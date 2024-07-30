@@ -186,3 +186,52 @@ The other cases follow similarly.
 \begin{theorem}
 An ordered semigroup without anomalous pairs is an Archimedean commutative semigroup.
 \end{theorem}
+\begin{proof}
+Let $a$ and $b$ be elements of an ordered semigroup $S$.
+If either $a$ or $b$ is zero, then they commute.
+
+We begin with the case that $a$ and $b$ are positive.
+If $a + b < b + a$, then for all $n\in \mathbb{N}^+$, we have that
+\begin{align}
+(n+1)(a+b) &= a + n(b+a) + b \\
+&> n(b+a) + b \\
+&> n(b+a) \\
+&> n(a+b)
+\end{align}
+And so $a+b$ and $b+a$ form an anomalous pair.
+
+The same for the case that $b + a < a + b$.
+Therefore, we must have that $a+b = b+a$.
+
+The case where $a$ and $b$ are negative follows similarly.
+
+We now look at the case where $a$ is negative and $b$ is positive.
+If the element $0$ exists and $a+b = 0$, then $a + b + a = a$ and so $b+a = 0$.
+Therefore, $a$ and $b$ commute.
+
+If $a + b$ is positive, then
+\begin{align}
+(a+b) + (a+b) &> a + b \\
+(b + a) + b &> b \\
+b + a &> 0
+\end{align}
+
+We already showed that positive elements commute and so
+\[ (b+a) + b = b + (b + a)\]
+
+Now we look at the case where $a+b < b+a$.
+Then we have that
+\begin{align}
+2(a + b) &= a + ((b+a) + b) \\
+&= a + (b + (b + a)) \\
+&= (a + b) + (b + a) \\
+&> (a + b) + (a + b) \\
+&= 2(a + b)
+\end{align}
+Which is a contradiction.
+We get a similar contradiction in the case that $b+a < a+b$.
+Therefore, $a+b = b+a$.
+
+The case where $a+b$ is negative follows similarly.
+The case where $b$ is negative and $a$ is positive is symmetric.
+\end{proof}

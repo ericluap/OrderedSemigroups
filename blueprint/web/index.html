@@ -491,12 +491,49 @@
 
     <a class="icon proof" href="index.html#a0000000027">#</a>
     
+    <a class="icon proof" href="index.html#a0000000028"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
     
     
         </div>
   </div>
   <div class="theorem_thmcontent">
   <p>An ordered semigroup without anomalous pairs is an Archimedean commutative semigroup. </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000028">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). If either \(a\) or \(b\) is zero, then they commute. </p>
+<p>We begin with the case that \(a\) and \(b\) are positive. If \(a + b {\lt} b + a\), then for all \(n\in \mathbb {N}^+\), we have that </p>
+<div class="displaymath" id="a0000000029">
+  \begin{align}  (n+1)(a+b) & = a + n(b+a) + b \\ & {\gt} n(b+a) + b \\ & {\gt} n(b+a) \\ & {\gt} n(a+b) \end{align}
+</div>
+<p> And so \(a+b\) and \(b+a\) form an anomalous pair. </p>
+<p>The same for the case that \(b + a {\lt} a + b\). Therefore, we must have that \(a+b = b+a\). </p>
+<p>The case where \(a\) and \(b\) are negative follows similarly. </p>
+<p>We now look at the case where \(a\) is negative and \(b\) is positive. If the element \(0\) exists and \(a+b = 0\), then \(a + b + a = a\) and so \(b+a = 0\). Therefore, \(a\) and \(b\) commute. </p>
+<p>If \(a + b\) is positive, then </p>
+<div class="displaymath" id="a0000000030">
+  \begin{align}  (a+b) + (a+b) & {\gt} a + b \\ (b + a) + b & {\gt} b \\ b + a & {\gt} 0 \end{align}
+</div>
+<p>We already showed that positive elements commute and so </p>
+<div class="displaymath" id="a0000000031">
+  \[  (b+a) + b = b + (b + a) \]
+</div>
+<p>Now we look at the case where \(a+b {\lt} b+a\). Then we have that </p>
+<div class="displaymath" id="a0000000032">
+  \begin{align}  2(a + b) & = a + ((b+a) + b) \\ & = a + (b + (b + a)) \\ & = (a + b) + (b + a) \\ & {\gt} (a + b) + (a + b) \\ & = 2(a + b) \end{align}
+</div>
+<p> Which is a contradiction. We get a similar contradiction in the case that \(b+a {\lt} a+b\). Therefore, \(a+b = b+a\). </p>
+<p>The case where \(a+b\) is negative follows similarly. The case where \(b\) is negative and \(a\) is positive is symmetric. </p>
 
   </div>
 </div>
