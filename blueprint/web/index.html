@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  MathJax = { 
+    tex: {
+		    inlineMath: [['$','$'], ['\\(','\\)']]
+	} }
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<meta name="generator" content="plasTeX" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OrderedSemigroups</title>
+<link rel="stylesheet" href="styles/theme-white.css" />
+<link rel="stylesheet" href="styles/amsthm.css" />
+<link rel="stylesheet" href="styles/showmore.css" />
+<link rel="stylesheet" href="styles/blueprint.css" />
+<link rel="stylesheet" href="styles/extra_styles.css" />
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<div class="content">
+<div class="content-wrapper">
+
+
+<div class="main-text">
+<div class="titlepage">
+<h1>OrderedSemigroups</h1>
+<p class="authors">
+<span class="author">Eric P</span>
+</p>
+</div>
+<h1 id="a0000000002">0.1 Introduction</h1>
+<p> We follow the paper “On ordered semigroups” by N. G. Alimov. </p>
+<h1 id="a0000000003">0.2 Content</h1>
+<div class="definition_thmwrapper theorem-style-definition" id="OrderedSemigroup">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">1</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#OrderedSemigroup">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p> An ordered semigroup \(S\) is a semigroup with a linear order such that for all \(a,b,c\in S\) such that \(a {\lt} b\) </p>
+<ol class="enumerate">
+  <li><p>\(a + c {\lt} b + c\) </p>
+</li>
+  <li><p>\(c + a {\lt} c + b\) </p>
+</li>
+</ol>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="a0000000004">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">1</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000004">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000005"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>An ordered semigroup is cancellative. </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000005">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(S\) be an ordered semigroup. Let \(a,b,c\in S\). </p>
+<p>Assume that \(a + c = b + c\). Then if \(a {\lt} b\) we have that \(a + c {\lt} b + c\) which is a contradiction. Likewise, if \(b {\lt} a\), we have that \(b + c {\lt} a + c\) which is a contradiction. Therefore, \(a = b\). </p>
+<p>Assume that \(c + a = c + b\). Then if \(a {\lt} b\) we have that \(c + a {\lt} c + b\) which is a contradiction. Likewise, if \(b {\lt} a\), we have that \(c + b {\lt} c + a\) which is a contradiction. Therefore, \(a = b\). </p>
+
+  </div>
+</div>
+<div class="definition_thmwrapper theorem-style-definition" id="a0000000006">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">2</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000006">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>An element \(a\) of an ordered semigroup \(S\) is positive if for all \(x\in S\), \(a+x {\gt} x\). </p>
+
+  </div>
+</div>
+<div class="definition_thmwrapper theorem-style-definition" id="a0000000007">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">3</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000007">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>An element \(a\) of an ordered semigroup \(S\) is negative if for all \(x\in S\), \(a+x {\lt} x\). </p>
+
+  </div>
+</div>
+<div class="definition_thmwrapper theorem-style-definition" id="a0000000008">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">4</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000008">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>An element \(a\) of an ordered semigroup \(S\) is zero if for all \(x\in S\), \(a+x = x\). </p>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="a0000000009">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">2</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000009">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000010"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>Each element \(a\) of an ordered semigroup \(S\) is either positive, negative, or zero. </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000010">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(a\in S\) and \(b\in S\). Since the \(S\) is a linear order we have one of the following cases. </p>
+<p>The first case is that \(b + a {\gt} b\). Then for all \(x\in S\) we have that \(b + a + x {\gt} b + x\) and so \(a + x {\gt} x\). Therefore, \(a\) is positive. </p>
+<p>The second case is that \(b + a {\lt} b\). Then for all \(x\in S\) we have that \(b + a + x {\lt} b + x\) and so \(a + x {\lt} x\). Therefore, \(a\) is negative. </p>
+<p>The last case is that \(b + a = b\). Then for all \(x\in S\) we have that \(b + a + x = b + x\) and so \(a + x = x\). Therefore, \(a\) is zero. </p>
+
+  </div>
+</div>
+<div class="corollary_thmwrapper theorem-style-plain" id="a0000000011">
+  <div class="corollary_thmheading">
+    <span class="corollary_thmcaption">
+    Corollary
+    </span>
+    <span class="corollary_thmlabel">1</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000011">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="corollary_thmcontent">
+  <p>Let \(a\) be an element of an ordered semigroup \(S\). </p>
+<p>If there exists a \(b\in S\) such that \(b + a {\gt} b\), \(a\) is positive. </p>
+<p>If there exists a \(b\in S\) such that \(b + a {\lt} b\), \(a\) is negative. </p>
+<p>If there exists a \(b\in S\) such that \(b + a = b\), \(a\) is zero. </p>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="a0000000012">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">3</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000012">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000013"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
+<p>If \(a\) is negative and \(b\) is positive, then \(a {\lt} b\). </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000013">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(a\) be negative and \(b\) be positive. Then for all \(x\in S\) we have that \(a + x {\lt} x\). Likewise, for all \(x\in S\) we have that \(b + x {\gt} x\). Therefore, \(a + x {\lt} x {\lt} b + x\) and so \(a {\lt} b\). </p>
+
+  </div>
+</div>
+<p>We endow our ordered semigroup with scalar multiplication by the positive natural numbers. </p>
+<div class="lemma_thmwrapper theorem-style-plain" id="DecreaseN">
+  <div class="lemma_thmheading">
+    <span class="lemma_thmcaption">
+    Lemma
+    </span>
+    <span class="lemma_thmlabel">1</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#DecreaseN">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000014"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="lemma_thmcontent">
+  <p> Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
+<p>For all \(n {\gt} 1\), \(n(a+b) = a + (n-1)(b+a) + b\). </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000014">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Let \(n=2\). Then \(2(a+b) = a + (2-1)(b+a) + b\). </p>
+<p>Assume that the statement holds for \(n\). Then we have that \((n+1)(a+b) = a + b + n(a+b) = a + b + a + (n-1)(b+a) + b = a + n(b+a) + b\). </p>
+
+  </div>
+</div>
+<div class="lemma_thmwrapper theorem-style-plain" id="a0000000015">
+  <div class="lemma_thmheading">
+    <span class="lemma_thmcaption">
+    Lemma
+    </span>
+    <span class="lemma_thmlabel">2</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000015">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000016"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="lemma_thmcontent">
+  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
+<p>If \(a + b {\lt} b + a\), then for any \(n\in \mathbb {N}^+\), we have that </p>
+<div class="displaymath" id="a0000000017">
+  \[ na + nb {\lt} n(a+b) {\lt} n(b+a) {\lt} nb + na \]
+</div>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000016">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>If \(n=1\), then we are done. </p>
+<p>Assume that the statement holds for \(n\). Then we have that </p>
+<div class="displaymath" id="a0000000018">
+  \begin{align}  (n+1)a + (n+1)b & = a + na + nb + b \\ \text{by the induction hypothesis}\\ & {\lt} a + n(a + b) + b \\ \text{since $a+b {\lt} b+a$}\\ & {\lt} a + n(b + a) + b \\ \text{by the previous lemma}\\ & = (n+1)(a + b) \\ & {\lt} (n+1)(b + a) \\ \text{by the previous lemma}\\ & = b + n(a + b) + a \\ & {\lt} b + n(b + a) + a \\ \text{by the induction hypothesis}\\ & {\lt} b + nb + na + a \\ & = (n+1)b + (n+1)a \end{align}
+</div>
+
+  </div>
+</div>
+<div class="definition_thmwrapper theorem-style-definition" id="a0000000019">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">5</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000019">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\) that are not zero. </p>
+<p>Then \(a\) is said to be Archimedean with respect to \(b\) if there exists an \(N\in \mathbb {N}^+\) such that for \(n {\gt} N\), the inequality \(b {\lt} na\) holds if \(b\) is positive, and the inequality \(b {\gt} na\) holds if \(b\) is negative. </p>
+
+  </div>
+</div>
+<div class="definition_thmwrapper theorem-style-definition" id="a0000000020">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">6</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000020">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>An ordered semigroup is Archimedean if any two of its elements of the same sign are mutually Archimedean. </p>
+
+  </div>
+</div>
+<div class="definition_thmwrapper theorem-style-definition" id="a0000000021">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">7</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000021">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
+<p>Then \(a\) and \(b\) are said to form an anomalous pair if for all \(n\in \mathbb {N}^+\), one of the following holds </p>
+<div class="displaymath" id="a0000000022">
+  \begin{align}  na {\lt} nb {\lt} (n+1)a \\ na {\gt} nb {\gt} (n+1)a \end{align}
+</div>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="a0000000023">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">4</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000023">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000024"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>If \(S\) is a non-Archimedean ordered semigroup, then there exists an anomalous pair. </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000024">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>Since \(S\) is non-Archimedean, there exists \(a,b\in S\) such that \(a\) and \(b\) have the sign and are not mutually Archimedean. </p>
+<p>First, we look at the case where \(a\) and \(b\) are positive. Then since they are not mutually Archimedean, without loss of generality, for all \(n\in \mathbb {N}^+\), \(na {\lt} b\). </p>
+<p>Then we either have that \(a + b \le b + a\) or that \(b+a\le a + b\). In the first case, we have that </p>
+<div class="displaymath" id="a0000000025">
+  \[  na + nb \le n(a+b) \le nb + na  \]
+</div>
+<p> which means that, since \(na {\lt} b\), </p>
+<div class="displaymath" id="a0000000026">
+  \[  nb {\lt} n(a+b) {\lt} (n+1)b  \]
+</div>
+<p> And so \(b\) and \(a+b\) form an anomalous pair. </p>
+<p>The other cases follow similarly. </p>
+
+  </div>
+</div>
+<div class="theorem_thmwrapper theorem-style-plain" id="a0000000027">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">5</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000027">#</a>
+    
+    
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>An ordered semigroup without anomalous pairs is an Archimedean commutative semigroup. </p>
+
+  </div>
+</div>
+
+</div> <!--main-text -->
+</div> <!-- content-wrapper -->
+</div> <!-- content -->
+</div> <!-- wrapper -->
+
+<nav class="prev_up_next">
+  <svg  id="showmore-minus" class="icon icon-eye-minus showmore"><use xlink:href="symbol-defs.svg#icon-eye-minus"></use></svg>
+
+  <svg  id="showmore-plus" class="icon icon-eye-plus showmore"><use xlink:href="symbol-defs.svg#icon-eye-plus"></use></svg>
+
+</nav>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/plastex.js"></script>
+<script type="text/javascript" src="js/svgxuse.js"></script>
+<script type="text/javascript" src="js/js.cookie.min.js"></script>
+<script type="text/javascript" src="js/showmore.js"></script>
+</body>
+</html>
