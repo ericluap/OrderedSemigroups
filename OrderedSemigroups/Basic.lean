@@ -6,17 +6,21 @@ universe u
 
 variable {α : Type u}
 
+/- The addition of two ℕ+ -/
 instance : Add ℕ+ :=
   ⟨fun a b ↦ ⟨a.val + b.val, by
     have a' : 0 < a.val := by simp
     have b' : 0 < b.val := by simp
     omega⟩⟩
 
+/- The addition of a ℕ+ with a ℕ returning an ℕ+ -/
 instance : HAdd ℕ+ ℕ ℕ+ :=
   ⟨fun a b ↦ ⟨a.val + b, by
     have a' : 0 < a.val := by simp
     omega⟩⟩
 
+/- The action of ℕ+ on a type with Mul where
+  nppowRec n a = a * a ⋯ * a (aka a^n)-/
 def nppowRec [Mul α] : ℕ+ → α → α
   | 1, a => a
   | ⟨n+2, hnp⟩, a =>
@@ -24,11 +28,13 @@ def nppowRec [Mul α] : ℕ+ → α → α
     (nppowRec ⟨n+1, by simp⟩ a) * a
 termination_by x => x
 
+/- A semigroup with an action of ℕ+ on it, by default it is exponentiation -/
 class Semigroup' (α : Type u) extends Semigroup α where
   nppow : ℕ+ → α → α := nppowRec
   nppow_one : ∀ x, nppow 1 x = x := by intros; rfl
   nppow_succ : ∀ (n : ℕ+) (x), nppow (n+1) x = nppow n x * x
 
+/- Use the exponentiation notation for the action of ℕ+ on a semigroup' -/
 instance (α : Type u) [Semigroup' α] : Pow α ℕ+ :=
   ⟨fun x n ↦ Semigroup'.nppow n x⟩
 
@@ -54,10 +60,64 @@ instance (α : Type u) [OrderedCancelSemigroup α] : ContravariantClass α α (�
 instance (α : Type u) [OrderedCancelSemigroup α] : ContravariantClass α α (Function.swap (· * ·)) (· ≤ ·) where
   elim a b c bc := OrderedCancelSemigroup.le_of_mul_le_mul_right a b c bc
 
+instance (α : Type u) [OrderedCancelSemigroup α] : LeftCancelSemigroup α where
+  mul_left_cancel a b c habc := by
+    have b_le_c : b ≤ c := OrderedCancelSemigroup.le_of_mul_le_mul_left a b c (le_of_eq habc)
+    have c_le_b : c ≤ b := OrderedCancelSemigroup.le_of_mul_le_mul_left a c b (le_of_eq (id (Eq.symm habc)))
+    exact (le_antisymm b_le_c c_le_b)
+
+instance (α : Type u) [OrderedCancelSemigroup α] : RightCancelSemigroup α where
+  mul_right_cancel a b c habc := by
+    have a_le_c : a ≤ c := OrderedCancelSemigroup.le_of_mul_le_mul_right b a c (le_of_eq habc)
+    have c_le_a : c ≤ a := OrderedCancelSemigroup.le_of_mul_le_mul_right b c a (le_of_eq (id (Eq.symm habc)))
+    exact (le_antisymm a_le_c c_le_a)
+
 class LinearOrderedSemigroup (α : Type u) extends OrderedSemigroup α, LinearOrder α
 
 section LinearOrderedSemigroup
-
 variable [LinearOrderedSemigroup α]
 
+def is_positive (a : α) := ∀x : α, a*x > x
+def is_negative (a : α) := ∀x : α, a*x < x
+def is_zero (a : α) := ∀x : α, a*x = x
+
 end LinearOrderedSemigroup
+
+class LinearOrderedCancelSemigroup (α : Type u) extends OrderedCancelSemigroup α, LinearOrder α
+
+instance (α : Type u) [LinearOrderedCancelSemigroup α] : LinearOrderedSemigroup α where
+  le_total := fun a b ↦ LinearOrderedCancelSemigroup.le_total a b
+  decidableLE := LinearOrderedCancelSemigroup.decidableLE
+  min_def := LinearOrderedCancelSemigroup.min_def
+  max_def := LinearOrderedCancelSemigroup.max_def
+  compare_eq_compareOfLessAndEq := LinearOrderedCancelSemigroup.compare_eq_compareOfLessAndEq
+
+section LinearOrderedCancelSemigroup
+variable [LinearOrderedCancelSemigroup α]
+
+theorem LinearOrderedCancelSemigroup.mul_lt_mul_left (a b : α) (h : a < b) (c : α) : c * a < c * b := mul_lt_mul_left' h c
+
+/- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or zero. -/
+theorem pos_neg_or_zero : ∀a : α, is_positive a ∨ is_negative a ∨ is_zero a := by
+  intro a
+  rcases le_total (a*a) a with ha | ha
+  <;> rcases LE.le.lt_or_eq ha with ha | ha
+  · right; left; intro x;
+    have : a * a * x < a * x := mul_lt_mul_right' ha x
+    have : a * (a * x) < a * x := by rw [mul_assoc a a x] at this; trivial
+    simp at this; trivial
+  · right; right; intro x
+    have : a * a * x = a * x := congrFun (congrArg HMul.hMul ha) x
+    have : a * (a * x) = a * x := by rw [mul_assoc a a x] at this; trivial
+    simp at this; trivial
+  · left; intro x
+    have : a * x < a * a * x := mul_lt_mul_right' ha x
+    have : a * x < a * (a * x) := by rw [mul_assoc a a x] at this; trivial
+    simp at this; trivial
+  · right; right; intro x
+    have : a * a * x = a * x := congrFun (congrArg HMul.hMul (id (Eq.symm ha))) x
+    have : a * (a * x) = a * x := by rw [mul_assoc a a x] at this; trivial
+    simp at this; trivial
+
+
+end LinearOrderedCancelSemigroup
