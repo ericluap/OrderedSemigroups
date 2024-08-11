@@ -6,20 +6,20 @@ universe u
 
 variable {α : Type u}
 
-/- The addition of two ℕ+ -/
+/-- Define + notation for the addition of two ℕ+ -/
 instance : Add ℕ+ :=
   ⟨fun a b ↦ ⟨a.val + b.val, by
     have a' : 0 < a.val := by simp
     have b' : 0 < b.val := by simp
     omega⟩⟩
 
-/- The addition of a ℕ+ with a ℕ returning an ℕ+ -/
+/-- Define + notation for the addition of a ℕ+ with a ℕ returning an ℕ+ -/
 instance : HAdd ℕ+ ℕ ℕ+ :=
   ⟨fun a b ↦ ⟨a.val + b, by
     have a' : 0 < a.val := by simp
     omega⟩⟩
 
-/- The action of ℕ+ on a type with Mul where
+/-- The action of ℕ+ on a type with Mul where
   nppowRec n a = a * a ⋯ * a (aka a^n)-/
 def nppowRec [Mul α] : ℕ+ → α → α
   | 1, a => a
@@ -28,13 +28,13 @@ def nppowRec [Mul α] : ℕ+ → α → α
     (nppowRec ⟨n+1, by simp⟩ a) * a
 termination_by x => x
 
-/- A semigroup with an action of ℕ+ on it, by default it is exponentiation -/
+/-- A semigroup with an action of ℕ+ on it, by default it is exponentiation -/
 class Semigroup' (α : Type u) extends Semigroup α where
   nppow : ℕ+ → α → α := nppowRec
   nppow_one : ∀ x, nppow 1 x = x := by intros; rfl
   nppow_succ : ∀ (n : ℕ+) (x), nppow (n+1) x = nppow n x * x
 
-/- Use the exponentiation notation for the action of ℕ+ on a semigroup' -/
+/-- Define the exponentiation notation for the action of ℕ+ on a semigroup' -/
 instance (α : Type u) [Semigroup' α] : Pow α ℕ+ :=
   ⟨fun x n ↦ Semigroup'.nppow n x⟩
 
@@ -86,7 +86,7 @@ end LinearOrderedSemigroup
 class LinearOrderedCancelSemigroup (α : Type u) extends OrderedCancelSemigroup α, LinearOrder α
 
 instance (α : Type u) [LinearOrderedCancelSemigroup α] : LinearOrderedSemigroup α where
-  le_total := fun a b ↦ LinearOrderedCancelSemigroup.le_total a b
+  le_total := LinearOrderedCancelSemigroup.le_total
   decidableLE := LinearOrderedCancelSemigroup.decidableLE
   min_def := LinearOrderedCancelSemigroup.min_def
   max_def := LinearOrderedCancelSemigroup.max_def
@@ -97,27 +97,33 @@ variable [LinearOrderedCancelSemigroup α]
 
 theorem LinearOrderedCancelSemigroup.mul_lt_mul_left (a b : α) (h : a < b) (c : α) : c * a < c * b := mul_lt_mul_left' h c
 
-/- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or zero. -/
+lemma pos_right_pos_forall {a b : α} (h : b * a > b) : is_positive a := by
+  intro x
+  have : b * a * x > b * x := mul_lt_mul_right' h x
+  simp [mul_assoc] at this
+  trivial
+
+lemma neg_right_neg_forall {a b : α} (h : b * a < b) : is_negative a := by
+  intro x
+  have : b * a * x < b * x := mul_lt_mul_right' h x
+  simp [mul_assoc] at this
+  trivial
+
+lemma zero_right_zero_forall {a b : α} (h : b * a = b) : is_zero a := by
+  intro x
+  have : b * a * x = b * x := congrFun (congrArg HMul.hMul h) x
+  simp [mul_assoc] at this
+  trivial
+
+/-- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or zero. -/
 theorem pos_neg_or_zero : ∀a : α, is_positive a ∨ is_negative a ∨ is_zero a := by
   intro a
   rcases le_total (a*a) a with ha | ha
   <;> rcases LE.le.lt_or_eq ha with ha | ha
-  · right; left; intro x;
-    have : a * a * x < a * x := mul_lt_mul_right' ha x
-    have : a * (a * x) < a * x := by rw [mul_assoc a a x] at this; trivial
-    simp at this; trivial
-  · right; right; intro x
-    have : a * a * x = a * x := congrFun (congrArg HMul.hMul ha) x
-    have : a * (a * x) = a * x := by rw [mul_assoc a a x] at this; trivial
-    simp at this; trivial
-  · left; intro x
-    have : a * x < a * a * x := mul_lt_mul_right' ha x
-    have : a * x < a * (a * x) := by rw [mul_assoc a a x] at this; trivial
-    simp at this; trivial
-  · right; right; intro x
-    have : a * a * x = a * x := congrFun (congrArg HMul.hMul (id (Eq.symm ha))) x
-    have : a * (a * x) = a * x := by rw [mul_assoc a a x] at this; trivial
-    simp at this; trivial
+  · right; left; exact neg_right_neg_forall ha
+  · right; right; exact zero_right_zero_forall ha
+  · left; exact pos_right_pos_forall ha
+  · right; right; exact zero_right_zero_forall ha.symm
 
 
 end LinearOrderedCancelSemigroup
