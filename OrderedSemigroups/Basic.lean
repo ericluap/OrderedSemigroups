@@ -1,23 +1,15 @@
 import Mathlib.Algebra.Order.Group.Basic
 import Mathlib.Algebra.Order.Monoid.Unbundled.Basic
-import Mathlib.Data.PNat.Defs
+import Mathlib.Data.PNat.Basic
 
 universe u
 
 variable {α : Type u}
 
-/-- Define + notation for the addition of two ℕ+ -/
-instance : Add ℕ+ :=
-  ⟨fun a b ↦ ⟨a.val + b.val, by
-    have a' : 0 < a.val := by simp
-    have b' : 0 < b.val := by simp
-    omega⟩⟩
-
-/-- Define + notation for the addition of a ℕ+ with a ℕ returning an ℕ+ -/
-instance : HAdd ℕ+ ℕ ℕ+ :=
-  ⟨fun a b ↦ ⟨a.val + b, by
-    have a' : 0 < a.val := by simp
-    omega⟩⟩
+@[simp]
+lemma add_sub_eq (x y : ℕ+) : x + y - y = x := by
+  apply PNat.eq
+  simp [PNat.sub_coe, PNat.lt_add_left y x]
 
 /-- The action of ℕ+ on a type with Mul where
   nppowRec n a = a * a ⋯ * a (aka a^n)-/
@@ -39,6 +31,24 @@ instance (α : Type u) [Semigroup' α] : Pow α ℕ+ :=
   ⟨fun x n ↦ Semigroup'.nppow n x⟩
 
 theorem nppow_eq_pow [Semigroup' α] (n : ℕ+) (x : α) : Semigroup'.nppow n x = x ^ n := rfl
+theorem ppow_one [Semigroup' α] (x : α) : x ^ (1 : ℕ+) = x := Semigroup'.nppow_one x
+theorem ppow_succ [Semigroup' α] (n : ℕ+) (x : α) : x ^ (n + 1) = x ^ n * x := Semigroup'.nppow_succ n x
+
+/-- If `n > 1`, then `(a*b)^n = a*(b*a)^(n-1)*b`-/
+theorem split_first_and_last_factor_of_product [Semigroup' α] {a b : α} {n : ℕ+} (h : n > 1) :
+  (a*b)^n = a*(b*a)^(n-1)*b := by
+  induction n using PNat.recOn with
+  | p1 => contradiction
+  | hp n ih =>
+    cases n using PNat.recOn with
+    | p1 =>
+      simp [ppow_succ, ppow_one, mul_assoc]
+    | hp n z =>
+      rw [ppow_succ]
+      rw [ih (PNat.lt_add_left 1 n)]
+      have : a * (b * a) ^ (n + 1 - 1) * b * (a * b) = a * ((b * a) ^ (n + 1 - 1) * (b * a)) * b := by simp [mul_assoc]
+      rw [this, ←ppow_succ]
+      simp
 
 class OrderedSemigroup (α : Type u) extends Semigroup' α, PartialOrder α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
@@ -124,6 +134,5 @@ theorem pos_neg_or_zero : ∀a : α, is_positive a ∨ is_negative a ∨ is_zero
   · right; right; exact zero_right_zero_forall ha
   · left; exact pos_right_pos_forall ha
   · right; right; exact zero_right_zero_forall ha.symm
-
 
 end LinearOrderedCancelSemigroup
