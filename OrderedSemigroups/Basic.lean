@@ -49,7 +49,6 @@ theorem ppow_comm (n : ℕ+) (x : α) : x^n * x = x * x^n := by
 theorem ppow_succ' (n : ℕ+) (x : α) : x ^ (n + 1) = x * x^n := by
   rw [ppow_succ, ppow_comm]
 
-/-- If `n > 1`, then `(a*b)^n = a*(b*a)^(n-1)*b`-/
 theorem split_first_and_last_factor_of_product [Semigroup' α] {a b : α} {n : ℕ+} :
   (a*b)^(n+1) = a*(b*a)^n*b := by
   induction n using PNat.recOn with
@@ -145,7 +144,49 @@ variable [LinearOrderedSemigroup α]
 
 def is_positive (a : α) := ∀x : α, a*x > x
 def is_negative (a : α) := ∀x : α, a*x < x
-def is_zero (a : α) := ∀x : α, a*x = x
+def is_one (a : α) := ∀x : α, a*x = x
+
+theorem pos_not_neg {a : α} (is_pos : is_positive a) : ¬is_negative a := by
+  intro is_neg
+  rw [is_positive, is_negative] at *
+  exact (lt_self_iff_false (a * a)).mp (lt_trans (is_neg a) (is_pos a))
+
+theorem pos_not_one {a : α} (is_pos : is_positive a) : ¬is_one a := by
+  intro is_zer
+  rw [is_positive, is_one] at *
+  have is_pos := is_pos a
+  simp [is_zer a] at is_pos
+
+theorem neg_not_pos {a : α} (is_neg : is_negative a) : ¬is_positive a := by
+  intro is_pos
+  rw [is_positive, is_negative] at *
+  exact (lt_self_iff_false a).mp (lt_trans (is_pos a) (is_neg a))
+
+theorem neg_not_one {a : α} (is_neg : is_negative a) : ¬is_one a := by
+  intro is_zer
+  rw [is_negative, is_one] at *
+  have is_neg := is_neg a
+  simp [is_zer a] at is_neg
+
+theorem one_not_pos {a : α} (is_zer : is_one a) : ¬is_positive a := by
+  intro is_pos
+  rw [is_positive, is_one] at *
+  have is_pos := is_pos a
+  rw [is_zer a] at is_pos
+  exact (lt_self_iff_false a).mp is_pos
+
+theorem one_not_neg {a : α} (is_zer : is_one a) : ¬is_negative a := by
+  intro is_neg
+  rw [is_negative, is_one] at *
+  have is_neg := is_neg a
+  rw [is_zer a] at is_neg
+  exact (lt_self_iff_false a).mp is_neg
+
+def is_archimedean_wrt (a b : α) :=
+  is_one a ∨ is_one b ∨
+  ∃n : ℕ+, (is_positive b ∧ b < a^n) ∨ (is_negative b ∧ a^n < b)
+
+def is_archimedean := ∀a b : α, is_archimedean_wrt a b
 
 end LinearOrderedSemigroup
 
@@ -166,29 +207,26 @@ theorem LinearOrderedCancelSemigroup.mul_lt_mul_left (a b : α) (h : a < b) (c :
 lemma pos_right_pos_forall {a b : α} (h : b * a > b) : is_positive a := by
   intro x
   have : b * a * x > b * x := mul_lt_mul_right' h x
-  simp [mul_assoc] at this
-  trivial
+  simpa [mul_assoc]
 
 lemma neg_right_neg_forall {a b : α} (h : b * a < b) : is_negative a := by
   intro x
   have : b * a * x < b * x := mul_lt_mul_right' h x
-  simp [mul_assoc] at this
-  trivial
+  simpa [mul_assoc]
 
-lemma zero_right_zero_forall {a b : α} (h : b * a = b) : is_zero a := by
+lemma one_right_one_forall {a b : α} (h : b * a = b) : is_one a := by
   intro x
   have : b * a * x = b * x := congrFun (congrArg HMul.hMul h) x
-  simp [mul_assoc] at this
-  trivial
+  simpa [mul_assoc]
 
-/-- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or zero. -/
-theorem pos_neg_or_zero : ∀a : α, is_positive a ∨ is_negative a ∨ is_zero a := by
+/-- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or one. -/
+theorem pos_neg_or_one : ∀a : α, is_positive a ∨ is_negative a ∨ is_one a := by
   intro a
   rcases le_total (a*a) a with ha | ha
   <;> rcases LE.le.lt_or_eq ha with ha | ha
   · right; left; exact neg_right_neg_forall ha
-  · right; right; exact zero_right_zero_forall ha
+  · right; right; exact one_right_one_forall ha
   · left; exact pos_right_pos_forall ha
-  · right; right; exact zero_right_zero_forall ha.symm
+  · right; right; exact one_right_one_forall ha.symm
 
 end LinearOrderedCancelSemigroup
