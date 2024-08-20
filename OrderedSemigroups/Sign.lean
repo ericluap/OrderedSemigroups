@@ -50,6 +50,36 @@ theorem one_not_neg {a : α} (is_zer : is_one a) : ¬is_negative a := by
   rw [is_zer a] at is_neg
   exact (lt_self_iff_false a).mp is_neg
 
+theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
+  fun x ↦ lt_mul_of_lt_mul_right (pos x) h
+
+theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative b :=
+  fun x ↦ mul_lt_of_mul_lt_right (neg x) h
+
+theorem pos_pow_pos {a : α} (pos : is_positive a) (n : ℕ+) : is_positive (a^n) := by
+  intro x
+  induction n using PNat.recOn with
+  | p1 => simp [pos x]
+  | hp n ih =>
+    simp [ppow_succ']
+    have : a * a^n * x > a^n * x := by simp [pos (a^n*x), mul_assoc]
+    exact gt_trans this ih
+
+theorem neg_pow_neg {a : α} (neg : is_negative a) (n : ℕ+) : is_negative (a^n) := by
+  intro x
+  induction n using PNat.recOn with
+  | p1 => simp [neg x]
+  | hp n ih =>
+    simp [ppow_succ']
+    have : a * a^n * x < a^n * x := by simp [neg (a^n*x), mul_assoc]
+    exact gt_trans ih this
+
+theorem one_pow_one {a : α} (one : is_one a) (n : ℕ+) : is_one (a^n) := by
+  intro x
+  induction n using PNat.recOn with
+  | p1 => simp [one x]
+  | hp n ih => simp [ppow_succ', mul_assoc, ih, one x]
+
 def same_sign (a b : α) :=
   (is_positive a ∧ is_positive b) ∨
   (is_negative a ∧ is_negative b) ∨
@@ -59,6 +89,15 @@ end OrderedSemigroup
 
 section LinearOrderedCancelSemigroup
 variable [LinearOrderedCancelSemigroup α]
+
+theorem pos_gt_one {a b : α} (one : is_one a) (h : a < b) : is_positive b :=
+  fun x ↦ lt_of_eq_of_lt (id (Eq.symm (one x))) (mul_lt_mul_right' h x)
+
+theorem neg_lt_one {a b : α} (one : is_one a) (h : b < a) : is_negative b :=
+  fun x ↦ lt_of_lt_of_eq (mul_lt_mul_right' h x) (one x)
+
+theorem neg_lt_pos {a b : α} (neg : is_negative a) (pos : is_positive b) : a < b :=
+  lt_of_mul_lt_mul_right' (gt_trans (pos b) (neg b))
 
 lemma pos_right_pos_forall {a b : α} (h : b * a > b) : is_positive a := by
   intro x
@@ -84,5 +123,23 @@ theorem pos_neg_or_one : ∀a : α, is_positive a ∨ is_negative a ∨ is_one a
   · right; right; exact one_right_one_forall ha
   · left; exact pos_right_pos_forall ha
   · right; right; exact one_right_one_forall ha.symm
+
+theorem pow_pos_pos {a : α} (n : ℕ+) (positive : is_positive (a^n)) : is_positive a := by
+  rcases pos_neg_or_one a with pos | neg | one
+  · trivial
+  · exact False.elim (neg_not_pos (neg_pow_neg neg n) positive)
+  · exact False.elim (one_not_pos (one_pow_one one n) positive)
+
+theorem pow_neg_neg {a : α} (n : ℕ+) (negative : is_negative (a^n)) : is_negative a := by
+  rcases pos_neg_or_one a with pos | neg | one
+  · exact False.elim (pos_not_neg (pos_pow_pos pos n) negative)
+  · trivial
+  · exact False.elim (one_not_neg (one_pow_one one n) negative)
+
+theorem pos_le_pow_pos {a b : α} (pos : is_positive a) (n : ℕ+) (h : a ≤ b^n) : is_positive b :=
+  pow_pos_pos n (pos_le_pos pos h)
+
+theorem pow_le_neg_neg {a b : α} (neg : is_negative a) (n : ℕ+) (h : b^n ≤ a) : is_negative b :=
+  pow_neg_neg n (le_neg_neg neg h)
 
 end LinearOrderedCancelSemigroup
