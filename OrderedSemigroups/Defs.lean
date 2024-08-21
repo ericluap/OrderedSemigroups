@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Order.Group.Basic
 import Mathlib.Algebra.Order.Monoid.Unbundled.Basic
-import Mathlib.Data.PNat.Basic
+import OrderedSemigroups.PNat
 
 /-!
 # Ordered Semigroups

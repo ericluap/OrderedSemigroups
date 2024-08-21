@@ -12,11 +12,6 @@ universe u
 
 variable {α : Type u}
 
-@[simp]
-lemma add_sub_eq (x y : ℕ+) : x + y - y = x := by
-  apply PNat.eq
-  simp [PNat.sub_coe, PNat.lt_add_left y x]
-
 section Semigroup'
 variable [Semigroup' α]
 
@@ -35,6 +30,11 @@ theorem ppow_comm (n : ℕ+) (x : α) : x^n * x = x * x^n := by
 
 theorem ppow_succ' (n : ℕ+) (x : α) : x ^ (n + 1) = x * x^n := by
   rw [ppow_succ, ppow_comm]
+
+theorem ppow_add (a : α) (m n : ℕ+) : a ^ (m + n) = a ^ m * a ^ n := by
+  induction n using PNat.recOn with
+  | p1 => simp [ppow_succ]
+  | hp n ih => rw [ppow_succ, ←mul_assoc, ←ih, ←ppow_succ]; exact rfl
 
 theorem split_first_and_last_factor_of_product [Semigroup' α] {a b : α} {n : ℕ+} :
   (a*b)^(n+1) = a*(b*a)^n*b := by

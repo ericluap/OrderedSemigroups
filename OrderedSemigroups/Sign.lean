@@ -85,6 +85,29 @@ def same_sign (a b : α) :=
   (is_negative a ∧ is_negative b) ∨
   (is_one a ∧ is_one b)
 
+theorem same_sign_symm {a b : α} (h : same_sign a b) : same_sign b a := by
+  unfold same_sign at *
+  tauto
+
+theorem pos_neg_same_sign_false {a b : α} (pos : is_positive a) (neg : is_negative b) (ss : same_sign a b) : False := by
+  unfold same_sign at ss
+  rcases ss with ⟨_, pos_b⟩ | ⟨neg_a, _⟩ | ⟨one_a, _⟩
+  · exact pos_not_neg pos_b neg
+  · exact pos_not_neg pos neg_a
+  · exact one_not_pos one_a pos
+
+theorem pos_ppow_lt_ppow {a : α} (n m : ℕ+) (pos : is_positive a)
+    (h : n < m) : a ^ n < a ^ m := by
+  obtain ⟨k, hk⟩ := le.dest h
+  rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
+  exact (pos_pow_pos pos k) (a ^ n)
+
+theorem neg_ppow_lt_ppow {a : α} (n m : ℕ+) (neg : is_negative a)
+    (h : n < m) : a ^ m < a ^ n := by
+  obtain ⟨k, hk⟩ := le.dest h
+  rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
+  exact (neg_pow_neg neg k) (a ^ n)
+
 end OrderedSemigroup
 
 section LinearOrderedCancelSemigroup
@@ -113,6 +136,27 @@ lemma one_right_one_forall {a b : α} (h : b * a = b) : is_one a := by
   intro x
   have : b * a * x = b * x := congrFun (congrArg HMul.hMul h) x
   simpa [mul_assoc]
+
+theorem pos_right {a : α} (pos : is_positive a) : ∀x : α, x * a > x := by
+  intro x
+  rcases lt_trichotomy (x*a) x with h | h | h
+  · exact False.elim (neg_not_pos (neg_right_neg_forall h) pos)
+  · exact False.elim (one_not_pos (one_right_one_forall h) pos)
+  · trivial
+
+theorem neg_right {a : α} (neg : is_negative a) : ∀x : α, x * a < x := by
+  intro x
+  rcases lt_trichotomy (x*a) x with h | h | h
+  · trivial
+  · exact False.elim (one_not_neg (one_right_one_forall h) neg)
+  · exact False.elim (pos_not_neg (pos_right_pos_forall h) neg)
+
+theorem one_right {a : α} (one : is_one a) : ∀x : α, x * a = x := by
+  intro x
+  rcases lt_trichotomy (x*a) x with h | h | h
+  · exact False.elim (neg_not_one (neg_right_neg_forall h) one)
+  · trivial
+  · exact False.elim (pos_not_one (pos_right_pos_forall h) one)
 
 /-- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or one. -/
 theorem pos_neg_or_one : ∀a : α, is_positive a ∨ is_negative a ∨ is_one a := by
