@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.8.16)  21 AUG 2024 18:36
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.8.16)  21 AUG 2024 21:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -82,13 +82,14 @@ Package: amsthm 2020/05/29 v2.20.6
 Type X to quit or <RETURN> to proceed,
 or enter new name. (Default extension: sty)
 
-Enter file name: 
+Enter file name: X
+
 ! Emergency stop.
 <read *> 
          
 l.20 \usepackage
                 [unicode,colorlinks=true,linkcolor=blue,urlcolor=magenta, ci...
-End of file on the terminal!
+*** (cannot \read from terminal in nonstop modes)
 
  
 Here is how much of TeX's memory you used:
