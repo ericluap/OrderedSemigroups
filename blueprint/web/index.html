@@ -335,7 +335,7 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">positive</b> if for all \(x\in S\), \(a*x \gt x\). </p>
+  <p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">positive</b> if for all \(x\in S\), \(a*x {\gt} x\). </p>
 
   </div>
 </div>
@@ -398,7 +398,7 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">negative</b> if for all \(x\in S\), \(a*x \lt x\). </p>
+  <p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">negative</b> if for all \(x\in S\), \(a*x {\lt} x\). </p>
 
   </div>
 </div>
@@ -745,7 +745,7 @@
   </div>
   <div class="lemma_thmcontent">
   <p>Let \(a\) and \(b\) be elements of a semigroup \(S\). </p>
-<p>For all \(n {\gt} 1\), \((a*b)^n = a * (b+a)^(n-1) * b\). </p>
+<p>For all \(n {\gt} 1\), \((a*b)^n = a * (b+a)^{n-1} * b\). </p>
 
   </div>
 </div>
@@ -757,8 +757,8 @@
     <span class="expand-proof">▶</span>
   </div>
   <div class="proof_content">
-  <p>Let \(n=2\). Then \((a+b)^2 = a * (b*a)^(2-1) * b\). </p>
-<p>Assume that the statement holds for \(n\). Then we have that \((a*b)^(n+1) = a * b * (a*b)^n = a * b * a * (b*a)^(n-1) * b = a * (b*a)^n * b\). </p>
+  <p>Let \(n=2\). Then \((a+b)^2 = a * (b*a)^{2-1} * b\). </p>
+<p>Assume that the statement holds for \(n\). Then we have that \((a*b)^{n+1} = a * b * (a*b)^n = a * b * a * (b*a)^{n-1} * b = a * (b*a)^n * b\). </p>
 
   </div>
 </div>
@@ -825,7 +825,7 @@
   <p>If \(n=1\), then we are done. </p>
 <p>Assume that the statement holds for \(n\). Then we have that </p>
 <div class="displaymath" id="a0000000009">
-  \begin{align}  a^(n+1) + b^(n+1) & = a * a^n * b^n * b \\ \text{by the induction hypothesis}\\ & {\lt} a * (a * b)^n * b \\ \text{since $a*b {\lt} b*a$}\\ & {\lt} a * (b * a)^n * b \\ \text{by the previous lemma}\\ & = (a * b)^(n+1) \\ & {\lt} (b * a)^(n+1) \\ \text{by the previous lemma}\\ & = b * (a * b)^n * a \\ & {\lt} b * (b * a)^n * a \\ \text{by the induction hypothesis}\\ & {\lt} b * b^n * a^n * a \\ & = b^(n+1) * a^(n+1) \end{align}
+  \begin{align}  a^{n+1} + b^{n+1} & = a * a^n * b^n * b \\ \text{by the induction hypothesis}\\ & {\lt} a * (a * b)^n * b \\ \text{since $a*b {\lt} b*a$}\\ & {\lt} a * (b * a)^n * b \\ \text{by the previous lemma}\\ & = (a * b)^{n+1} \\ & {\lt} (b * a)^{n+1} \\ \text{by the previous lemma}\\ & = b * (a * b)^n * a \\ & {\lt} b * (b * a)^n * a \\ \text{by the induction hypothesis}\\ & {\lt} b * b^n * a^n * a \\ & = b^{n+1} * a^{n+1} \end{align}
 </div>
 
   </div>
@@ -892,7 +892,7 @@
   </div>
   <div class="definition_thmcontent">
   <p> Let \(a\) and \(b\) be elements of an ordered semigroup \(S\) that are not one. </p>
-<p>Then \(a\) is said to be Archimedean with respect to \(b\) if there exists an \(N\in \mathbb {N}^+\) such that for \(n {\gt} N\), the inequality \(b {\lt} a^n\) holds if \(b\) is positive, and the inequality \(b {\gt} a^n\) holds if \(b\) is negative. </p>
+<p>Then \(a\) is said to be <b class="bfseries">Archimedean with respect to</b> \(b\) if there exists an \(N\in \mathbb {N}^+\) such that for \(n {\gt} N\), the inequality \(b {\lt} a^n\) holds if \(b\) is positive, and the inequality \(b {\gt} a^n\) holds if \(b\) is negative. </p>
 
   </div>
 </div>
@@ -957,7 +957,7 @@
         </div>
   </div>
   <div class="definition_thmcontent">
-  <p> An ordered semigroup is Archimedean if any two of its elements of the same sign are mutually Archimedean. </p>
+  <p> An ordered semigroup is <b class="bfseries">Archimedean</b> if any two of its elements of the same sign are mutually Archimedean. </p>
 
   </div>
 </div>
@@ -1001,9 +1001,9 @@
   </div>
   <div class="definition_thmcontent">
   <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
-<p>Then \(a\) and \(b\) are said to form an anomalous pair if for all \(n\in \mathbb {N}^+\), one of the following holds </p>
+<p>Then \(a\) and \(b\) are said to form an <b class="bfseries">anomalous pair</b> if for all \(n\in \mathbb {N}^+\), one of the following holds </p>
 <div class="displaymath" id="a0000000010">
-  \begin{align}  a^n {\lt} b^n {\lt} a^(n+1) \\ a^n {\gt} b^n {\gt} a^(n+1) \end{align}
+  \begin{align}  a^n {\lt} b^n {\lt} a^{n+1} \\ a^n {\gt} b^n {\gt} a^{n+1} \end{align}
 </div>
 
   </div>
@@ -1090,7 +1090,7 @@
 </div>
 <p> which means that, since \(a^n {\lt} b\), </p>
 <div class="displaymath" id="a0000000013">
-  \[  b^n {\lt} (a*b)^n {\lt} b^(n+1)  \]
+  \[  b^n {\lt} (a*b)^n {\lt} b^{n+1}  \]
 </div>
 <p> And so \(b\) and \(a*b\) form an anomalous pair. </p>
 <p>The other cases follow similarly. </p>

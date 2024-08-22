@@ -99,13 +99,13 @@ We endow our ordered semigroup with scalar multiplication by the positive natura
 \begin{lemma}\label{split_first_and_last}\lean{split_first_and_last_factor_of_product}\leanok
 Let $a$ and $b$ be elements of a semigroup $S$.
 
-For all $n > 1$, $(a*b)^n = a * (b+a)^(n-1) * b$.
+For all $n > 1$, $(a*b)^n = a * (b+a)^{n-1} * b$.
 \end{lemma}
 \begin{proof}
-Let $n=2$. Then $(a+b)^2 = a * (b*a)^(2-1) * b$.
+Let $n=2$. Then $(a+b)^2 = a * (b*a)^{2-1} * b$.
 
 Assume that the statement holds for $n$.
-Then we have that $(a*b)^(n+1) = a * b * (a*b)^n = a * b * a * (b*a)^(n-1) * b = a * (b*a)^n * b$.
+Then we have that $(a*b)^{n+1} = a * b * (a*b)^n = a * b * a * (b*a)^{n-1} * b = a * (b*a)^n * b$.
 \end{proof}
 
 \begin{lemma}\label{thm:comm_ineq}\lean{comm_factor_le, comm_swap_le, comm_dist_le}\leanok
@@ -120,20 +120,20 @@ If $n=1$, then we are done.
 Assume that the statement holds for $n$.
 Then we have that
 \begin{align}
-a^(n+1) + b^(n+1) &= a * a^n * b^n * b \\
+a^{n+1} + b^{n+1} &= a * a^n * b^n * b \\
 \text{by the induction hypothesis}\\
 &< a * (a * b)^n * b \\
 \text{since $a*b < b*a$}\\
 &< a * (b * a)^n * b \\
 \text{by the previous lemma}\\
-&= (a * b)^(n+1) \\
-&< (b * a)^(n+1) \\
+&= (a * b)^{n+1} \\
+&< (b * a)^{n+1} \\
 \text{by the previous lemma}\\
 &= b * (a * b)^n * a \\
 &< b * (b * a)^n * a \\
 \text{by the induction hypothesis}\\
 &< b * b^n * a^n * a \\
-&= b^(n+1) * a^(n+1)
+&= b^{n+1} * a^{n+1}
 \end{align}
 \end{proof}
 
@@ -141,7 +141,7 @@ a^(n+1) + b^(n+1) &= a * a^n * b^n * b \\
 \uses{def:positive, def:negative}
 Let $a$ and $b$ be elements of an ordered semigroup $S$ that are not one.
 
-Then $a$ is said to be Archimedean with respect to $b$
+Then $a$ is said to be \textbf{Archimedean with respect to} $b$
 if there exists an $N\in \mathbb{N}^+$ such that for $n > N$,
 the inequality $b < a^n$ holds if $b$ is positive,
 and the inequality $b > a^n$ holds if $b$ is negative.
@@ -149,18 +149,18 @@ and the inequality $b > a^n$ holds if $b$ is negative.
 
 \begin{definition}\label{def:arch}\lean{is_archimedean}\leanok
 \uses{def:one, def:arch_wrt}
-An ordered semigroup is Archimedean if any two of its elements
+An ordered semigroup is \textbf{Archimedean} if any two of its elements
 of the same sign are mutually Archimedean.
 \end{definition}
 
 \begin{definition}\label{def:anomalous_pair}\lean{anomalous_pair}\leanok
 Let $a$ and $b$ be elements of an ordered semigroup $S$.
 
-Then $a$ and $b$ are said to form an anomalous pair
+Then $a$ and $b$ are said to form an \textbf{anomalous pair}
 if for all $n\in \mathbb{N}^+$, one of the following holds
 \begin{align}
-a^n < b^n < a^(n+1) \\
-a^n > b^n > a^(n+1)
+a^n < b^n < a^{n+1} \\
+a^n > b^n > a^{n+1}
 \end{align}
 \end{definition}
 
@@ -183,7 +183,7 @@ a^n + b^n \le (a*b)^n \le b^n + a^n
 \]
 which means that, since $a^n < b$,
 \[
-b^n < (a*b)^n < b^(n+1)
+b^n < (a*b)^n < b^{n+1}
 \]
 And so $b$ and $a*b$ form an anomalous pair.
 
