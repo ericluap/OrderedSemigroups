@@ -1097,7 +1097,7 @@
 
   </div>
 </div>
-<div class="theorem_thmwrapper theorem-style-plain" id="a0000000014">
+<div class="theorem_thmwrapper theorem-style-plain" id="non_anomalous_comm_and_arch">
   <div class="theorem_thmheading">
     <span class="theorem_thmcaption">
     Theorem
@@ -1108,21 +1108,62 @@
         </div>
     <div class="thm_header_hidden_extras">
 
-    <a class="icon proof" href="index.html#a0000000014">#</a>
+    <a class="icon proof" href="index.html#non_anomalous_comm_and_arch">#</a>
     
-    <a class="icon proof" href="index.html#a0000000015"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+    <a class="icon proof" href="index.html#a0000000014"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
 </a>
     
     
+    <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
+</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Uses</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="index.html#def:anomalous_pair">Definition 10</a></li>
+          
+          <li><a href="index.html#def:arch">Definition 9</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/not_anomalous_comm_and_arch" class="lean_decl">not_anomalous_comm_and_arch</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
     
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p>A linear ordered cancel semigroup without anomalous pairs is an Archimedean commutative semigroup. </p>
+  <p> A linear ordered cancel semigroup without anomalous pairs is an Archimedean commutative semigroup. </p>
 
   </div>
 </div>
-<div class="proof_wrapper" id="a0000000015">
+<div class="proof_wrapper" id="a0000000014">
   <div class="proof_heading">
     <span class="proof_caption">
     Proof
@@ -1130,29 +1171,29 @@
     <span class="expand-proof">▶</span>
   </div>
   <div class="proof_content">
-  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). If either \(a\) or \(b\) is zero, then they commute. </p>
-<p>We begin with the case that \(a\) and \(b\) are positive. If \(a + b {\lt} b + a\), then for all \(n\in \mathbb {N}^+\), we have that </p>
-<div class="displaymath" id="a0000000016">
-  \begin{align}  (n+1)(a+b) & = a + n(b+a) + b \\ & {\gt} n(b+a) + b \\ & {\gt} n(b+a) \\ & {\gt} n(a+b) \end{align}
+  <p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). If either \(a\) or \(b\) is one, then they commute. </p>
+<p>We begin with the case that \(a\) and \(b\) are positive. If \(a * b {\lt} b * a\), then for all \(n\in \mathbb {N}^+\), we have that </p>
+<div class="displaymath" id="a0000000015">
+  \begin{align}  (a*b)^{n+1} & = a * (b*a)^n * b \\ & {\gt} (b*a)^n * b \\ & {\gt} (b*a)^n \\ & {\gt} (a*b)^n \end{align}
 </div>
-<p> And so \(a+b\) and \(b+a\) form an anomalous pair. </p>
-<p>The same for the case that \(b + a {\lt} a + b\). Therefore, we must have that \(a+b = b+a\). </p>
+<p> And so \(a*b\) and \(b*a\) form an anomalous pair. </p>
+<p>The same for the case that \(b * a {\lt} a * b\). Therefore, we must have that \(a*b = b*a\). </p>
 <p>The case where \(a\) and \(b\) are negative follows similarly. </p>
-<p>We now look at the case where \(a\) is negative and \(b\) is positive. If the element \(0\) exists and \(a+b = 0\), then \(a + b + a = a\) and so \(b+a = 0\). Therefore, \(a\) and \(b\) commute. </p>
-<p>If \(a + b\) is positive, then </p>
-<div class="displaymath" id="a0000000017">
-  \begin{align}  (a+b) + (a+b) & {\gt} a + b \\ (b + a) + b & {\gt} b \\ b + a & {\gt} 0 \end{align}
+<p>We now look at the case where \(a\) is negative and \(b\) is positive. If the element \(1\) exists and \(a*b = 1\), then \(a * b * a = a\) and so \(b*a = 1\). Therefore, \(a\) and \(b\) commute. </p>
+<p>If \(a * b\) is positive, then </p>
+<div class="displaymath" id="a0000000016">
+  \begin{align}  (a*b) * (a*b) & {\gt} a * b \\ (b * a) * b & {\gt} b \\ b * a & {\gt} 0 \end{align}
 </div>
 <p>We already showed that positive elements commute and so </p>
+<div class="displaymath" id="a0000000017">
+  \[  (b*a) * b = b * (b * a) \]
+</div>
+<p>Now we look at the case where \(a*b {\lt} b*a\). Then we have that </p>
 <div class="displaymath" id="a0000000018">
-  \[  (b+a) + b = b + (b + a) \]
+  \begin{align}  (a * b)^2 & = a * ((b*a) * b) \\ & = a * (b * (b * a)) \\ & = (a * b) * (b * a) \\ & {\gt} (a * b) * (a * b) \\ & = (a * b)^2 \end{align}
 </div>
-<p>Now we look at the case where \(a+b {\lt} b+a\). Then we have that </p>
-<div class="displaymath" id="a0000000019">
-  \begin{align}  2(a + b) & = a + ((b+a) + b) \\ & = a + (b + (b + a)) \\ & = (a + b) + (b + a) \\ & {\gt} (a + b) + (a + b) \\ & = 2(a + b) \end{align}
-</div>
-<p> Which is a contradiction. We get a similar contradiction in the case that \(b+a {\lt} a+b\). Therefore, \(a+b = b+a\). </p>
-<p>The case where \(a+b\) is negative follows similarly. The case where \(b\) is negative and \(a\) is positive is symmetric. </p>
+<p> Which is a contradiction. We get a similar contradiction in the case that \(b*a {\lt} a*b\). Therefore, \(a*b = b*a\). </p>
+<p>The case where \(a*b\) is negative follows similarly. The case where \(b\) is negative and \(a\) is positive is symmetric. </p>
 
   </div>
 </div>
