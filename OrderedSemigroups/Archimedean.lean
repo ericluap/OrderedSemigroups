@@ -143,4 +143,6 @@ theorem non_archimedean_anomalous_pair (non_arch : ¬is_archimedean (α := α)) 
     · exact neg_not_archimedean_anomalous_pair neg_a neg_b hab h
     · exact neg_not_archimedean_anomalous_pair' neg_a neg_b hab h
 
+theorem not_anomalous_pair_commutative (not_anomalous : ¬has_anomalous_pair (α := α)) (a b : α) : a * b = b * a := by sorry
+
 end LinearOrderedCancelSemigroup

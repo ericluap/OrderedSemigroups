@@ -12,103 +12,108 @@ N. G. Alimov.
 
 \section{Content}
 
-\begin{definition}\label{OrderedSemigroup}
-An ordered semigroup $S$ is a semigroup with a linear order such that
-for all $a,b,c\in S$ such that $a < b$
+\begin{definition}\label{def:OrderedSemigroup}\lean{OrderedSemigroup}\leanok
+An \textbf{ordered semigroup} $S$ is a semigroup with a partial order such that
+for all $a,b,c\in S$ such that $a \le b$
 \begin{enumerate}
-    \item $a + c < b + c$
-    \item $c + a < c + b$
+    \item $a * c \le b * c$ and
+    \item $c * a \le c * b$
 \end{enumerate}
 \end{definition}
 
-\begin{theorem}
-An ordered semigroup is cancellative.
-\end{theorem}
-\begin{proof}
-Let $S$ be an ordered semigroup. Let $a,b,c\in S$.
+\begin{definition}\label{def:OrderedCancelSemigroup}\lean{OrderedCancelSemigroup}\leanok
+\uses{def:OrderedSemigroup}
+An \textbf{ordered cancel semigroup} $S$ is an ordered semigroup such that for all $a,b,c\in S$,
+if $a * b \le a * c$ then $b \le c$ and if $b * a \le c * a$ then $b \le c$.
+\end{defintion}
 
-Assume that $a + c = b + c$.
-Then if $a < b$ we have that $a + c < b + c$ which is a contradiction.
-Likewise, if $b < a$, we have that $b + c < a + c$ which is a contradiction.
-Therefore, $a = b$.
+\begin{definition}\label{def:LinearOrderedSemigroup}\lean{LinearOrderedSemigroup}\leanok
+\uses{def:OrderedSemigroup}
+A \textbf{linear ordered semigroup} is an ordered semigroup where its partial order is a linear order.
+\end{definition}
 
-Assume that $c + a = c + b$.
-Then if $a < b$ we have that $c + a < c + b$ which is a contradiction.
-Likewise, if $b < a$, we have that $c + b < c + a$ which is a contradiction.
-Therefore, $a = b$.
-\end{proof}
+\begin{definition}\label{def:LinearOrderedCancelSemigroup}\lean{LinearOrderedCancelSemigroup}\leanok
+\uses{def:OrderedCancelSemigroup}
+A \textbf{linear ordered cancel semigroup} is an ordered cancel semigroup where its partial order is a linear order.
+\end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:positive}\lean{is_positive}\leanok
+\uses{def:OrderedSemigroup}
 An element $a$ of an ordered semigroup $S$ 
-is positive if for all $x\in S$, $a+x > x$.
+is \textbf{positive} if for all $x\in S$, $a*x \gt x$.
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:negative}\lean{is_negative}\leanok
+\uses{def:OrderedSemigroup}
 An element $a$ of an ordered semigroup $S$
-is negative if for all $x\in S$, $a+x < x$.
+is \textbf{negative} if for all $x\in S$, $a*x \lt x$.
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:one}\lean{is_one}\leanok
+\uses{def:OrderedSemigroup}
 An element $a$ of an ordered semigroup $S$
-is zero if for all $x\in S$, $a+x = x$.
+is \textbf{one} if for all $x\in S$, $a*x = x$.
 \end{definition}
 
-\begin{theorem}
-Each element $a$ of an ordered semigroup $S$ is either positive, negative, or zero.
+\begin{theorem}\label{thm:pos_neg_or_one}\lean{pos_neg_or_one}\leanok
+\uses{def:positive, def:negative, def:one, def:LinearOrderedCancelSemigroup}
+Each element $a$ of a linear ordered cancel semigroup $S$ is either positive, negative, or one.
 \end{theorem}
 \begin{proof}
 Let $a\in S$ and $b\in S$. Since the $S$ is a linear order we have one of the following cases.
 
-The first case is that $b + a > b$. Then for all $x\in S$ we have that $b + a + x > b + x$
-and so $a + x > x$. Therefore, $a$ is positive.
+The first case is that $b * a > b$. Then for all $x\in S$ we have that $b * a * x > b * x$
+and so $a * x > x$. Therefore, $a$ is positive.
 
-The second case is that $b + a < b$. Then for all $x\in S$ we have that $b + a + x < b + x$
-and so $a + x < x$. Therefore, $a$ is negative.
+The second case is that $b * a < b$. Then for all $x\in S$ we have that $b * a * x < b * x$
+and so $a * x < x$. Therefore, $a$ is negative.
 
-The last case is that $b + a = b$. Then for all $x\in S$ we have that $b + a + x = b + x$
-and so $a + x = x$. Therefore, $a$ is zero.
+The last case is that $b * a = b$. Then for all $x\in S$ we have that $b * a * x = b * x$
+and so $a * x = x$. Therefore, $a$ is zero.
 \end{proof}
 
-\begin{corollary}
-Let $a$ be an element of an ordered semigroup $S$. 
+\begin{corollary}\label{lem:right_forall}\lean{pos_right_pos_forall, neg_right_neg_forall, one_right_one_forall}\leanok
+\uses{def:positive, def:negative, def:one}
+Let $a$ be an element of a linear ordered cancel semigroup $S$. 
 
-If there exists a $b\in S$ such that $b + a > b$, $a$ is positive.
+If there exists a $b\in S$ such that $b * a > b$, $a$ is positive.
 
-If there exists a $b\in S$ such that $b + a < b$, $a$ is negative.
+If there exists a $b\in S$ such that $b * a < b$, $a$ is negative.
 
-If there exists a $b\in S$ such that $b + a = b$, $a$ is zero.
+If there exists a $b\in S$ such that $b * a = b$, $a$ is one.
 \end{corollary}
 
-\begin{theorem}
-Let $a$ and $b$ be elements of an ordered semigroup $S$.
+\begin{theorem}\label{thm:neg_lt_pos}\lean{neg_lt_pos}\leanok
+\uses{def:positive, def:negative}
+Let $a$ and $b$ be elements of a linear ordered cancel semigroup $S$.
 
 If $a$ is negative and $b$ is positive, then $a < b$.
 \end{theorem}
 \begin{proof}
-Let $a$ be negative and $b$ be positive. Then for all $x\in S$ we have that $a + x < x$.
-Likewise, for all $x\in S$ we have that $b + x > x$.
-Therefore, $a + x < x < b + x$ and so $a < b$.
+Let $a$ be negative and $b$ be positive. Then for all $x\in S$ we have that $a * x < x$.
+Likewise, for all $x\in S$ we have that $b * x > x$.
+Therefore, $a * x < x < b + x$ and so $a < b$.
 \end{proof}
 
 We endow our ordered semigroup with scalar multiplication by the positive natural numbers.
 
-\begin{lemma}\label{DecreaseN}
-Let $a$ and $b$ be elements of an ordered semigroup $S$.
+\begin{lemma}\label{split_first_and_last}\lean{split_first_and_last_factor_of_product}\leanok
+Let $a$ and $b$ be elements of a semigroup $S$.
 
-For all $n > 1$, $n(a+b) = a + (n-1)(b+a) + b$.
+For all $n > 1$, $(a*b)^n = a * (b+a)^(n-1) * b$.
 \end{lemma}
 \begin{proof}
-Let $n=2$. Then $2(a+b) = a + (2-1)(b+a) + b$.
+Let $n=2$. Then $(a+b)^2 = a * (b*a)^(2-1) * b$.
 
 Assume that the statement holds for $n$.
-Then we have that $(n+1)(a+b) = a + b + n(a+b) = a + b + a + (n-1)(b+a) + b = a + n(b+a) + b$.
+Then we have that $(a*b)^(n+1) = a * b * (a*b)^n = a * b * a * (b*a)^(n-1) * b = a * (b*a)^n * b$.
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{thm:comm_ineq}\lean{comm_factor_le, comm_swap_le, comm_dist_le}\leanok
 Let $a$ and $b$ be elements of an ordered semigroup $S$.
 
-If $a + b < b + a$, then for any $n\in \mathbb{N}^+$, we have that
-\[na + nb < n(a+b) < n(b+a) < nb + na\]
+If $a * b < b * a$, then for any $n\in \mathbb{N}^+$, we have that
+\[a^n * b^n < (a*b)^n < (b*a)^n < b^n * a^n\]
 \end{lemma}
 \begin{proof}
 If $n=1$, then we are done.
@@ -116,50 +121,53 @@ If $n=1$, then we are done.
 Assume that the statement holds for $n$.
 Then we have that
 \begin{align}
-(n+1)a + (n+1)b &= a + na + nb + b \\
+a^(n+1) + b^(n+1) &= a * a^n * b^n * b \\
 \text{by the induction hypothesis}\\
-&< a + n(a + b) + b \\
-\text{since $a+b < b+a$}\\
-&< a + n(b + a) + b \\
+&< a * (a * b)^n * b \\
+\text{since $a*b < b*a$}\\
+&< a * (b * a)^n * b \\
 \text{by the previous lemma}\\
-&= (n+1)(a + b) \\
-&< (n+1)(b + a) \\
+&= (a * b)^(n+1) \\
+&< (b * a)^(n+1) \\
 \text{by the previous lemma}\\
-&= b + n(a + b) + a \\
-&< b + n(b + a) + a \\
+&= b * (a * b)^n * a \\
+&< b * (b * a)^n * a \\
 \text{by the induction hypothesis}\\
-&< b + nb + na + a \\
-&= (n+1)b + (n+1)a
+&< b * b^n * a^n * a \\
+&= b^(n+1) * a^(n+1)
 \end{align}
 \end{proof}
 
-\begin{definition}
-Let $a$ and $b$ be elements of an ordered semigroup $S$ that are not zero.
+\begin{definition}\label{def:arch_wrt}\lean{is_archimedean_wrt}\leanok
+\uses{def:positive, def:negative}
+Let $a$ and $b$ be elements of an ordered semigroup $S$ that are not one.
 
 Then $a$ is said to be Archimedean with respect to $b$
 if there exists an $N\in \mathbb{N}^+$ such that for $n > N$,
-the inequality $b < na$ holds if $b$ is positive,
-and the inequality $b > na$ holds if $b$ is negative.
+the inequality $b < a^n$ holds if $b$ is positive,
+and the inequality $b > a^n$ holds if $b$ is negative.
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:arch}\lean{is_archimedean}\leanok
+\uses{def:one, def:arch_wrt}
 An ordered semigroup is Archimedean if any two of its elements
 of the same sign are mutually Archimedean.
 \end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:anomalous_pair}\lean{anomalous_pair}\leanok
 Let $a$ and $b$ be elements of an ordered semigroup $S$.
 
 Then $a$ and $b$ are said to form an anomalous pair
 if for all $n\in \mathbb{N}^+$, one of the following holds
 \begin{align}
-na < nb < (n+1)a \\
-na > nb > (n+1)a
+a^n < b^n < a^(n+1) \\
+a^n > b^n > a^(n+1)
 \end{align}
 \end{definition}
 
-\begin{theorem}
-If $S$ is a non-Archimedean ordered semigroup, then there exists an anomalous pair.
+\begin{theorem}\label{non_arch_anomalous}\lean{non_archimedean_anomalous_pair}\leanok
+\uses{def:anomalous_pair, def:arch}
+If $S$ is a non-Archimedean linear ordered cancel semigroup, then there exists an anomalous pair.
 \end{theorem}
 \begin{proof}
 Since $S$ is non-Archimedean, there exists $a,b\in S$ such that
@@ -167,24 +175,24 @@ $a$ and $b$ have the sign and are not mutually Archimedean.
 
 First, we look at the case where $a$ and $b$ are positive.
 Then since they are not mutually Archimedean, without loss of generality, for all $n\in \mathbb{N}^+$,
-$na < b$.
+$a^n < b$.
 
-Then we either have that $a + b \le b + a$ or that $b+a\le a + b$.
+Then we either have that $a * b \le b * a$ or that $b*a\le a * b$.
 In the first case, we have that
 \[
-na + nb \le n(a+b) \le nb + na
+a^n + b^n \le (a*b)^n \le b^n + a^n
 \]
-which means that, since $na < b$,
+which means that, since $a^n < b$,
 \[
-nb < n(a+b) < (n+1)b
+b^n < (a*b)^n < b^(n+1)
 \]
-And so $b$ and $a+b$ form an anomalous pair.
+And so $b$ and $a*b$ form an anomalous pair.
 
 The other cases follow similarly.
 \end{proof}
 
 \begin{theorem}
-An ordered semigroup without anomalous pairs is an Archimedean commutative semigroup.
+A linear ordered cancel semigroup without anomalous pairs is an Archimedean commutative semigroup.
 \end{theorem}
 \begin{proof}
 Let $a$ and $b$ be elements of an ordered semigroup $S$.

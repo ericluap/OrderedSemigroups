@@ -61,22 +61,22 @@
 <div id="statements">
 
     
-    <div class="dep-modal-container" id="a0000000004_modal">
+    <div class="dep-modal-container" id="a0000000014_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000004" style="display: none">
+  <div class="thm" id="a0000000014" style="display: none">
     <div class="thm_thmheading">
       <span class="theorem_thmcaption">
       Theorem
       </span>
-      <span class="theorem_thmlabel">1</span></div>
-    <div class="thm_thmcontent"><p>An ordered semigroup is cancellative. </p>
+      <span class="theorem_thmlabel">4</span></div>
+    <div class="thm_thmcontent"><p>A linear ordered cancel semigroup without anomalous pairs is an Archimedean commutative semigroup. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000004">LaTeX</a>
+    <a class="latex_link" href="index.html#a0000000014">LaTeX</a>
     
     
   
@@ -91,25 +91,29 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000006_modal">
+    <div class="dep-modal-container" id="def:anomalous_pair_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000006" style="display: none">
+  <div class="thm" id="def:anomalous_pair" style="display: none">
     <div class="thm_thmheading">
       <span class="definition_thmcaption">
       Definition
       </span>
-      <span class="definition_thmlabel">2</span></div>
-    <div class="thm_thmcontent"><p>An element \(a\) of an ordered semigroup \(S\) is positive if for all \(x\in S\), \(a+x {\gt} x\). </p>
+      <span class="definition_thmlabel">10</span></div>
+    <div class="thm_thmcontent"><p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
+<p>Then \(a\) and \(b\) are said to form an anomalous pair if for all \(n\in \mathbb {N}^+\), one of the following holds </p>
+<div class="displaymath" id="a0000000010">
+  \begin{align}  a^n {\lt} b^n {\lt} a^(n+1) \\ a^n {\gt} b^n {\gt} a^(n+1) \end{align}
+</div>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000006">LaTeX</a>
+    <a class="latex_link" href="index.html#def:anomalous_pair">LaTeX</a>
     
     
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/anomalous_pair">Lean</a>
     
     
   
@@ -121,25 +125,25 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000007_modal">
+    <div class="dep-modal-container" id="def:arch_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000007" style="display: none">
+  <div class="thm" id="def:arch" style="display: none">
     <div class="thm_thmheading">
       <span class="definition_thmcaption">
       Definition
       </span>
-      <span class="definition_thmlabel">3</span></div>
-    <div class="thm_thmcontent"><p>An element \(a\) of an ordered semigroup \(S\) is negative if for all \(x\in S\), \(a+x {\lt} x\). </p>
+      <span class="definition_thmlabel">9</span></div>
+    <div class="thm_thmcontent"><p> An ordered semigroup is Archimedean if any two of its elements of the same sign are mutually Archimedean. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000007">LaTeX</a>
+    <a class="latex_link" href="index.html#def:arch">LaTeX</a>
     
     
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/is_archimedean">Lean</a>
     
     
   
@@ -151,25 +155,56 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000008_modal">
+    <div class="dep-modal-container" id="def:arch_wrt_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000008" style="display: none">
+  <div class="thm" id="def:arch_wrt" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">8</span></div>
+    <div class="thm_thmcontent"><p> Let \(a\) and \(b\) be elements of an ordered semigroup \(S\) that are not one. </p>
+<p>Then \(a\) is said to be Archimedean with respect to \(b\) if there exists an \(N\in \mathbb {N}^+\) such that for \(n {\gt} N\), the inequality \(b {\lt} a^n\) holds if \(b\) is positive, and the inequality \(b {\gt} a^n\) holds if \(b\) is negative. </p>
+</div>
+
+    <a class="latex_link" href="index.html#def:arch_wrt">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/is_archimedean_wrt">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:LinearOrderedCancelSemigroup_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:LinearOrderedCancelSemigroup" style="display: none">
     <div class="thm_thmheading">
       <span class="definition_thmcaption">
       Definition
       </span>
       <span class="definition_thmlabel">4</span></div>
-    <div class="thm_thmcontent"><p>An element \(a\) of an ordered semigroup \(S\) is zero if for all \(x\in S\), \(a+x = x\). </p>
+    <div class="thm_thmcontent"><p> A <b class="bfseries">linear ordered cancel semigroup</b> is an ordered cancel semigroup where its partial order is a linear order. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000008">LaTeX</a>
+    <a class="latex_link" href="index.html#def:LinearOrderedCancelSemigroup">LaTeX</a>
     
     
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/LinearOrderedCancelSemigroup">Lean</a>
     
     
   
@@ -181,25 +216,25 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000009_modal">
+    <div class="dep-modal-container" id="def:LinearOrderedSemigroup_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000009" style="display: none">
+  <div class="thm" id="def:LinearOrderedSemigroup" style="display: none">
     <div class="thm_thmheading">
-      <span class="theorem_thmcaption">
-      Theorem
+      <span class="definition_thmcaption">
+      Definition
       </span>
-      <span class="theorem_thmlabel">2</span></div>
-    <div class="thm_thmcontent"><p>Each element \(a\) of an ordered semigroup \(S\) is either positive, negative, or zero. </p>
+      <span class="definition_thmlabel">3</span></div>
+    <div class="thm_thmcontent"><p> A <b class="bfseries">linear ordered semigroup</b> is an ordered semigroup where its partial order is a linear order. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000009">LaTeX</a>
+    <a class="latex_link" href="index.html#def:LinearOrderedSemigroup">LaTeX</a>
     
     
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/LinearOrderedSemigroup">Lean</a>
     
     
   
@@ -211,28 +246,195 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000011_modal">
+    <div class="dep-modal-container" id="def:negative_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000011" style="display: none">
+  <div class="thm" id="def:negative" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">6</span></div>
+    <div class="thm_thmcontent"><p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">negative</b> if for all \(x\in S\), \(a*x \lt x\). </p>
+</div>
+
+    <a class="latex_link" href="index.html#def:negative">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/is_negative">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:one_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:one" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">7</span></div>
+    <div class="thm_thmcontent"><p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">one</b> if for all \(x\in S\), \(a*x = x\). </p>
+</div>
+
+    <a class="latex_link" href="index.html#def:one">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/is_one">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:OrderedCancelSemigroup_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:OrderedCancelSemigroup" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">2</span></div>
+    <div class="thm_thmcontent"><p> An <b class="bfseries">ordered cancel semigroup</b> \(S\) is an ordered semigroup such that for all \(a,b,c\in S\), if \(a * b \le a * c\) then \(b \le c\) and if \(b * a \le c * a\) then \(b \le c\). </p>
+</div>
+
+    <a class="latex_link" href="index.html#def:OrderedCancelSemigroup">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/OrderedCancelSemigroup">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:OrderedSemigroup_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:OrderedSemigroup" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">1</span></div>
+    <div class="thm_thmcontent"><p>An <b class="bfseries">ordered semigroup</b> \(S\) is a semigroup with a partial order such that for all \(a,b,c\in S\) such that \(a \le b\) </p>
+<ol class="enumerate">
+  <li><p>\(a * c \le b * c\) and </p>
+</li>
+  <li><p>\(c * a \le c * b\) </p>
+</li>
+</ol>
+</div>
+
+    <a class="latex_link" href="index.html#def:OrderedSemigroup">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/OrderedSemigroup">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:positive_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:positive" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">5</span></div>
+    <div class="thm_thmcontent"><p> An element \(a\) of an ordered semigroup \(S\) is <b class="bfseries">positive</b> if for all \(x\in S\), \(a*x \gt x\). </p>
+</div>
+
+    <a class="latex_link" href="index.html#def:positive">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/is_positive">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="lem:right_forall_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="lem:right_forall" style="display: none">
     <div class="thm_thmheading">
       <span class="corollary_thmcaption">
       Corollary
       </span>
       <span class="corollary_thmlabel">1</span></div>
-    <div class="thm_thmcontent"><p>Let \(a\) be an element of an ordered semigroup \(S\). </p>
-<p>If there exists a \(b\in S\) such that \(b + a {\gt} b\), \(a\) is positive. </p>
-<p>If there exists a \(b\in S\) such that \(b + a {\lt} b\), \(a\) is negative. </p>
-<p>If there exists a \(b\in S\) such that \(b + a = b\), \(a\) is zero. </p>
+    <div class="thm_thmcontent"><p> Let \(a\) be an element of a linear ordered cancel semigroup \(S\). </p>
+<p>If there exists a \(b\in S\) such that \(b * a {\gt} b\), \(a\) is positive. </p>
+<p>If there exists a \(b\in S\) such that \(b * a {\lt} b\), \(a\) is negative. </p>
+<p>If there exists a \(b\in S\) such that \(b * a = b\), \(a\) is one. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000011">LaTeX</a>
+    <a class="latex_link" href="index.html#lem:right_forall">LaTeX</a>
     
     
-  
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/pos_right_pos_forall" class="lean_decl">pos_right_pos_forall</a></li>
+        
+           <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/neg_right_neg_forall" class="lean_decl">neg_right_neg_forall</a></li>
+        
+           <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/one_right_one_forall" class="lean_decl">one_right_one_forall</a></li>
+        
+      </ul>
+  </div>
     
     
   
@@ -244,26 +446,25 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000012_modal">
+    <div class="dep-modal-container" id="non_arch_anomalous_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000012" style="display: none">
+  <div class="thm" id="non_arch_anomalous" style="display: none">
     <div class="thm_thmheading">
       <span class="theorem_thmcaption">
       Theorem
       </span>
       <span class="theorem_thmlabel">3</span></div>
-    <div class="thm_thmcontent"><p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
-<p>If \(a\) is negative and \(b\) is positive, then \(a {\lt} b\). </p>
+    <div class="thm_thmcontent"><p> If \(S\) is a non-Archimedean linear ordered cancel semigroup, then there exists an anomalous pair. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000012">LaTeX</a>
+    <a class="latex_link" href="index.html#non_arch_anomalous">LaTeX</a>
     
     
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/non_archimedean_anomalous_pair">Lean</a>
     
     
   
@@ -275,29 +476,71 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000015_modal">
+    <div class="dep-modal-container" id="split_first_and_last_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000015" style="display: none">
+  <div class="thm" id="split_first_and_last" style="display: none">
+    <div class="thm_thmheading">
+      <span class="lemma_thmcaption">
+      Lemma
+      </span>
+      <span class="lemma_thmlabel">1</span></div>
+    <div class="thm_thmcontent"><p>Let \(a\) and \(b\) be elements of a semigroup \(S\). </p>
+<p>For all \(n {\gt} 1\), \((a*b)^n = a * (b+a)^(n-1) * b\). </p>
+</div>
+
+    <a class="latex_link" href="index.html#split_first_and_last">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/split_first_and_last_factor_of_product">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:comm_ineq_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:comm_ineq" style="display: none">
     <div class="thm_thmheading">
       <span class="lemma_thmcaption">
       Lemma
       </span>
       <span class="lemma_thmlabel">2</span></div>
     <div class="thm_thmcontent"><p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
-<p>If \(a + b {\lt} b + a\), then for any \(n\in \mathbb {N}^+\), we have that </p>
-<div class="displaymath" id="a0000000017">
-  \[ na + nb {\lt} n(a+b) {\lt} n(b+a) {\lt} nb + na \]
+<p>If \(a * b {\lt} b * a\), then for any \(n\in \mathbb {N}^+\), we have that </p>
+<div class="displaymath" id="a0000000008">
+  \[ a^n * b^n {\lt} (a*b)^n {\lt} (b*a)^n {\lt} b^n * a^n \]
 </div>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000015">LaTeX</a>
+    <a class="latex_link" href="index.html#thm:comm_ineq">LaTeX</a>
     
     
-  
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/comm_factor_le" class="lean_decl">comm_factor_le</a></li>
+        
+           <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/comm_swap_le" class="lean_decl">comm_swap_le</a></li>
+        
+           <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/comm_dist_le" class="lean_decl">comm_dist_le</a></li>
+        
+      </ul>
+  </div>
     
     
   
@@ -309,120 +552,26 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000019_modal">
+    <div class="dep-modal-container" id="thm:neg_lt_pos_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000019" style="display: none">
-    <div class="thm_thmheading">
-      <span class="definition_thmcaption">
-      Definition
-      </span>
-      <span class="definition_thmlabel">5</span></div>
-    <div class="thm_thmcontent"><p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\) that are not zero. </p>
-<p>Then \(a\) is said to be Archimedean with respect to \(b\) if there exists an \(N\in \mathbb {N}^+\) such that for \(n {\gt} N\), the inequality \(b {\lt} na\) holds if \(b\) is positive, and the inequality \(b {\gt} na\) holds if \(b\) is negative. </p>
-</div>
-
-    <a class="latex_link" href="index.html#a0000000019">LaTeX</a>
-    
-    
-  
-    
-    
-  
-    
-  </div>
-    
-      </div>
-    </div>
-
-
-    
-    <div class="dep-modal-container" id="a0000000020_modal">
-      <div class="dep-modal-content">
-          <button class="dep-closebtn">
-<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
-</button>
-        
-  <div class="thm" id="a0000000020" style="display: none">
-    <div class="thm_thmheading">
-      <span class="definition_thmcaption">
-      Definition
-      </span>
-      <span class="definition_thmlabel">6</span></div>
-    <div class="thm_thmcontent"><p>An ordered semigroup is Archimedean if any two of its elements of the same sign are mutually Archimedean. </p>
-</div>
-
-    <a class="latex_link" href="index.html#a0000000020">LaTeX</a>
-    
-    
-  
-    
-    
-  
-    
-  </div>
-    
-      </div>
-    </div>
-
-
-    
-    <div class="dep-modal-container" id="a0000000021_modal">
-      <div class="dep-modal-content">
-          <button class="dep-closebtn">
-<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
-</button>
-        
-  <div class="thm" id="a0000000021" style="display: none">
-    <div class="thm_thmheading">
-      <span class="definition_thmcaption">
-      Definition
-      </span>
-      <span class="definition_thmlabel">7</span></div>
-    <div class="thm_thmcontent"><p>Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
-<p>Then \(a\) and \(b\) are said to form an anomalous pair if for all \(n\in \mathbb {N}^+\), one of the following holds </p>
-<div class="displaymath" id="a0000000022">
-  \begin{align}  na {\lt} nb {\lt} (n+1)a \\ na {\gt} nb {\gt} (n+1)a \end{align}
-</div>
-</div>
-
-    <a class="latex_link" href="index.html#a0000000021">LaTeX</a>
-    
-    
-  
-    
-    
-  
-    
-  </div>
-    
-      </div>
-    </div>
-
-
-    
-    <div class="dep-modal-container" id="a0000000023_modal">
-      <div class="dep-modal-content">
-          <button class="dep-closebtn">
-<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
-</button>
-        
-  <div class="thm" id="a0000000023" style="display: none">
+  <div class="thm" id="thm:neg_lt_pos" style="display: none">
     <div class="thm_thmheading">
       <span class="theorem_thmcaption">
       Theorem
       </span>
-      <span class="theorem_thmlabel">4</span></div>
-    <div class="thm_thmcontent"><p>If \(S\) is a non-Archimedean ordered semigroup, then there exists an anomalous pair. </p>
+      <span class="theorem_thmlabel">2</span></div>
+    <div class="thm_thmcontent"><p> Let \(a\) and \(b\) be elements of a linear ordered cancel semigroup \(S\). </p>
+<p>If \(a\) is negative and \(b\) is positive, then \(a {\lt} b\). </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000023">LaTeX</a>
+    <a class="latex_link" href="index.html#thm:neg_lt_pos">LaTeX</a>
     
     
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/neg_lt_pos">Lean</a>
     
     
   
@@ -434,92 +583,25 @@
 
 
     
-    <div class="dep-modal-container" id="a0000000027_modal">
+    <div class="dep-modal-container" id="thm:pos_neg_or_one_modal">
       <div class="dep-modal-content">
           <button class="dep-closebtn">
 <svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
 </button>
         
-  <div class="thm" id="a0000000027" style="display: none">
+  <div class="thm" id="thm:pos_neg_or_one" style="display: none">
     <div class="thm_thmheading">
       <span class="theorem_thmcaption">
       Theorem
       </span>
-      <span class="theorem_thmlabel">5</span></div>
-    <div class="thm_thmcontent"><p>An ordered semigroup without anomalous pairs is an Archimedean commutative semigroup. </p>
+      <span class="theorem_thmlabel">1</span></div>
+    <div class="thm_thmcontent"><p> Each element \(a\) of a linear ordered cancel semigroup \(S\) is either positive, negative, or one. </p>
 </div>
 
-    <a class="latex_link" href="index.html#a0000000027">LaTeX</a>
+    <a class="latex_link" href="index.html#thm:pos_neg_or_one">LaTeX</a>
     
     
-  
-    
-    
-  
-    
-  </div>
-    
-      </div>
-    </div>
-
-
-    
-    <div class="dep-modal-container" id="DecreaseN_modal">
-      <div class="dep-modal-content">
-          <button class="dep-closebtn">
-<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
-</button>
-        
-  <div class="thm" id="DecreaseN" style="display: none">
-    <div class="thm_thmheading">
-      <span class="lemma_thmcaption">
-      Lemma
-      </span>
-      <span class="lemma_thmlabel">1</span></div>
-    <div class="thm_thmcontent"><p> Let \(a\) and \(b\) be elements of an ordered semigroup \(S\). </p>
-<p>For all \(n {\gt} 1\), \(n(a+b) = a + (n-1)(b+a) + b\). </p>
-</div>
-
-    <a class="latex_link" href="index.html#DecreaseN">LaTeX</a>
-    
-    
-  
-    
-    
-  
-    
-  </div>
-    
-      </div>
-    </div>
-
-
-    
-    <div class="dep-modal-container" id="OrderedSemigroup_modal">
-      <div class="dep-modal-content">
-          <button class="dep-closebtn">
-<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
-</button>
-        
-  <div class="thm" id="OrderedSemigroup" style="display: none">
-    <div class="thm_thmheading">
-      <span class="definition_thmcaption">
-      Definition
-      </span>
-      <span class="definition_thmlabel">1</span></div>
-    <div class="thm_thmcontent"><p> An ordered semigroup \(S\) is a semigroup with a linear order such that for all \(a,b,c\in S\) such that \(a {\lt} b\) </p>
-<ol class="enumerate">
-  <li><p>\(a + c {\lt} b + c\) </p>
-</li>
-  <li><p>\(c + a {\lt} c + b\) </p>
-</li>
-</ol>
-</div>
-
-    <a class="latex_link" href="index.html#OrderedSemigroup">LaTeX</a>
-    
-    
-  
+  <a class="lean_link lean_decl" href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/pos_neg_or_one">Lean</a>
     
     
   
@@ -547,7 +629,7 @@ graphContainer.graphviz({useWorker: true})
     .width(width)
     .height(height)
     .fit(true)
-    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	a0000000011	[color=blue,		label=a0000000011,		shape=ellipse];	a0000000023	[color=blue,		fillcolor="#A3D6FF",		label=a0000000023,		shape=ellipse,		style=filled];	a0000000027	[color=blue,		fillcolor="#A3D6FF",		label=a0000000027,		shape=ellipse,		style=filled];	a0000000012	[color=blue,		fillcolor="#A3D6FF",		label=a0000000012,		shape=ellipse,		style=filled];	OrderedSemigroup	[color=blue,		fillcolor="#A3D6FF",		label=OrderedSemigroup,		shape=box,		style=filled];	a0000000008	[color=blue,		fillcolor="#A3D6FF",		label=a0000000008,		shape=box,		style=filled];	a0000000007	[color=blue,		fillcolor="#A3D6FF",		label=a0000000007,		shape=box,		style=filled];	a0000000006	[color=blue,		fillcolor="#A3D6FF",		label=a0000000006,		shape=box,		style=filled];	a0000000019	[color=blue,		fillcolor="#A3D6FF",		label=a0000000019,		shape=box,		style=filled];	a0000000020	[color=blue,		fillcolor="#A3D6FF",		label=a0000000020,		shape=box,		style=filled];	a0000000021	[color=blue,		fillcolor="#A3D6FF",		label=a0000000021,		shape=box,		style=filled];	DecreaseN	[color=blue,		fillcolor="#A3D6FF",		label=DecreaseN,		shape=ellipse,		style=filled];	a0000000015	[color=blue,		fillcolor="#A3D6FF",		label=a0000000015,		shape=ellipse,		style=filled];	a0000000004	[color=blue,		fillcolor="#A3D6FF",		label=a0000000004,		shape=ellipse,		style=filled];	a0000000009	[color=blue,		fillcolor="#A3D6FF",		label=a0000000009,		shape=ellipse,		style=filled];}`)
+    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"lem:right_forall"	[color=green,		label=right_forall,		shape=ellipse];	"thm:pos_neg_or_one"	[color=green,		fillcolor="#A3D6FF",		label=pos_neg_or_one,		shape=ellipse,		style=filled];	"def:OrderedSemigroup"	[color=green,		fillcolor="#B0ECA3",		label=OrderedSemigroup,		shape=box,		style=filled];	"def:OrderedCancelSemigroup"	[color=green,		fillcolor="#B0ECA3",		label=OrderedCancelSemigroup,		shape=box,		style=filled];	"def:OrderedSemigroup" -> "def:OrderedCancelSemigroup"	[style=dashed];	"def:LinearOrderedSemigroup"	[color=green,		fillcolor="#B0ECA3",		label=LinearOrderedSemigroup,		shape=box,		style=filled];	"def:OrderedSemigroup" -> "def:LinearOrderedSemigroup"	[style=dashed];	"def:positive"	[color=green,		fillcolor="#B0ECA3",		label=positive,		shape=box,		style=filled];	"def:OrderedSemigroup" -> "def:positive"	[style=dashed];	"def:negative"	[color=green,		fillcolor="#B0ECA3",		label=negative,		shape=box,		style=filled];	"def:OrderedSemigroup" -> "def:negative"	[style=dashed];	"def:one"	[color=green,		fillcolor="#B0ECA3",		label=one,		shape=box,		style=filled];	"def:OrderedSemigroup" -> "def:one"	[style=dashed];	"def:LinearOrderedCancelSemigroup"	[color=green,		fillcolor="#B0ECA3",		label=LinearOrderedCancelSemigroup,		shape=box,		style=filled];	"def:OrderedCancelSemigroup" -> "def:LinearOrderedCancelSemigroup"	[style=dashed];	"def:positive" -> "lem:right_forall"	[style=dashed];	"def:positive" -> "thm:pos_neg_or_one"	[style=dashed];	"def:arch_wrt"	[color=green,		fillcolor="#B0ECA3",		label=arch_wrt,		shape=box,		style=filled];	"def:positive" -> "def:arch_wrt"	[style=dashed];	"thm:neg_lt_pos"	[color=green,		fillcolor="#A3D6FF",		label=neg_lt_pos,		shape=ellipse,		style=filled];	"def:positive" -> "thm:neg_lt_pos"	[style=dashed];	"def:negative" -> "lem:right_forall"	[style=dashed];	"def:negative" -> "thm:pos_neg_or_one"	[style=dashed];	"def:negative" -> "def:arch_wrt"	[style=dashed];	"def:negative" -> "thm:neg_lt_pos"	[style=dashed];	"def:one" -> "lem:right_forall"	[style=dashed];	"def:one" -> "thm:pos_neg_or_one"	[style=dashed];	"def:arch"	[color=green,		fillcolor="#B0ECA3",		label=arch,		shape=box,		style=filled];	"def:one" -> "def:arch"	[style=dashed];	"def:LinearOrderedCancelSemigroup" -> "thm:pos_neg_or_one"	[style=dashed];	"def:arch_wrt" -> "def:arch"	[style=dashed];	non_arch_anomalous	[color=green,		fillcolor="#A3D6FF",		label=non_arch_anomalous,		shape=ellipse,		style=filled];	"def:arch" -> non_arch_anomalous	[style=dashed];	"def:anomalous_pair"	[color=green,		fillcolor="#B0ECA3",		label=anomalous_pair,		shape=box,		style=filled];	"def:anomalous_pair" -> non_arch_anomalous	[style=dashed];	"thm:comm_ineq"	[color=green,		fillcolor="#A3D6FF",		label=comm_ineq,		shape=ellipse,		style=filled];	split_first_and_last	[color=green,		fillcolor="#A3D6FF",		label=split_first_and_last,		shape=ellipse,		style=filled];	a0000000014	[color=blue,		fillcolor="#A3D6FF",		label=a0000000014,		shape=ellipse,		style=filled];}`)
     .on("end", interactive);
 
 latexLabelEscaper = function(label) {
