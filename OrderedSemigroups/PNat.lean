@@ -1,5 +1,13 @@
 import Mathlib.Data.PNat.Basic
 
+/-!
+# Positive Naturals
+
+This file proves some basic lemmas about `PNat` (aka `ℕ+`)
+that are used in relation to exponentiation of elements in a semigroup.
+
+-/
+
 lemma add_sub_eq (x y : ℕ+) : x + y - y = x := by
   apply PNat.eq
   simp [PNat.sub_coe, PNat.lt_add_left y x]
