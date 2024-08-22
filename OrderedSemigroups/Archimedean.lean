@@ -297,4 +297,13 @@ theorem not_anomalous_pair_commutative (not_anomalous : ¬has_anomalous_pair (α
       exact one_unique this one_ba
   · exact neg_not_anomalous_comm neg_a neg_b not_anomalous
 
+/-- If a linear ordered cancel semigroup does not have an anomalous pair,
+then it is commutative and Archimedean. -/
+theorem not_anomalous_comm_and_arch (not_anomalous : ¬has_anomalous_pair (α := α)) :
+    (∀a b : α, a * b = b * a) ∧ is_archimedean (α := α) := by
+  constructor
+  · exact fun a b ↦ not_anomalous_pair_commutative not_anomalous a b
+  · have := mt (non_archimedean_anomalous_pair (α := α)) not_anomalous
+    simpa
+
 end LinearOrderedCancelSemigroup
