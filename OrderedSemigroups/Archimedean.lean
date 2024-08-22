@@ -27,6 +27,10 @@ def is_archimedean := ∀a b : α, is_one a ∨ is_one b ∨ (same_sign a b → 
 class Archimedean (α : Type u) [OrderedSemigroup α] where
   arch : is_archimedean (α := α)
 
+theorem not_has_anomalous_not_pair (not_anomalous : ¬has_anomalous_pair (α := α)) (a b : α) : ¬anomalous_pair a b := by
+  simp at *
+  tauto
+
 end OrderedSemigroup
 
 section LinearOrderedCancelSemigroup
@@ -143,6 +147,94 @@ theorem non_archimedean_anomalous_pair (non_arch : ¬is_archimedean (α := α)) 
     · exact neg_not_archimedean_anomalous_pair neg_a neg_b hab h
     · exact neg_not_archimedean_anomalous_pair' neg_a neg_b hab h
 
-theorem not_anomalous_pair_commutative (not_anomalous : ¬has_anomalous_pair (α := α)) (a b : α) : a * b = b * a := by sorry
+theorem pos_not_comm_anomalous_pair {a b : α} (pos_a : is_positive a) (pos_b : is_positive b)
+    (h : a * b < b * a) : anomalous_pair (a*b) (b*a) := by
+  intro n
+  have : ∀n : ℕ+, (b*a)^n < (a*b)^(n+1) := by
+    intro n
+    calc
+      (b * a) ^ n < (b * a) ^ n * b := pos_right pos_b ((b * a) ^ n)
+      _           < a * (b * a) ^ n * b := mul_lt_mul_right' (pos_a ((b * a) ^ n)) b
+      _           = (a * b) ^ (n + 1) := Eq.symm split_first_and_last_factor_of_product
+  left
+  exact ⟨comm_swap_lt h n, this n⟩
+
+theorem neg_not_comm_anomalous_pair {a b : α} (neg_a : is_negative a) (neg_b : is_negative b)
+    (h : a * b < b * a) : anomalous_pair (b*a) (a*b) := by
+  intro n
+  have : ∀n : ℕ+, (a*b)^n >(b*a)^(n+1) := by
+    intro n
+    calc
+      (a * b) ^ n > (a * b) ^ n * a := neg_right neg_a ((a * b) ^ n)
+      _           > b * (a * b) ^ n * a := mul_lt_mul_right' (neg_b ((a * b) ^ n)) a
+      _           = (b * a) ^ (n + 1) := Eq.symm split_first_and_last_factor_of_product
+  right
+  exact ⟨comm_swap_lt h n, this n⟩
+
+theorem pos_not_anomalous_comm {a b : α} (pos_a : is_positive a) (pos_b : is_positive b)
+    (not_anomalous : ¬has_anomalous_pair (α := α)): a * b = b * a := by
+  rcases lt_trichotomy (a*b) (b*a) with h | h | h
+  · have : has_anomalous_pair (α := α) := by
+      use (a*b), (b*a)
+      exact pos_not_comm_anomalous_pair pos_a pos_b h
+    contradiction
+  · trivial
+  · have : has_anomalous_pair (α := α) := by
+      use (b*a), (a*b)
+      exact pos_not_comm_anomalous_pair pos_b pos_a h
+    contradiction
+
+theorem neg_not_anomalous_comm {a b : α} (neg_a : is_negative a) (neg_b : is_negative b)
+    (not_anomalous : ¬has_anomalous_pair (α := α)): a * b = b * a := by
+  rcases lt_trichotomy (a*b) (b*a) with h | h | h
+  · have : has_anomalous_pair (α := α) := by
+      use (b*a), (a*b)
+      exact neg_not_comm_anomalous_pair neg_a neg_b h
+    contradiction
+  · trivial
+  · have : has_anomalous_pair (α := α) := by
+      use (a*b), (b*a)
+      exact neg_not_comm_anomalous_pair neg_b neg_a h
+    contradiction
+
+theorem not_anomalous_pair_commutative (not_anomalous : ¬has_anomalous_pair (α := α)) (a b : α) : a * b = b * a := by
+  rcases pos_neg_or_one a with pos_a | neg_a | one_a
+  <;> rcases pos_neg_or_one b with pos_b | neg_b | one_b
+  all_goals try simp [one_b a, one_right one_b a]
+  all_goals try simp [one_a b, one_right one_a b]
+  · exact pos_not_anomalous_comm pos_a pos_b not_anomalous
+  · rcases pos_neg_or_one (a*b) with pos_ab | neg_ab | one_ab
+    · sorry
+    · sorry
+    · have : is_one (b * a) := by
+        apply one_right_one_forall (b := a)
+        rw [Eq.symm (mul_assoc a b a)]
+        exact one_ab a
+      exact one_unique one_ab this
+  · rcases pos_neg_or_one (b*a) with pos_ba | neg_ba | one_ba
+    have := pos_not_anomalous_comm pos_ba pos_b not_anomalous
+    · rcases lt_trichotomy (a*b) (b*a) with h | h | h
+      · have : a * b * a * b > a * b * a * b := calc
+          a * b * a * b = a * ((b * a) * b) := by simp [mul_assoc]
+          _             = a * (b * (b * a)) := by simp [←this]
+          _             = (a * b) * (b * a) := by simp [mul_assoc]
+          _             > (a * b) * (a * b) := by exact mul_lt_mul_left' h (a * b)
+          _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
+        exact False.elim ((lt_self_iff_false (a * b * a * b)).mp this)
+      · trivial
+      · have : a * b * a * b > a * b * a * b := calc
+          a * b * a * b = a * ((b * a) * b) := by simp [mul_assoc]
+          _             = a * (b * (b * a)) := by simp [←this]
+          _             = (a * b) * (b * a) := by simp [mul_assoc]
+          _             < (a * b) * (a * b) := by exact mul_lt_mul_left' h (a * b)
+          _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
+        exact False.elim ((lt_self_iff_false (a * b * a * b)).mp this)
+    · sorry
+    · have : is_one (a * b) := by
+        apply one_right_one_forall (b := b)
+        rw [Eq.symm (mul_assoc b a b)]
+        exact one_ba b
+      exact one_unique this one_ba
+  · exact neg_not_anomalous_comm neg_a neg_b not_anomalous
 
 end LinearOrderedCancelSemigroup

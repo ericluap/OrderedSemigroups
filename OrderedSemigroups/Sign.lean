@@ -186,4 +186,7 @@ theorem pos_le_pow_pos {a b : α} (pos : is_positive a) (n : ℕ+) (h : a ≤ b^
 theorem pow_le_neg_neg {a b : α} (neg : is_negative a) (n : ℕ+) (h : b^n ≤ a) : is_negative b :=
   pow_neg_neg n (le_neg_neg neg h)
 
+theorem one_unique {a b : α} (one_a : is_one a) (one_b : is_one b) : a = b := by
+  rw [←one_right one_b a, one_a b]
+
 end LinearOrderedCancelSemigroup

@@ -55,8 +55,7 @@ variable [OrderedSemigroup α]
 theorem le_pow {a b : α} (h : a ≤ b) (n : ℕ+) : a^n ≤ b^n := by
   induction n using PNat.recOn with
   | p1 =>
-    simp
-    assumption
+    simpa
   | hp n ih =>
     simp [ppow_succ]
     exact mul_le_mul' ih h
@@ -77,9 +76,9 @@ theorem comm_factor_le {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : a^n * b^n ≤ (
       _                 ≤ a * (b * a)^n * b := middle_swap (le_pow h n)
       _                 = (a * b)^(n+1) := by rw [←split_first_and_last_factor_of_product]
 
-theorem comm_swap_le [OrderedSemigroup α] {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : (a*b)^n ≤ (b*a)^n := le_pow h n
+theorem comm_swap_le {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : (a*b)^n ≤ (b*a)^n := le_pow h n
 
-theorem comm_dist_le [OrderedSemigroup α] {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : (b*a)^n ≤ b^n * a^n := by
+theorem comm_dist_le {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : (b*a)^n ≤ b^n * a^n := by
   induction n using PNat.recOn with
   | p1 => simp
   | hp n ih =>
@@ -91,3 +90,29 @@ theorem comm_dist_le [OrderedSemigroup α] {a b : α} (h : a*b ≤ b*a) (n : ℕ
       _           = b^(n+1) * a^(n+1) := by simp [ppow_succ, ←ppow_succ']
 
 end OrderedSemigroup
+
+section OrderedCancelSemigroup
+variable [OrderedCancelSemigroup α]
+
+theorem lt_pow {a b : α} (h : a < b) (n : ℕ+) : a^n < b^n := by
+  induction n using PNat.recOn with
+  | p1 => simpa
+  | hp n ih =>
+    simp [ppow_succ]
+    exact Left.mul_lt_mul ih h
+
+theorem comm_swap_lt {a b : α} (h : a*b < b*a) (n : ℕ+) : (a*b)^n < (b*a)^n := lt_pow h n
+
+/-
+theorem comm_dist_lt {a b : α} (h : a*b < b*a) (n : ℕ+) : n > 1 → (b*a)^n < b^n * a^n := by
+  induction n using PNat.recOn with
+  | p1 => intro; contradiction
+  | hp n ih =>
+    calc
+      (b*a)^(n+1) = b * (a*b)^n * a := by rw [split_first_and_last_factor_of_product]
+      _           ≤ b * (b*a)^n * a := middle_swap (le_pow h n)
+      _           ≤ b * (b^n * a^n) * a := middle_swap ih
+      _           = (b * b^n) * (a^n * a) := by simp [mul_assoc]
+      _           = b^(n+1) * a^(n+1) := by simp [ppow_succ, ←ppow_succ']-/
+
+end OrderedCancelSemigroup
