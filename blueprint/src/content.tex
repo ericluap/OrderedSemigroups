@@ -243,3 +243,43 @@ Therefore, $a*b = b*a$.
 The case where $a*b$ is negative follows similarly.
 The case where $b$ is negative and $a$ is positive is symmetric.
 \end{proof}
+
+\begin{theorem}
+\uses{def:arch_wrt, def:anomalous_pair}
+In a linear ordered cancel semigroup $S$, there are no anomalous pairs
+if and only if
+for any two elements $a,b\in S$,
+if $a$ and $b$ are positive and $a < b$, then there exists an $n \in \mathbb{N}^+$ and
+a $c\in S$ that is Archimedean with respect to $a$ such that $a^n * c \le b^n$,
+or if $a$ and $b$ are negative and $b < a$, then there exists an $n\in \mathbb{N}^+$ and
+a $c\in S$ that is Archimedean with respect to $a$ such that $a^n *c \ge b^n$.
+\end{theorem}
+\begin{proof}
+($\Rightarrow$)
+If $a$ and $b$ are positive and $a < b$, then we have that $a^n < b^n$ for all $n$.
+Therefore, there must exist an $n$ such that $a^{n+1} \le b^n$
+as otherwise $a$ and $b$ would form an anomalous pair.
+Thus, the theorem is satisfied with $c = a$.
+
+Similarly if $a$ and $b$ are negatiave.
+
+($\Leftarrow$)
+We look first at the case where $a$ and $b$ are positive and $a < b$.
+Then we have $c\in S$ Archimedean with respect to $a$ and $m\in \mathbb{N}^+$ such that
+$a^m * c \le b^m$.
+
+Therefore, for any $n \in \mathbb{N}^+$,
+either
+\[(a^m)^n * c^n \le (a^m*c)^n \le (b^m)^n\]
+or
+\[c^n * (a^m)^n \le (a^m*c)^n \le (b^m)^n\]
+holds.
+
+Since $c$ is Archimedean with respect to $a$, there exists an $N$
+such that for all $n > N$, $a < c^n$. Thus, for any $n \ge N$,
+we get from the previous relations that
+\[a^{mn + 1} \le b^{mn}\]
+and so $a$ and $b$ do not form an anomalous pair.
+
+Similalry if $a$ and $b$ are negative.
+\end{proof}

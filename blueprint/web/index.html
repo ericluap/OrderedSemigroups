@@ -1197,6 +1197,82 @@
 
   </div>
 </div>
+<div class="theorem_thmwrapper theorem-style-plain" id="a0000000019">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">5</span>
+    <div class="thm_header_extras">
+
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#a0000000019">#</a>
+    
+    <a class="icon proof" href="index.html#a0000000020"><svg  class="icon icon-cogs "><use xlink:href="symbol-defs.svg#icon-cogs"></use></svg>
+</a>
+    
+    
+    <button class="modal"><svg  class="icon icon-mindmap "><use xlink:href="symbol-defs.svg#icon-mindmap"></use></svg>
+</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Uses</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="index.html#def:arch_wrt">Definition 8</a></li>
+          
+          <li><a href="index.html#def:anomalous_pair">Definition 10</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+    
+        </div>
+  </div>
+  <div class="theorem_thmcontent">
+  <p> In a linear ordered cancel semigroup \(S\), there are no anomalous pairs if and only if for any two elements \(a,b\in S\), if \(a\) and \(b\) are positive and \(a {\lt} b\), then there exists an \(n \in \mathbb {N}^+\) and a \(c\in S\) that is Archimedean with respect to \(a\) such that \(a^n * c \le b^n\), or if \(a\) and \(b\) are negative and \(b {\lt} a\), then there exists an \(n\in \mathbb {N}^+\) and a \(c\in S\) that is Archimedean with respect to \(a\) such that \(a^n *c \ge b^n\). </p>
+
+  </div>
+</div>
+<div class="proof_wrapper" id="a0000000020">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▶</span>
+  </div>
+  <div class="proof_content">
+  <p>(\(\Rightarrow \)) If \(a\) and \(b\) are positive and \(a {\lt} b\), then we have that \(a^n {\lt} b^n\) for all \(n\). Therefore, there must exist an \(n\) such that \(a^{n+1} \le b^n\) as otherwise \(a\) and \(b\) would form an anomalous pair. Thus, the theorem is satisfied with \(c = a\). </p>
+<p>Similarly if \(a\) and \(b\) are negatiave. </p>
+<p>(\(\Leftarrow \)) We look first at the case where \(a\) and \(b\) are positive and \(a {\lt} b\). Then we have \(c\in S\) Archimedean with respect to \(a\) and \(m\in \mathbb {N}^+\) such that \(a^m * c \le b^m\). </p>
+<p>Therefore, for any \(n \in \mathbb {N}^+\), either </p>
+<div class="displaymath" id="a0000000021">
+  \[ (a^m)^n * c^n \le (a^m*c)^n \le (b^m)^n \]
+</div>
+<p> or </p>
+<div class="displaymath" id="a0000000022">
+  \[ c^n * (a^m)^n \le (a^m*c)^n \le (b^m)^n \]
+</div>
+<p> holds. </p>
+<p>Since \(c\) is Archimedean with respect to \(a\), there exists an \(N\) such that for all \(n {\gt} N\), \(a {\lt} c^n\). Thus, for any \(n \ge N\), we get from the previous relations that </p>
+<div class="displaymath" id="a0000000023">
+  \[ a^{mn + 1} \le b^{mn} \]
+</div>
+<p> and so \(a\) and \(b\) do not form an anomalous pair. </p>
+<p>Similalry if \(a\) and \(b\) are negative. </p>
+
+  </div>
+</div>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
