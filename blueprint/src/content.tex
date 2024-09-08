@@ -94,8 +94,6 @@ Likewise, for all $x\in S$ we have that $b * x > x$.
 Therefore, $a * x < x < b + x$ and so $a < b$.
 \end{proof}
 
-We endow our ordered semigroup with scalar multiplication by the positive natural numbers.
-
 \begin{lemma}\label{split_first_and_last}\lean{split_first_and_last_factor_of_product}\leanok
 Let $a$ and $b$ be elements of a semigroup $S$.
 
@@ -111,8 +109,8 @@ Then we have that $(a*b)^{n+1} = a * b * (a*b)^n = a * b * a * (b*a)^{n-1} * b =
 \begin{lemma}\label{thm:comm_ineq}\lean{comm_factor_le, comm_swap_le, comm_dist_le}\leanok
 Let $a$ and $b$ be elements of an ordered semigroup $S$.
 
-If $a * b < b * a$, then for any $n\in \mathbb{N}^+$, we have that
-\[a^n * b^n < (a*b)^n < (b*a)^n < b^n * a^n\]
+If $a * b \le b * a$, then for any $n\in \mathbb{N}^+$, we have that
+\[a^n * b^n \le (a*b)^n \le (b*a)^n \le b^n * a^n\]
 \end{lemma}
 \begin{proof}
 If $n=1$, then we are done.
