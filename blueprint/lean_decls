@@ -19,3 +19,5 @@ is_archimedean
 anomalous_pair
 non_archimedean_anomalous_pair
 not_anomalous_comm_and_arch
+has_large_differences
+not_anomalous_iff_large_difference

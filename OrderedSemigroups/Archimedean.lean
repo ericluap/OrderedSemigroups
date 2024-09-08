@@ -33,6 +33,9 @@ abbrev has_anomalous_pair := ∃a b : α, anomalous_pair a b
 `a` is one, `b` is one, or if `a` and `b` have the same sign, then `a` is Archimedean with respect to `b`.-/
 def is_archimedean := ∀a b : α, is_one a ∨ is_one b ∨ (same_sign a b → is_archimedean_wrt a b)
 
+abbrev has_large_differences := ∀a b : α, (is_positive a → a < b → ∃(c : α) (n : ℕ+), is_archimedean_wrt c a ∧ a^n*c ≤ b^n) ∧
+               (is_negative a → b < a → ∃(c : α) (n : ℕ+), is_archimedean_wrt c a ∧ a^n*c ≥ b^n)
+
 theorem not_anomalous_pair_self (a : α) : ¬anomalous_pair a a := by
   simp
 
@@ -414,9 +417,6 @@ theorem arch_wrt_self {a : α} (not_one : ¬is_one a) : is_archimedean_wrt a a :
     · trivial
     · exact lt_of_le_of_lt (neg_ppow_le_ppow 2 n neg_a hn) (neg_one_lt_squared neg_a)
   · contradiction
-
-abbrev has_large_differences := ∀a b : α, (is_positive a → a < b → ∃(c : α) (n : ℕ+), is_archimedean_wrt c a ∧ a^n*c ≤ b^n) ∧
-               (is_negative a → b < a → ∃(c : α) (n : ℕ+), is_archimedean_wrt c a ∧ a^n*c ≥ b^n)
 
 theorem not_anomalous_large_difference (not_anomalous : ¬has_anomalous_pair (α := α)) :
     has_large_differences (α := α) := by

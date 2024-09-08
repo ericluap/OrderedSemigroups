@@ -244,15 +244,23 @@ The case where $a*b$ is negative follows similarly.
 The case where $b$ is negative and $a$ is positive is symmetric.
 \end{proof}
 
-\begin{theorem}
-\uses{def:arch_wrt, def:anomalous_pair}
+\begin{definition}\label{def:has_large_differences}\lean{has_large_differences}\leanok
+An ordered semigroup $S$ has \textbf{large differences} if
+for all $a,b\in S$, the two following implications hold
+\begin{itemize}
+\item if $a$ is positive and $a<b$, then there exists $c\in S$
+and $n\in \mathbb{N}^+$ such that $c$ is Archimedean with respect to $a$
+and $a^n*c \le b^n$
+\item if $a$ is negative and $b < a$, then there exists $c\in S$
+and $n\in \mathbb{N}^+$ such that $c$ is Archimedean with respect to $a$
+and $a^n*c \ge b^n$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}\lean{not_anomalous_iff_large_difference}\leanok
+\uses{def:arch_wrt, def:anomalous_pair, def:has_large_differences}
 In a linear ordered cancel semigroup $S$, there are no anomalous pairs
-if and only if
-for any two elements $a,b\in S$,
-if $a$ and $b$ are positive and $a < b$, then there exists an $n \in \mathbb{N}^+$ and
-a $c\in S$ that is Archimedean with respect to $a$ such that $a^n * c \le b^n$,
-and if $a$ and $b$ are negative and $b < a$, then there exists an $n\in \mathbb{N}^+$ and
-a $c\in S$ that is Archimedean with respect to $a$ such that $a^n *c \ge b^n$.
+if and only if there are large differences.
 \end{theorem}
 \begin{proof}
 ($\Rightarrow$)

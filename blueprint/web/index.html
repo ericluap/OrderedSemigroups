@@ -1197,6 +1197,55 @@
 
   </div>
 </div>
+<div class="definition_thmwrapper theorem-style-definition" id="def:has_large_differences">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">11</span>
+    <div class="thm_header_extras">
+
+    
+    ✓
+        </div>
+    <div class="thm_header_hidden_extras">
+
+    <a class="icon proof" href="index.html#def:has_large_differences">#</a>
+    
+    
+    
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/has_large_differences" class="lean_decl">has_large_differences</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
+        </div>
+  </div>
+  <div class="definition_thmcontent">
+  <p>An ordered semigroup \(S\) has <b class="bfseries">large differences</b> if for all \(a,b\in S\), the two following implications hold </p>
+<ul class="itemize">
+  <li><p>if \(a\) is positive and \(a{\lt}b\), then there exists \(c\in S\) and \(n\in \mathbb {N}^+\) such that \(c\) is Archimedean with respect to \(a\) and \(a^n*c \le b^n\) </p>
+</li>
+  <li><p>if \(a\) is negative and \(b {\lt} a\), then there exists \(c\in S\) and \(n\in \mathbb {N}^+\) such that \(c\) is Archimedean with respect to \(a\) and \(a^n*c \ge b^n\) </p>
+</li>
+</ul>
+
+  </div>
+</div>
 <div class="theorem_thmwrapper theorem-style-plain" id="a0000000019">
   <div class="theorem_thmheading">
     <span class="theorem_thmcaption">
@@ -1230,6 +1279,8 @@
           
           <li><a href="index.html#def:anomalous_pair">Definition 10</a></li>
           
+          <li><a href="index.html#def:has_large_differences">Definition 11</a></li>
+          
         </ul>
     
       </div>
@@ -1237,10 +1288,29 @@
 
     
     
+    <button class="modal lean">L∃∀N</button>
+        <div class="modal-container">
+      <div class="modal-content">
+        <header>
+          <h1>Lean declarations</h1>
+          <button class="closebtn"><svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        </header>
+        
+        <ul class="uses">
+          
+          <li><a href="https://ericluap.github.io/OrderedSemigroups/docs/find/#doc/not_anomalous_iff_large_difference" class="lean_decl">not_anomalous_iff_large_difference</a></li>
+          
+        </ul>
+    
+      </div>
+    </div>
+
+    
         </div>
   </div>
   <div class="theorem_thmcontent">
-  <p> In a linear ordered cancel semigroup \(S\), there are no anomalous pairs if and only if for any two elements \(a,b\in S\), if \(a\) and \(b\) are positive and \(a {\lt} b\), then there exists an \(n \in \mathbb {N}^+\) and a \(c\in S\) that is Archimedean with respect to \(a\) such that \(a^n * c \le b^n\), or if \(a\) and \(b\) are negative and \(b {\lt} a\), then there exists an \(n\in \mathbb {N}^+\) and a \(c\in S\) that is Archimedean with respect to \(a\) such that \(a^n *c \ge b^n\). </p>
+  <p> In a linear ordered cancel semigroup \(S\), there are no anomalous pairs if and only if there are large differences. </p>
 
   </div>
 </div>
@@ -1264,7 +1334,7 @@
   \[ c^n * (a^m)^n \le (a^m*c)^n \le (b^m)^n \]
 </div>
 <p> holds. </p>
-<p>Since \(c\) is Archimedean with respect to \(a\), there exists an \(N\) such that for all \(n {\gt} N\), \(a {\lt} c^n\). Thus, for any \(n \ge N\), we get from the previous relations that </p>
+<p>Since \(c\) is Archimedean with respect to \(a\), there exists an \(N\) such that for all \(n \ge N\), \(a {\lt} c^n\). Thus, for any \(n \ge N\), we get from the previous relations that </p>
 <div class="displaymath" id="a0000000023">
   \[ a^{mn + 1} \le b^{mn} \]
 </div>
