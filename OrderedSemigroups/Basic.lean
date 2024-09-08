@@ -22,6 +22,10 @@ theorem ppow_one (x : α) : x ^ (1 : ℕ+) = x := Semigroup'.nppow_one x
 
 theorem ppow_succ (n : ℕ+) (x : α) : x ^ (n + 1) = x ^ n * x := Semigroup'.nppow_succ n x
 
+theorem ppow_two (x : α) : x ^ (2 : ℕ+) = x * x := by
+  have : (2 : ℕ+) = 1 + 1 := by decide
+  simp [this, ppow_succ]
+
 theorem ppow_comm (n : ℕ+) (x : α) : x^n * x = x * x^n := by
   induction n using PNat.recOn with
   | p1 => simp
@@ -35,6 +39,17 @@ theorem ppow_add (a : α) (m n : ℕ+) : a ^ (m + n) = a ^ m * a ^ n := by
   induction n using PNat.recOn with
   | p1 => simp [ppow_succ]
   | hp n ih => rw [ppow_succ, ←mul_assoc, ←ih, ←ppow_succ]; exact rfl
+
+theorem ppow_mul (a : α) (m : ℕ+) : ∀ n, a ^ (m * n) = (a ^ m) ^ n := by
+  intro n
+  induction n using PNat.recOn with
+  | p1 => simp
+  | hp n ih =>
+    calc
+      a ^ (m * (n + 1)) = a ^ (m * n + m)     := rfl
+      _                 = a ^ (m * n) * a ^ m := ppow_add a (m * n) m
+      _                 = (a ^ m) ^ n * a ^ m := congrFun (congrArg HMul.hMul ih) (a ^ m)
+      _                 = (a ^ m) ^ (n + 1)   := Eq.symm (ppow_succ n (a ^ m))
 
 theorem split_first_and_last_factor_of_product [Semigroup' α] {a b : α} {n : ℕ+} :
   (a*b)^(n+1) = a*(b*a)^n*b := by

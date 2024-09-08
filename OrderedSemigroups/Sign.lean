@@ -96,17 +96,57 @@ theorem pos_neg_same_sign_false {a b : α} (pos : is_positive a) (neg : is_negat
   · exact pos_not_neg pos neg_a
   · exact one_not_pos one_a pos
 
+theorem pos_one_same_sign_false {a b : α} (pos : is_positive a) (one : is_one b) (ss : same_sign a b) : False := by
+  unfold same_sign at ss
+  rcases ss with ⟨_, pos_b⟩ | ⟨neg_a, _⟩ | ⟨one_a, _⟩
+  · exact pos_not_one pos_b one
+  · exact pos_not_neg pos neg_a
+  · exact one_not_pos one_a pos
+
+theorem neg_one_same_sign_false {a b : α} (neg : is_negative a) (one : is_one b) (ss : same_sign a b) : False := by
+  unfold same_sign at ss
+  rcases ss with ⟨_, pos_b⟩ | ⟨_, neg_b⟩ | ⟨one_a, _⟩
+  · exact pos_not_one pos_b one
+  · exact neg_not_one neg_b one
+  · exact one_not_neg one_a neg
+
 theorem pos_ppow_lt_ppow {a : α} (n m : ℕ+) (pos : is_positive a)
     (h : n < m) : a ^ n < a ^ m := by
   obtain ⟨k, hk⟩ := le.dest h
   rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
   exact (pos_pow_pos pos k) (a ^ n)
 
+theorem pos_one_lt_squared {a : α} (pos : is_positive a) : a < a^(2 : ℕ+) := by
+  conv => lhs; rw [←ppow_one a]
+  have : 1 < (2 : ℕ+) := by decide
+  exact pos_ppow_lt_ppow 1 2 pos this
+
+theorem pos_ppow_le_ppow {a : α} (n m : ℕ+) (pos : is_positive a)
+    (h : n ≤ m) : a ^ n ≤ a ^ m := by
+  rcases lt_or_eq_of_le h with h | h
+  · obtain ⟨k, hk⟩ := le.dest h
+    rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
+    exact ((pos_pow_pos pos k) (a ^ n)).le
+  · simp [h]
+
 theorem neg_ppow_lt_ppow {a : α} (n m : ℕ+) (neg : is_negative a)
     (h : n < m) : a ^ m < a ^ n := by
   obtain ⟨k, hk⟩ := le.dest h
   rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
   exact (neg_pow_neg neg k) (a ^ n)
+
+theorem neg_one_lt_squared {a : α} (neg : is_negative a) : a > a^(2 : ℕ+) := by
+  conv => lhs; rw [←ppow_one a]
+  have : 1 < (2 : ℕ+) := by decide
+  exact neg_ppow_lt_ppow 1 2 neg this
+
+theorem neg_ppow_le_ppow {a : α} (n m : ℕ+) (neg : is_negative a)
+    (h : n ≤ m) : a ^ m ≤ a ^ n := by
+  rcases lt_or_eq_of_le h with h | h
+  · obtain ⟨k, hk⟩ := le.dest h
+    rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
+    exact ((neg_pow_neg neg k) (a ^ n)).le
+  · simp [h]
 
 end OrderedSemigroup
 
