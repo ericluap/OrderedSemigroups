@@ -51,7 +51,7 @@ theorem ppow_mul (a : α) (m : ℕ+) : ∀ n, a ^ (m * n) = (a ^ m) ^ n := by
       _                 = (a ^ m) ^ n * a ^ m := congrFun (congrArg HMul.hMul ih) (a ^ m)
       _                 = (a ^ m) ^ (n + 1)   := Eq.symm (ppow_succ n (a ^ m))
 
-theorem split_first_and_last_factor_of_product [Semigroup' α] {a b : α} {n : ℕ+} :
+theorem split_first_and_last_factor_of_product {a b : α} {n : ℕ+} :
   (a*b)^(n+1) = a*(b*a)^n*b := by
   induction n using PNat.recOn with
   | p1 => simp [ppow_succ, mul_assoc]
