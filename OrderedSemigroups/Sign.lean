@@ -153,10 +153,10 @@ end OrderedSemigroup
 section LinearOrderedCancelSemigroup
 variable [LinearOrderedCancelSemigroup α]
 
-theorem pos_gt_one {a b : α} (one : is_one a) (h : a < b) : is_positive b :=
+theorem gt_one_pos {a b : α} (one : is_one a) (h : a < b) : is_positive b :=
   fun x ↦ lt_of_eq_of_lt (id (Eq.symm (one x))) (mul_lt_mul_right' h x)
 
-theorem neg_lt_one {a b : α} (one : is_one a) (h : b < a) : is_negative b :=
+theorem lt_one_neg {a b : α} (one : is_one a) (h : b < a) : is_negative b :=
   fun x ↦ lt_of_lt_of_eq (mul_lt_mul_right' h x) (one x)
 
 theorem neg_lt_pos {a b : α} (neg : is_negative a) (pos : is_positive b) : a < b :=
@@ -198,6 +198,12 @@ theorem one_right {a : α} (one : is_one a) : ∀x : α, x * a = x := by
   · trivial
   · exact False.elim (pos_not_one (pos_right_pos_forall h) one)
 
+theorem neg_lt_one {a b : α} (neg : is_negative a) (one : is_one b) : a < b :=
+  lt_of_eq_of_lt (id (Eq.symm (one_right one a))) (neg b)
+
+theorem one_lt_pos {a b : α} (one : is_one a) (pos : is_positive b) : a < b :=
+  lt_of_lt_of_eq (pos a) (one_right one b)
+
 /-- Every element of a LinearOrderedCancelSemigroup is either positive, negative, or one. -/
 theorem pos_neg_or_one : ∀a : α, is_positive a ∨ is_negative a ∨ is_one a := by
   intro a
@@ -228,5 +234,67 @@ theorem pow_le_neg_neg {a b : α} (neg : is_negative a) (n : ℕ+) (h : b^n ≤ 
 
 theorem one_unique {a b : α} (one_a : is_one a) (one_b : is_one b) : a = b := by
   rw [←one_right one_b a, one_a b]
+
+theorem not_pos_iff {a : α} : ¬is_positive a ↔ a * a ≤ a := by
+  constructor
+  · intro _
+    obtain pos | neg | one := pos_neg_or_one a
+    · contradiction
+    · exact le_of_lt (neg a)
+    · exact le_of_eq (one a)
+  · intro _
+    simp [is_positive]
+    use a
+
+theorem not_neg_iff {a : α} : ¬is_negative a ↔ a ≤ a * a := by
+  constructor
+  · intro _
+    obtain pos | neg | one := pos_neg_or_one a
+    · exact le_of_lt (pos a)
+    · contradiction
+    · exact Eq.ge (one a)
+  · intro _
+    simp [is_negative]
+    use a
+
+theorem not_pos_or {a : α} (not_pos : ¬is_positive a) : is_negative a ∨ is_one a := by
+  obtain pos | neg | one := pos_neg_or_one a
+  · contradiction
+  · exact Or.symm (Or.inr neg)
+  · exact Or.inr one
+
+theorem not_neg_or {a : α} (not_neg : ¬is_negative a) : is_positive a ∨ is_one a := by
+  obtain pos | neg | one := pos_neg_or_one a
+  · exact Or.symm (Or.inr pos)
+  · contradiction
+  · exact Or.inr one
+
+theorem le_not_pos_not_pos {a b : α} (not_pos : ¬is_positive a) (h : b ≤ a) : ¬is_positive b := by
+  obtain h | h := eq_or_lt_of_le h
+  <;> obtain pos | neg | one := pos_neg_or_one a
+  · contradiction
+  · simpa [h]
+  · simpa [h]
+  · exact fun _ ↦ not_pos pos
+  · exact neg_not_pos (le_neg_neg neg h.le)
+  · exact neg_not_pos (lt_one_neg one h)
+
+theorem ge_not_neg_not_neg {a b : α} (not_neg : ¬is_negative a) (h : a ≤ b) : ¬is_negative b := by
+  obtain h | h := eq_or_lt_of_le h
+  <;> obtain pos | neg | one := pos_neg_or_one a
+  · simpa [←h]
+  · simpa [←h]
+  · simpa [←h]
+  · exact pos_not_neg (pos_le_pos pos h.le)
+  · contradiction
+  · exact pos_not_neg (gt_one_pos one h)
+
+theorem not_pos_le_not_neg {a b : α} (not_pos : ¬is_positive a) (not_neg : ¬is_negative b) : a ≤ b := by
+  obtain neg_a | one_a := not_pos_or not_pos
+  <;> obtain pos_b | one_b := not_neg_or not_neg
+  · exact (neg_lt_pos neg_a pos_b).le
+  · exact (neg_lt_one neg_a one_b).le
+  · exact (one_lt_pos one_a pos_b).le
+  · exact (one_unique one_a one_b).le
 
 end LinearOrderedCancelSemigroup

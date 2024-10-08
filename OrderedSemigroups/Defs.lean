@@ -15,7 +15,7 @@ universe u
 variable {α : Type u}
 
 /-- The action of ℕ+ on a type with Mul where
-  nppowRec n a = a * a ⋯ * a (aka a^n)-/
+  `nppowRec n a = a * a ⋯ * a` (aka `a^n`)-/
 def nppowRec [Mul α] : ℕ+ → α → α
   | 1, a => a
   | ⟨n+2, hnp⟩, a =>
@@ -23,11 +23,35 @@ def nppowRec [Mul α] : ℕ+ → α → α
     (nppowRec ⟨n+1, by simp⟩ a) * a
 termination_by x => x
 
+theorem nppowRec_one [Mul α] (x : α) : nppowRec 1 x = x := by
+  unfold nppowRec
+  simp
+
+theorem nppowRec_succ [Mul α] (n : ℕ+) (x : α) : nppowRec (n + 1) x = nppowRec n x * x := by
+  induction n using PNat.recOn with
+  | p1 =>
+    unfold nppowRec
+    simp [nppowRec_one]
+  | hp n ih =>
+    unfold nppowRec
+    have : (n + 1) = ⟨↑n + 1, nppowRec.proof_1 ↑n⟩ := by rfl
+    simp
+    erw [←this]
+    split
+    · rename_i x y w z
+      have : (n : Nat) = 0 := Eq.symm ((fun {n m} ↦ Nat.succPNat_inj.mp) (id (Eq.symm z)))
+      exact False.elim (PNat.ne_zero n this)
+    · rename_i x y w z h g
+      simp at *
+      have : n = z + 1 := by exact Nat.succPNat_inj.mp g
+      have : n = ⟨z + 1, nppowRec.proof_1 z⟩ := by exact PNat.eq this
+      simp [←this, ih]
+
 /-- A semigroup with an action of ℕ+ on it, by default it is exponentiation -/
 class Semigroup' (α : Type u) extends Semigroup α where
   nppow : ℕ+ → α → α := nppowRec
-  nppow_one : ∀ x, nppow 1 x = x := by intros; rfl
-  nppow_succ : ∀ (n : ℕ+) (x), nppow (n+1) x = nppow n x * x
+  nppow_one : ∀ x, nppow 1 x = x := by intros x; exact nppowRec_one x
+  nppow_succ : ∀ (n : ℕ+) (x), nppow (n+1) x = nppow n x * x := by intros x; exact nppowRec_succ x
 
 /-- Define the exponentiation notation for the action of ℕ+ on a semigroup' -/
 instance [Semigroup' α]: Pow α ℕ+ :=
@@ -75,3 +99,10 @@ instance [LinearOrderedCancelSemigroup α] : LinearOrderedSemigroup α where
   min_def := LinearOrderedCancelSemigroup.min_def
   max_def := LinearOrderedCancelSemigroup.max_def
   compare_eq_compareOfLessAndEq := LinearOrderedCancelSemigroup.compare_eq_compareOfLessAndEq
+
+class CommSemigroup' (G : Type u) extends Semigroup' G, CommMagma G where
+
+class LinearOrderedCancelCommSemigroup (α : Type u) extends LinearOrderedCancelSemigroup α, CommSemigroup' α where
+
+instance [LinearOrderedCancelCommSemigroup α] : LinearOrderedCancelSemigroup α :=
+  inferInstance
