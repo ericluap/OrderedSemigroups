@@ -297,4 +297,29 @@ theorem not_pos_le_not_neg {a b : α} (not_pos : ¬is_positive a) (not_neg : ¬i
   · exact (one_lt_pos one_a pos_b).le
   · exact (one_unique one_a one_b).le
 
+theorem not_positive {a : α} (not_pos : ¬is_positive a) : ∀x : α, a * x ≤ x := by
+  intro x
+  obtain neg_a | one_a := not_pos_or not_pos
+  · exact le_of_lt (neg_a x)
+  · exact le_of_eq (one_a x)
+
+theorem not_pos_right {a : α} (not_pos : ¬is_positive a) : ∀x : α, x * a ≤ x := by
+  intro x
+  obtain neg_a | one_a := not_pos_or not_pos
+  · exact le_of_lt (neg_right neg_a x)
+  · exact le_of_eq (one_right one_a x)
+
+
+theorem not_negative {a : α} (not_neg : ¬is_negative a) : ∀x : α, a * x ≥ x := by
+  intro x
+  obtain pos_a | one_a := not_neg_or not_neg
+  · exact le_of_lt (pos_a x)
+  · exact Eq.ge (one_a x)
+
+theorem not_neg_right {a : α} (not_neg : ¬is_negative a) : ∀x : α, x * a ≥ x := by
+  intro x
+  obtain pos_a | one_a := not_neg_or not_neg
+  · exact le_of_lt (pos_right pos_a x)
+  · exact le_of_eq (one_right one_a x).symm
+
 end LinearOrderedCancelSemigroup
