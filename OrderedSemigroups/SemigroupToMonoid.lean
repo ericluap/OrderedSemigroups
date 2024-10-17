@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Order.Group.Basic
-import OrderedSemigroups.Sign
+import OrderedSemigroups.Archimedean
 
 universe u
 variable {α : Type u}
@@ -57,7 +57,8 @@ end CommSemigroup'
 section LinearOrderedCancelSemigroup
 variable [LinearOrderedCancelCommSemigroup α]
 
-instance (not_one : ∀x : α, ¬is_one x): OrderedCommMonoid (with_one α) where
+set_option maxHeartbeats 300000
+instance to_monoid (not_one : ∀x : α, ¬is_one x) : LinearOrderedCancelCommMonoid (with_one α) where
   le := by
     intro x y
     rcases x with x | _
@@ -69,13 +70,13 @@ instance (not_one : ∀x : α, ¬is_one x): OrderedCommMonoid (with_one α) wher
   le_refl := by
     intro x
     rcases x with x | _
-    <;> simp
+    <;> simp only [le_refl]
   le_trans := by
     intro x y z x_le_y y_le_z
     rcases x with x | one
     <;> rcases y with y | one
     <;> rcases z with z | one
-    <;> simp at *
+    <;> simp only [ge_iff_le] at *
     · exact Preorder.le_trans x y z x_le_y y_le_z
     · rw [←not_pos_iff]
       exact le_not_pos_not_pos (not_pos_iff.mpr y_le_z) x_le_y
@@ -88,7 +89,7 @@ instance (not_one : ∀x : α, ¬is_one x): OrderedCommMonoid (with_one α) wher
     intro x y x_le_y y_le_x
     rcases x with x | one
     <;> rcases y with y | one
-    <;> simp at *
+    <;> simp only [ge_iff_le, reduceCtorEq] at *
     · rw [PartialOrder.le_antisymm x y x_le_y y_le_x]
     · exact not_one x (one_right_one_forall (PartialOrder.le_antisymm (x*x) x x_le_y y_le_x))
     · exact not_one y (one_right_one_forall (PartialOrder.le_antisymm (y*y) y y_le_x x_le_y))
@@ -98,14 +99,54 @@ instance (not_one : ∀x : α, ¬is_one x): OrderedCommMonoid (with_one α) wher
     <;> rcases y with y | one
     <;> rcases z with z | one
     <;> unfold_projs
-    <;> simp at *
+    <;> simp only [ge_iff_le, le_refl] at *
     · exact mul_le_mul_left' x_le_y z
     · trivial
     · exact not_pos_right (not_pos_iff.mpr x_le_y) z
     · exact x_le_y
     · exact not_neg_right (not_neg_iff.mpr x_le_y) z
     · trivial
+  le_total := by
+    intro x y
+    rcases x with x | one
+    <;> rcases y with y | one
+    <;> simp only [ge_iff_le, or_self] at *
+    · exact LinearOrder.le_total x y
+    · exact LinearOrder.le_total (x * x) x
+    · exact LinearOrder.le_total y (y * y)
+  decidableLE := by
+    simp [DecidableRel]
+    intro x y
+    rcases x with x | one
+    <;> rcases y with y | one
+    <;> simp at *
+    · exact instDecidableLe_mathlib x y
+    · exact instDecidableLe_mathlib (x * x) x
+    · exact instDecidableLe_mathlib y (y * y)
+    · exact instDecidableTrue
+  le_of_mul_le_mul_left := by
+    intro x y z xy_le_xz
+    rcases x with x | one
+    <;> rcases y with y | one
+    <;> rcases z with z | one
+    <;> unfold_projs at *
+    <;> simp only [ge_iff_le] at *
+    · exact (mul_le_mul_iff_left x).mp xy_le_xz
+    · exact not_pos_iff.1 (not_pos_right_not_pos xy_le_xz)
+    · exact not_neg_iff.1 (not_neg_right_not_neg xy_le_xz)
+    all_goals exact xy_le_xz
 
+instance {β : Type*} [Semigroup β] : Semigroup' β where
+
+instance {β : Type*} [OrderedCommMonoid β] : OrderedSemigroup β where
+  mul_le_mul_left := fun _ _ a_1 c ↦ mul_le_mul_left' a_1 c
+  mul_le_mul_right := fun _ _ a_1 c ↦ mul_le_mul_right' a_1 c
+
+instance toOrderedSemigroup {β : Type*} (_ : LinearOrderedCancelCommMonoid β) : OrderedSemigroup β :=
+  inferInstance
+
+theorem arch_semigroup_arch_monoid (not_one : ∀x : α, ¬is_one x) (arch : is_archimedean (α := α)) :
+    @is_archimedean (with_one α) (toOrderedSemigroup (to_monoid not_one)) := sorry
 
 
 end LinearOrderedCancelSemigroup

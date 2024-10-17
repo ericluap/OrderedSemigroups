@@ -78,7 +78,7 @@ theorem anomalous_not_one' {a b : α} (anomalous : anomalous_pair a b) : ¬is_on
       simpa [←ppow_two a]
     have : is_negative b := le_neg_neg this b_lt_ap1.le
     exact False.elim (neg_not_one this one_b)
-  · have : is_positive b := pos_gt_one one_a a_lt_b
+  · have : is_positive b := gt_one_pos one_a a_lt_b
     exact False.elim (pos_not_one this one_b)
   · exact (lt_self_iff_false b).mp (gt_trans b_gt_ap1 (gt_trans (pos_a a) a_gt_b))
   · exact one_not_neg one_b (le_neg_neg neg_a (a_gt_b.le))

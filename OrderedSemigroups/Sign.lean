@@ -257,17 +257,31 @@ theorem not_neg_iff {a : α} : ¬is_negative a ↔ a ≤ a * a := by
     simp [is_negative]
     use a
 
-theorem not_pos_or {a : α} (not_pos : ¬is_positive a) : is_negative a ∨ is_one a := by
-  obtain pos | neg | one := pos_neg_or_one a
-  · contradiction
-  · exact Or.symm (Or.inr neg)
-  · exact Or.inr one
+theorem not_pos_or {a : α} : ¬is_positive a ↔ is_negative a ∨ is_one a := by
+  constructor
+  · intro not_pos
+    obtain pos | neg | one := pos_neg_or_one a
+    · contradiction
+    · exact Or.symm (Or.inr neg)
+    · exact Or.inr one
+  · intro neg_or_one
+    rw [not_pos_iff]
+    obtain neg | one := neg_or_one
+    · exact le_of_lt (neg a)
+    · exact le_of_eq (one a)
 
-theorem not_neg_or {a : α} (not_neg : ¬is_negative a) : is_positive a ∨ is_one a := by
-  obtain pos | neg | one := pos_neg_or_one a
-  · exact Or.symm (Or.inr pos)
-  · contradiction
-  · exact Or.inr one
+theorem not_neg_or {a : α} : ¬is_negative a ↔ is_positive a ∨ is_one a := by
+  constructor
+  · intro not_neg
+    obtain pos | neg | one := pos_neg_or_one a
+    · exact Or.symm (Or.inr pos)
+    · contradiction
+    · exact Or.inr one
+  · intro pos_or_one
+    rw [not_neg_iff]
+    obtain pos | one := pos_or_one
+    · exact le_of_lt (pos a)
+    · exact Eq.ge (one a)
 
 theorem le_not_pos_not_pos {a b : α} (not_pos : ¬is_positive a) (h : b ≤ a) : ¬is_positive b := by
   obtain h | h := eq_or_lt_of_le h
@@ -290,8 +304,8 @@ theorem ge_not_neg_not_neg {a b : α} (not_neg : ¬is_negative a) (h : a ≤ b) 
   · exact pos_not_neg (gt_one_pos one h)
 
 theorem not_pos_le_not_neg {a b : α} (not_pos : ¬is_positive a) (not_neg : ¬is_negative b) : a ≤ b := by
-  obtain neg_a | one_a := not_pos_or not_pos
-  <;> obtain pos_b | one_b := not_neg_or not_neg
+  obtain neg_a | one_a := not_pos_or.1 not_pos
+  <;> obtain pos_b | one_b := not_neg_or.1 not_neg
   · exact (neg_lt_pos neg_a pos_b).le
   · exact (neg_lt_one neg_a one_b).le
   · exact (one_lt_pos one_a pos_b).le
@@ -299,27 +313,43 @@ theorem not_pos_le_not_neg {a b : α} (not_pos : ¬is_positive a) (not_neg : ¬i
 
 theorem not_positive {a : α} (not_pos : ¬is_positive a) : ∀x : α, a * x ≤ x := by
   intro x
-  obtain neg_a | one_a := not_pos_or not_pos
+  obtain neg_a | one_a := not_pos_or.1 not_pos
   · exact le_of_lt (neg_a x)
   · exact le_of_eq (one_a x)
 
 theorem not_pos_right {a : α} (not_pos : ¬is_positive a) : ∀x : α, x * a ≤ x := by
   intro x
-  obtain neg_a | one_a := not_pos_or not_pos
+  obtain neg_a | one_a := not_pos_or.1 not_pos
   · exact le_of_lt (neg_right neg_a x)
   · exact le_of_eq (one_right one_a x)
 
 
 theorem not_negative {a : α} (not_neg : ¬is_negative a) : ∀x : α, a * x ≥ x := by
   intro x
-  obtain pos_a | one_a := not_neg_or not_neg
+  obtain pos_a | one_a := not_neg_or.1 not_neg
   · exact le_of_lt (pos_a x)
   · exact Eq.ge (one_a x)
 
 theorem not_neg_right {a : α} (not_neg : ¬is_negative a) : ∀x : α, x * a ≥ x := by
   intro x
-  obtain pos_a | one_a := not_neg_or not_neg
+  obtain pos_a | one_a := not_neg_or.1 not_neg
   · exact le_of_lt (pos_right pos_a x)
   · exact le_of_eq (one_right one_a x).symm
+
+theorem not_pos_right_not_pos {a b : α} (h : b * a ≤ b) : ¬is_positive a := by
+  rw [not_pos_or]
+  obtain lt | eq := h.lt_or_eq
+  · left
+    exact neg_right_neg_forall lt
+  · right
+    exact one_right_one_forall eq
+
+theorem not_neg_right_not_neg {a b : α} (h : b * a ≥ b) : ¬is_negative a := by
+  rw [not_neg_or]
+  obtain lt | eq := h.lt_or_eq
+  · left
+    exact pos_right_pos_forall lt
+  · right
+    exact one_right_one_forall eq.symm
 
 end LinearOrderedCancelSemigroup
