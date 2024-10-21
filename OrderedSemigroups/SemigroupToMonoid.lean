@@ -35,6 +35,45 @@ instance : Monoid (with_one α) where
     <;> unfold_projs
     <;> simp
 
+def without_one : Subsemigroup (with_one α) where
+  carrier := {x : with_one α | ∃y : α, x = Sum.inl y}
+  mul_mem' := by
+    intro x' y' hx hy
+    obtain ⟨x, hx⟩ := hx
+    obtain ⟨y, hy⟩ := hy
+    subst_vars
+    simp
+    use (x*y)
+    unfold_projs
+    simp
+
+noncomputable def iso_without_one : α ≃* without_one (α := α) where
+  toFun x := ⟨Sum.inl x, by use x⟩
+  invFun x := by
+    obtain ⟨y, hy⟩ := x
+    use hy.choose
+  left_inv := by
+    simp [Function.LeftInverse]
+    intro x
+    set point : without_one (α := α) := ⟨Sum.inl x, by use x⟩
+    have := point.2.choose_spec
+    apply Sum.inl.inj
+    rw [←this]
+  right_inv := by
+    simp [Function.RightInverse, Function.LeftInverse]
+    intro x hx
+    obtain ⟨y, hy⟩ := hx
+    simp [hy]
+    rw [Sum.inl.injEq]
+    set point : without_one (α := α) := ⟨Sum.inl y, by use y⟩
+    have := point.2.choose_spec
+    apply Sum.inl.inj
+    rw [←this]
+  map_mul' := by
+    intro x y
+    unfold_projs
+    simp
+
 end Semigroup
 
 section CommSemigroup'
