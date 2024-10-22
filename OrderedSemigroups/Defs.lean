@@ -23,6 +23,10 @@ def nppowRec [Mul α] : ℕ+ → α → α
     (nppowRec ⟨n+1, by simp⟩ a) * a
 termination_by x => x
 
+theorem nppowRec_eq [Mul α] {n m : ℕ+} (h : n.val = m.val) (x : α) :
+    nppowRec n x = nppowRec m x := by
+  simp only [PNat.eq h]
+
 theorem nppowRec_one [Mul α] (x : α) : nppowRec 1 x = x := by
   unfold nppowRec
   simp

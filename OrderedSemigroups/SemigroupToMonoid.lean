@@ -9,6 +9,8 @@ def with_one (α : Type u) := α ⊕ Unit
 section Semigroup
 variable [Semigroup α]
 
+instance {β : Type*} [Semigroup β] : Semigroup' β where
+
 instance : Semigroup (with_one α) where
   mul x y :=
     match x, y with
@@ -74,6 +76,20 @@ noncomputable def iso_without_one : α ≃* without_one (α := α) where
     unfold_projs
     simp
 
+theorem pow_without_one {a : α} (n : ℕ+):
+    (Semigroup'.nppow n (Sum.inl a : with_one α) : with_one α) = (Sum.inl (a ^ n) : with_one α) := by
+  induction n using PNat.recOn with
+  | p1 => simp [Semigroup'.nppow_one]
+  | hp n ih =>
+    simp [Semigroup'.nppow_succ, ih]
+    unfold_projs
+    simp [nppowRec_succ n a]
+    have : Mul.mul (nppowRec n a) a = nppowRec (n+1) a := (nppowRec_succ n a).symm
+    rw [this, Sum.inl.injEq]
+    apply nppowRec_eq
+    simp
+    rfl
+
 end Semigroup
 
 section CommSemigroup'
@@ -94,10 +110,10 @@ instance : CommMonoid (with_one α) where
 end CommSemigroup'
 
 section LinearOrderedCancelSemigroup
-variable [LinearOrderedCancelCommSemigroup α]
+variable [LinearOrderedCancelCommSemigroup α] [not_one : Fact (∀x : α, ¬is_one x)]
 
 set_option maxHeartbeats 300000
-instance to_monoid (not_one : ∀x : α, ¬is_one x) : LinearOrderedCancelCommMonoid (with_one α) where
+instance to_monoid [not_one : Fact (∀x : α, ¬is_one x)] : LinearOrderedCancelCommMonoid (with_one α) where
   le := by
     intro x y
     rcases x with x | _
@@ -130,8 +146,8 @@ instance to_monoid (not_one : ∀x : α, ¬is_one x) : LinearOrderedCancelCommMo
     <;> rcases y with y | one
     <;> simp only [ge_iff_le, reduceCtorEq] at *
     · rw [PartialOrder.le_antisymm x y x_le_y y_le_x]
-    · exact not_one x (one_right_one_forall (PartialOrder.le_antisymm (x*x) x x_le_y y_le_x))
-    · exact not_one y (one_right_one_forall (PartialOrder.le_antisymm (y*y) y y_le_x x_le_y))
+    · exact not_one.out x (one_right_one_forall (PartialOrder.le_antisymm (x*x) x x_le_y y_le_x))
+    · exact not_one.out y (one_right_one_forall (PartialOrder.le_antisymm (y*y) y y_le_x x_le_y))
   mul_le_mul_left := by
     intro x y x_le_y z
     rcases x with x | one
@@ -175,8 +191,6 @@ instance to_monoid (not_one : ∀x : α, ¬is_one x) : LinearOrderedCancelCommMo
     · exact not_neg_iff.1 (not_neg_right_not_neg xy_le_xz)
     all_goals exact xy_le_xz
 
-instance {β : Type*} [Semigroup β] : Semigroup' β where
-
 instance {β : Type*} [OrderedCommMonoid β] : OrderedSemigroup β where
   mul_le_mul_left := fun _ _ a_1 c ↦ mul_le_mul_left' a_1 c
   mul_le_mul_right := fun _ _ a_1 c ↦ mul_le_mul_right' a_1 c
@@ -184,8 +198,95 @@ instance {β : Type*} [OrderedCommMonoid β] : OrderedSemigroup β where
 instance toOrderedSemigroup {β : Type*} (_ : LinearOrderedCancelCommMonoid β) : OrderedSemigroup β :=
   inferInstance
 
-theorem arch_semigroup_arch_monoid (not_one : ∀x : α, ¬is_one x) (arch : is_archimedean (α := α)) :
-    @is_archimedean (with_one α) (toOrderedSemigroup (to_monoid not_one)) := sorry
+theorem inr_is_one : @is_one (with_one α) _ (Sum.inr ()) := by
+  simp only [is_one]
+  intro x
+  rcases x with x | one
+  <;> unfold_projs
+  <;> simp
 
+theorem pos_without_one {a : α} : @is_positive (with_one α) _ (Sum.inl a) ↔ is_positive a := by
+  constructor
+  · simp only [is_positive] at *
+    intro pos x
+    have := pos (Sum.inl x)
+    unfold_projs at this
+    simp at this
+    tauto
+  · simp only [is_positive] at *
+    intro pos x
+    rcases x with x | one
+    · have := pos x
+      unfold_projs
+      simp
+      constructor
+      exact this.le
+      trivial
+    · unfold_projs
+      simp
+      constructor
+      exact (pos a).le
+      exact pos a
+
+theorem neg_without_one {a : α} : @is_negative (with_one α) _ (Sum.inl a) ↔ is_negative a := by
+  constructor
+  · simp only [is_negative] at *
+    intro neg x
+    have := neg (Sum.inl x)
+    unfold_projs at this
+    simp at this
+    tauto
+  · simp only [is_negative] at *
+    intro neg x
+    rcases x with x | one
+    · have := neg x
+      unfold_projs
+      simp
+      constructor
+      exact this.le
+      trivial
+    · unfold_projs
+      simp
+      constructor
+      exact (neg a).le
+      exact neg a
+
+theorem one_without_one {a : α} : @is_one (with_one α) _ (Sum.inl a) ↔ is_one a := by
+  constructor
+  · intro one x
+    have := one (Sum.inl x)
+    simp at this
+  · intro one
+    exact False.elim (not_one.out a one)
+
+theorem same_sign_without_one {a b : α} : @same_sign (with_one α) _ (Sum.inl a) (Sum.inl b) ↔ same_sign a b := by
+  simp [same_sign, neg_without_one, pos_without_one, one_without_one] at *
+
+theorem arch_wrt_without_one {a b : α} : @is_archimedean_wrt (with_one α) _ (Sum.inl a) (Sum.inl b) ↔ is_archimedean_wrt a b := by
+  simp [is_archimedean_wrt, pos_without_one, neg_without_one, HPow.hPow, Pow.pow, pow_without_one, nppow_eq_nppowRec]
+  unfold_projs
+  have {a b : α} : a ≤ b ∧ a < b ↔ a < b := by
+    constructor
+    · rintro ⟨-, this⟩
+      exact this
+    · intro h
+      exact ⟨h.le, h⟩
+  simp [this]
+
+theorem arch_semigroup_arch_monoid (arch : is_archimedean (α := α)) :
+    @is_archimedean (with_one α) _ := by
+  simp [is_archimedean] at *
+  intro x y
+  rcases x with x | one
+  <;> rcases y with y | one'
+  <;> simp [same_sign_without_one, one_without_one, arch_wrt_without_one]
+  · exact arch x y
+  · right
+    left
+    exact inr_is_one
+  · left
+    exact inr_is_one
+  · left
+    exact inr_is_one
 
 end LinearOrderedCancelSemigroup

@@ -15,6 +15,12 @@ variable {α : Type u}
 section Semigroup'
 variable [Semigroup' α]
 
+theorem nppow_eq_nppowRec : Semigroup'.nppow = nppowRec (α := α) := by
+  ext x y
+  induction x using PNat.recOn with
+  | p1 => simp [Semigroup'.nppow_one, nppowRec_one]
+  | hp n ih => simp [Semigroup'.nppow_succ,nppowRec_succ, ih]
+
 theorem nppow_eq_pow (n : ℕ+) (x : α) : Semigroup'.nppow n x = x ^ n := rfl
 
 @[simp]
