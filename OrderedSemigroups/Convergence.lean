@@ -34,28 +34,24 @@ lemma sequence_convergence
         _ = m * C := by ring_nf
 
   have h_I (m n : ℕ) (mpos : 0 < m) : I (m * n) ⊆ I n := by
-    -- m can be 1 or greater
-    have hm : m = 1 ∨ m > 1 := by exact LE.le.eq_or_gt mpos
-    obtain hm | hm := hm
-    · rw [hm, one_mul] -- m = 1
-    · intro x hx -- m > 1
-      have h' : |a (n) - a (m * n) / m| ≤ (m - 1) * C / m := calc
-        |a (n) - a (m * n) / m| = 1 / m * |m * a n - a (m * n)| := by field_simp; rw [abs_div]; field_simp; ring_nf
-        _ = 1 / ↑m * |a (m * n) - m * a n| := by rw [<-abs_neg]; ring_nf
-        _ ≤ 1 / ↑m * ((m - 1) * C) := mul_le_mul_of_nonneg_left (h m n mpos) (by positivity)
-        _ ≤ (m - 1) * C / m := by field_simp
+    intro x hx
+    have h' : |a (n) - a (m * n) / m| ≤ (m - 1) * C / m := calc
+      |a (n) - a (m * n) / m| = 1 / m * |m * a n - a (m * n)| := by field_simp; rw [abs_div]; field_simp; ring_nf
+      _ = 1 / ↑m * |a (m * n) - m * a n| := by rw [<-abs_neg]; ring_nf
+      _ ≤ 1 / ↑m * ((m - 1) * C) := mul_le_mul_of_nonneg_left (h m n mpos) (by positivity)
+      _ ≤ (m - 1) * C / m := by field_simp
 
-      calc
-        |a n / ↑n - x| = |(a n / ↑n - a (m * n) / (m * n)) + (a (m * n) / (m * n) - x)| := by simp only [sub_add_sub_cancel]
-        _ ≤ |a n / ↑n - a (m * n) / (m * n)| + |a (m * n) / (m * n) - x| := abs_add_le _ _
-        _ ≤ |a n / ↑n - a (m * n) / (m * n)| + C / ↑(m * n) := by rw [add_le_add_iff_left, <-Nat.cast_mul]; exact hx
-        _ = |a n / n - (a (m * n) / m) / n| + C / ↑(m * n) := by field_simp
-        _ = |(a n - a (m * n) / m) / n| + C / ↑(m * n) := by ring_nf
-        _ ≤ |a n - a (m * n) / ↑m| / |↑n| + C / ↑(m * n) := by rw [abs_div]
-        _ ≤ (m - 1) * C / m / n + C / ↑(m * n) := by rw [Nat.abs_cast, add_le_add_iff_right]; exact div_le_div_of_nonneg_right h' (Nat.cast_nonneg' n)
-        _ ≤ ((m - 1) * C + C) / (m * n) := by field_simp
-        _ ≤ (m * C) / (m * n) := by exact div_le_div_of_nonneg_right (by linarith) (by simp [mpos])
-        _ ≤ C / ↑n := by ring_nf; field_simp
+    calc
+      |a n / ↑n - x| = |(a n / ↑n - a (m * n) / (m * n)) + (a (m * n) / (m * n) - x)| := by simp only [sub_add_sub_cancel]
+      _ ≤ |a n / ↑n - a (m * n) / (m * n)| + |a (m * n) / (m * n) - x| := abs_add_le _ _
+      _ ≤ |a n / ↑n - a (m * n) / (m * n)| + C / ↑(m * n) := by rw [add_le_add_iff_left, <-Nat.cast_mul]; exact hx
+      _ = |a n / n - (a (m * n) / m) / n| + C / ↑(m * n) := by field_simp
+      _ = |(a n - a (m * n) / m) / n| + C / ↑(m * n) := by ring_nf
+      _ ≤ |a n - a (m * n) / ↑m| / |↑n| + C / ↑(m * n) := by rw [abs_div]
+      _ ≤ (m - 1) * C / m / n + C / ↑(m * n) := by rw [Nat.abs_cast, add_le_add_iff_right]; exact div_le_div_of_nonneg_right h' (Nat.cast_nonneg' n)
+      _ ≤ ((m - 1) * C + C) / (m * n) := by field_simp
+      _ ≤ (m * C) / (m * n) := by exact div_le_div_of_nonneg_right (by linarith) (by simp [mpos])
+      _ ≤ C / ↑n := by ring_nf; field_simp
 
   have : C ≥ 0 := by
     have pos := abs_nonneg (a (2 + 1) - a 2 - a 1)
