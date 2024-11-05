@@ -112,7 +112,7 @@ end CommSemigroup'
 section LinearOrderedCancelSemigroup
 variable [LinearOrderedCancelCommSemigroup α] [not_one : Fact (∀x : α, ¬is_one x)]
 
-set_option maxHeartbeats 300000
+set_option maxHeartbeats 500000
 instance to_monoid [not_one : Fact (∀x : α, ¬is_one x)] : LinearOrderedCancelCommMonoid (with_one α) where
   le := by
     intro x y

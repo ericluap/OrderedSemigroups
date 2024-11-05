@@ -289,3 +289,102 @@ and so $a$ and $b$ do not form an anomalous pair.
 
 Similalry if $a$ and $b$ are negative.
 \end{proof}
+
+\section{Holder's Theorem}
+We follow the proof from ``Groups, Orders, and Dynamics'' by Deroin, Navas, and Rivas.
+
+\begin{lemma}
+Let $G$ be a left ordered group. 
+If its positive cone is a normal subsemigroup, then $G$ is a bi-ordered group.
+\end{lemma}
+\begin{proof}
+Let $x,y,z \in G$ such that $x \le y$. Since $G$ is a left ordered group, we then know that $zx \le zy$.
+Our goal is to show that $xz \le yz$.
+
+Since $x \le y$, we either have that $x = y$ or $x < y$.
+In the first case, it is true that $xz = yz$ and so $xz \le yz$ and we are done.
+
+In the second case, since $x < y$, we have that $1 < x^{-1}y$.
+So $x^{-1}y$ is in the positive cone. Since the positive cone is normal, we have that
+$1 < z^{-1}x^{-1}yz$. Therefore, $xz < yz$ and we are done.
+\end{proof}
+
+\begin{lemma}
+Let $G$ be a left ordered group.
+If $G$ is Archimedean, then it is bi-ordered.
+\end{lemma}
+\begin{proof}
+By the previous lemma, it suffices to show that its positive cone is a normal semigroup.
+Let $g$ be an element of the positive cone and let $h$ be an element of $G$.
+Our goal is to show that $hgh^{-1}$ is in the positive cone.
+
+Assume for the sake of contradiction that $hgh^{-1}$ is not in the positive cone.
+We then split into two cases based on whether or not $h$ is in the positive or negative cone.
+Notice that since $h \ne 1$, it must be in one of the cones.
+
+Let's first look at the case where $h$ is in the negative cone.
+Since $G$ is Archimedean, there exists a smallest nonnegative integer $n$
+such that $h^{-1} < g^n$ (we can guarantee its nonnegative as both $g$ and $h^{-1}$ are positive).
+Since $h < 1$, $1 < h^{-1}$ and so $n > 0$.
+
+Notice that since $g$ and $h$ are not the identity,
+and $hgh^{-1}$ is not in the positive cone, it must be in the negative cone.
+So $hgh^{-1} < 1$ and thus, we have that $h^{-1} < g^{-1}h^{-1}$. And since
+$h^{-1} < g^n$, we have that $g^{-1}h^{-1} < g^{n-1}$. Therefore,
+we have that $h^{-1} < g^{-1}h^{-1} < g^{n-1}$. So then $h^{-1} < g^{n-1}$.
+Since $n > 0$, $n-1$ is a smaller nonnegative integer such that $h^{-1} < g^{n-1}$. 
+This contradicts the minimality of $n$.
+
+The remaining case is where $h$ is in the positive cone.
+As before, $hgh^{-1}$ must be in the negative cone so
+$hgh^{-1} < 1$. Therefore, $1 < hg^{-1}h^{-1}$.
+
+We have that $h^{-1}$ is in the negative cone
+and so from the first half of this proof, we know that
+$h^{-1}(hg^{-1}h^{-1})h$ is in the positive cone.
+Simplifying, we get that $g^{-1}$ is in the positive cone.
+So then we have that $1 < g^{-1}$ and $1 < g$ which is a contradiction.
+
+So we have shown that the positive cone is a normal subsemigroup
+and thus that the group $G$ is bi-ordered.
+\end{proof}
+
+\begin{theorem}
+A left-ordered group that is Archimedean is isomorphic to a
+subgroup of $\mathbb{R}$.
+\end{theorem}
+\begin{proof}
+The first step is to define the following map:\\ \\
+Let $G$ be a bi-ordered Archimedean group.
+Fix a positive element $f \in G$. Then for each $g \in G$
+we can define a function $q_g\colon \mathbb{N} \to \mathbb{N}$ where
+for each $n \in \mathbb{N}$, $q_g(n)$ is the unique integer satisfying
+\[
+f^{q_g(n)} \le g^n < f^{q_g(n) + 1}
+\]
+
+The second step:\\ \\ 
+We prove that for each $g \in G$,
+the sequence $\frac{q_g(n)}{n}$ converges to a real number as $n$
+goes to infinity.
+Let $n_1$ and $n_2$ be natural numbers. Then
+$f^{q_g(n_1)} \le g^{n_1} < f^{q_g(n_1) + 1}$ and
+$f^{q_g(n_2)} \le g^{n_2} < f^{q_g(n_2) + 1}$.
+Therefore,
+\[
+f^{q_g(n_1)+q_g(n_2)} \le g^{n_1+n_2} < f^{q_g(n_1) + q_g(n_2) + 2}
+\]
+And so it must be that 
+\[
+q_g(n_1) + q_g(n_2) \le q_g(n_1 + n_2) \le q_g(n_1) + q_g(n_2) + 1
+\]
+Then the sequence converges by the exercise already proven as we have that
+$|q_g(n_1+n_2) - q_g(n_1) - q_g(n_2)| \le 1$.
+
+The third step:\\ \\
+We define a map that takes each element $g \in G$ to the real number which is the limit
+of the sequence $\frac{q_g(n)}{n}$. We then check that this map is a group homomorphism.
+
+The fourth step:\\ \\
+We check that the map is injective and order-preserving.
+\end{proof}

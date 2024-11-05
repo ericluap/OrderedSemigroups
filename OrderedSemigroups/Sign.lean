@@ -7,8 +7,8 @@ This file defines what it means for an element of an ordered semigroup
 to be positive, negative, or one. It also proves some basic facts about signs.
 -/
 
-section OrderedSemigroup
-variable [OrderedSemigroup α]
+section LeftOrderedSemigroup
+variable [LeftOrderedSemigroup α]
 
 def is_positive (a : α) := ∀x : α, a*x > x
 def is_negative (a : α) := ∀x : α, a*x < x
@@ -50,11 +50,13 @@ theorem one_not_neg {a : α} (is_zer : is_one a) : ¬is_negative a := by
   rw [is_zer a] at is_neg
   exact (lt_self_iff_false a).mp is_neg
 
+/-
 theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
   fun x ↦ lt_mul_of_lt_mul_right (pos x) h
 
 theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative b :=
   fun x ↦ mul_lt_of_mul_lt_right (neg x) h
+-/
 
 theorem pos_pow_pos {a : α} (pos : is_positive a) (n : ℕ+) : is_positive (a^n) := by
   intro x
@@ -147,6 +149,17 @@ theorem neg_ppow_le_ppow {a : α} (n m : ℕ+) (neg : is_negative a)
     rw [←hk, ←AddCommMagma.add_comm k n, ppow_add]
     exact ((neg_pow_neg neg k) (a ^ n)).le
   · simp [h]
+
+end LeftOrderedSemigroup
+
+section OrderedSemigroup
+variable [OrderedSemigroup α]
+
+theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
+  fun x ↦ lt_mul_of_lt_mul_right (pos x) h
+
+theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative b :=
+  fun x ↦ mul_lt_of_mul_lt_right (neg x) h
 
 end OrderedSemigroup
 

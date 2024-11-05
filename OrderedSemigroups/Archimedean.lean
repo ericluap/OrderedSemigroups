@@ -14,7 +14,7 @@ universe u
 variable {α : Type u}
 
 section OrderedSemigroup
-variable [OrderedSemigroup α]
+variable [LeftOrderedSemigroup α]
 
 /-- `a` is Archimedean with respect to `b` if there exists an `N : ℕ+` such that
 for all `n ≥ N`, either `b` is positive and `b < a^n` or `b` is negative and `a^n < b`. -/

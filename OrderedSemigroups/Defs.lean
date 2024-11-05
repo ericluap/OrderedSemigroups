@@ -58,18 +58,23 @@ class Semigroup' (α : Type u) extends Semigroup α where
   nppow_succ : ∀ (n : ℕ+) (x), nppow (n+1) x = nppow n x * x := by intros x; exact nppowRec_succ x
 
 /-- Define the exponentiation notation for the action of ℕ+ on a semigroup' -/
-instance [Semigroup' α]: Pow α ℕ+ :=
+instance [Semigroup' α] : Pow α ℕ+ :=
   ⟨fun x n ↦ Semigroup'.nppow n x⟩
 
-class OrderedSemigroup (α : Type u) extends Semigroup' α, PartialOrder α where
+class LeftOrderedSemigroup (α : Type u) extends Semigroup' α, PartialOrder α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
+
+instance [LeftOrderedSemigroup α] : CovariantClass α α (· * ·) (· ≤ ·) where
+  elim a b c bc := LeftOrderedSemigroup.mul_le_mul_left b c bc a
+
+class RightOrderedSemigroup (α : Type u) extends Semigroup' α, PartialOrder α where
   mul_le_mul_right : ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c
 
-instance [OrderedSemigroup α] : CovariantClass α α (· * ·) (· ≤ ·) where
-  elim a b c bc := OrderedSemigroup.mul_le_mul_left b c bc a
+instance [RightOrderedSemigroup α] : CovariantClass α α (Function.swap (· * ·)) (· ≤ ·) where
+  elim a b c bc := RightOrderedSemigroup.mul_le_mul_right b c bc a
 
-instance [OrderedSemigroup α] : CovariantClass α α (Function.swap (· * ·)) (· ≤ ·) where
-  elim a b c bc := OrderedSemigroup.mul_le_mul_right b c bc a
+class OrderedSemigroup (α : Type u) extends
+  LeftOrderedSemigroup α, RightOrderedSemigroup α, PartialOrder α where
 
 class OrderedCancelSemigroup (α : Type u) extends OrderedSemigroup α where
   le_of_mul_le_mul_left : ∀ a b c : α, a * b ≤ a * c → b ≤ c
