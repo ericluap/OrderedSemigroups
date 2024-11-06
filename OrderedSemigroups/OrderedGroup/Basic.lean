@@ -35,6 +35,28 @@ def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
 instance : LeftOrderedSemigroup α where
   mul_le_mul_left _ _ a b :=  mul_le_mul_left' a b
 
+theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
+    1 < x^z := by sorry
+
+theorem pos_exp_neg_neg {x : α} (neg_x : x < 1) {z : ℤ} (pos_z : z > 0) :
+    x^z < 1 := by sorry
+
+theorem neg_exp_pos_neg {x : α} (pos_x : 1 < x) {z : ℤ} (neg_z : z < 0) :
+    x^z < 1 := by sorry
+
+theorem neg_exp_neg_pos {x : α} (neg_x : x < 1) {z : ℤ} (neg_z : z < 0) :
+    1 < x^z := by sorry
+
+theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
+    ∀z : ℤ, x^z > y → z > 0 := sorry
+
+/--
+  If x and y are both positive, then by Archimedneaness
+  we have a least z such that x^z > y.
+-/
+theorem pos_min_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
+  ∃z : ℤ, x^z > y ∧ z > 0 ∧ (∀t : ℤ, x^t > y → z < t) := sorry
+
 /--
   The definition of archimedean for groups and the one for semigroups are equivalent.
 -/
