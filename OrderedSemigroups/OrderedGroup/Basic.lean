@@ -32,7 +32,6 @@ theorem pos_neg_disjoint :
     Disjoint (SetLike.coe (PositiveCone α)) (SetLike.coe (NegativeCone α)) := by
   simp [Disjoint, PositiveCone, NegativeCone]
   intro S S_subset_pos S_subset_neg
-  unfold_projs at *
   ext x
   constructor
   · intro x_in_S
