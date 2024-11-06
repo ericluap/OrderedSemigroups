@@ -9,31 +9,39 @@ universe u
 
 variable {α : Type u}
 
-section Cones
-
-variable [Group α] [PartialOrder α]
-
-instance PositiveCone (α : Type u) [Group α] [PartialOrder α] : Subsemigroup α where
-  carrier := {x : α | 1 < x}
-  mul_mem' := sorry
-
-instance NegativeCone (α : Type u) [Group α] [PartialOrder α] : Subsemigroup α where
-  carrier := {x : α | x < 1}
-  mul_mem' := sorry
-
-theorem pos_neg_disjoint : Disjoint (SetLike.coe (PositiveCone α)) (SetLike.coe (NegativeCone α)) := sorry
-
-end Cones
-
 section LeftOrdered
 
 variable [LeftOrderedGroup α]
 
-def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
-    ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
-
 instance : LeftOrderedSemigroup α where
   mul_le_mul_left _ _ a b :=  mul_le_mul_left' a b
+
+instance PositiveCone (α : Type u) [LeftOrderedGroup α] : Subsemigroup α where
+  carrier := {x : α | 1 < x}
+  mul_mem' := by
+    simp
+    exact fun {a b} a_1 a_2 ↦ one_lt_mul' a_1 a_2
+
+instance NegativeCone (α : Type u) [LeftOrderedGroup α] : Subsemigroup α where
+  carrier := {x : α | x < 1}
+  mul_mem' := by
+    simp
+    exact fun {a b} a_1 a_2 ↦ mul_lt_one a_1 a_2
+
+theorem pos_neg_disjoint :
+    Disjoint (SetLike.coe (PositiveCone α)) (SetLike.coe (NegativeCone α)) := by
+  simp [Disjoint, PositiveCone, NegativeCone]
+  intro S S_subset_pos S_subset_neg
+  unfold_projs at *
+  ext x
+  constructor
+  · intro x_in_S
+    exact (lt_self_iff_false x).mp (gt_trans (S_subset_pos x_in_S) (S_subset_neg x_in_S))
+  · intro x_in_empty
+    contradiction
+
+def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
+    ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
     1 < x^z := by sorry
