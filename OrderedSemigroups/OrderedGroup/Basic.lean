@@ -43,19 +43,54 @@ def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
     ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
-    1 < x^z := by sorry
+    1 < x^z := by
+    have (b : ℕ) (pos_b : b > 0) : 1 < x^b := one_lt_pow' pos_x (Nat.not_eq_zero_of_lt pos_b)
+    cases z
+    · simp_all
+    · simp_all
 
 theorem pos_exp_neg_neg {x : α} (neg_x : x < 1) {z : ℤ} (pos_z : z > 0) :
-    x^z < 1 := by sorry
+    x^z < 1 := by
+    have (b : ℕ) (pos_b : b > 0) : x^b < 1 := pow_lt_one' neg_x (Nat.not_eq_zero_of_lt pos_b)
+    cases z
+    · simp_all
+    · simp_all
 
 theorem neg_exp_pos_neg {x : α} (pos_x : 1 < x) {z : ℤ} (neg_z : z < 0) :
-    x^z < 1 := by sorry
+    x^z < 1 := by
+    let y := -z
+    have hy : z = -y := by omega
+    rw [hy]
+    field_simp
+    exact pos_exp_pos_pos pos_x (by omega)
 
 theorem neg_exp_neg_pos {x : α} (neg_x : x < 1) {z : ℤ} (neg_z : z < 0) :
-    1 < x^z := by sorry
+    1 < x^z := by
+    let y := -z
+    have hy : z = -y := by omega
+    rw [hy]
+    field_simp
+    rw [one_div]
+    exact one_lt_inv_of_inv (pos_exp_neg_neg neg_x (by omega))
 
 theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
-    ∀z : ℤ, x^z > y → z > 0 := sorry
+    ∀z : ℤ, x^z > y → z > 0 := by
+    intro z
+    by_contra!
+    obtain ⟨h, hz⟩ := this -- h : x ^ z > y, hz : z ≤ 0
+    obtain hz | hz := Int.le_iff_eq_or_lt.mp hz
+    · -- case z = 0
+      have : (1 : α) < 1 := by calc
+        1 < y := pos_y
+        _ < x^z := h
+        _ = 1 := by rw [hz, zpow_zero]
+      exact (lt_self_iff_false 1).mp this
+    · -- case z < 0
+      have : x^z < x^z := by calc
+        x^z < 1 := neg_exp_pos_neg pos_x hz
+        _ < y := pos_y
+        _ < x^z := h
+      exact (lt_self_iff_false (x ^ z)).mp this
 
 /--
   If x and y are both positive, then by Archimedneaness
