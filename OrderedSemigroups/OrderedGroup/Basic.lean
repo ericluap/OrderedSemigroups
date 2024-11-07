@@ -96,7 +96,7 @@ theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
   If x and y are both positive, then by Archimedneaness
   we have a least z such that x^z > y.
 -/
-theorem pos_min_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
+theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (pos_y : 1 < y) :
   ∃z : ℤ, x^z > y ∧ z > 0 ∧ (∀t : ℤ, x^t > y → z < t) := sorry
 
 /--
@@ -110,11 +110,77 @@ def normal_semigroup {α : Type u} [Group α] (x : Subsemigroup α) :=
 /--
   A left ordered group whose positive cone is a normal semigroup is an ordered group.
 -/
-def pos_normal_ordered (pos_normal : normal_semigroup (PositiveCone α)) : OrderedGroup α := by sorry
-
-/--
-  A left ordered group that is Archimedean is an ordered group.
--/
-def left_arch_ordered (arch : is_archimedean (α := α)) : OrderedGroup α := by sorry
+def pos_normal_ordered (pos_normal : normal_semigroup (PositiveCone α)) :
+    ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c := by sorry
 
 end LeftOrdered
+
+section LeftLinearOrderedGroup
+
+variable [LeftLinearOrderedGroup α]
+
+theorem neg_case_left_arch_false {g h : α} (arch : is_archimedean (α := α)) (pos_g : 1 < g) (neg_h : h < 1)
+    (conj_lt_one : h * g * h⁻¹ < 1) : False := by
+  simp [←arch_group_semigroup] at arch
+  have pos_hinv : 1 < h⁻¹ := one_lt_inv_of_inv neg_h
+  obtain ⟨z, gz_gt_hinv, _, z_maximum⟩ := pos_min_arch arch pos_g pos_hinv
+  have hinv_lt : h⁻¹ < g⁻¹ * h⁻¹ := by
+    have : h⁻¹ * (h * g * h⁻¹) < h⁻¹ * 1 := mul_lt_mul_left' conj_lt_one (h⁻¹)
+    simp [mul_assoc] at this
+    have : g⁻¹ * (g * h⁻¹) < g⁻¹ * h⁻¹ := mul_lt_mul_left' this g⁻¹
+    simpa [mul_assoc]
+  have : g⁻¹ * h⁻¹ < g⁻¹ * g^z := mul_lt_mul_left' gz_gt_hinv g⁻¹
+  have hinv_lt : h⁻¹ < g⁻¹ * g^z := by exact gt_trans this hinv_lt
+  have : g^z = g * g^((-1) + z) := by
+    have : g^z = g^(1 + ((-1) + z)) := by simp
+    have : g^(1 + ((-1) + z)) = g^(1 : ℤ) * g^((-1) + z) := by
+      simp only [zpow_add g 1 (-1 + z)]
+    simpa
+  simp [this] at hinv_lt
+  have := z_maximum (-1 + z) hinv_lt
+  omega
+
+theorem neg_case_conj_pos {g h : α} (arch : is_archimedean (α := α)) (pos_g : 1 < g) (neg_h : h < 1)
+    : 1 < h * g * h⁻¹ := by
+  by_contra not_pos_conj
+  simp at not_pos_conj
+  rcases not_pos_conj.eq_or_lt with conj_eq_one | conj_lt_one
+  · have : g = 1 := by exact conj_eq_one_iff.mp conj_eq_one
+    rw [this] at pos_g
+    exact (lt_self_iff_false 1).mp pos_g
+  exact False.elim (neg_case_left_arch_false arch pos_g neg_h conj_lt_one)
+
+/--
+  A left ordered group that is Archimedean is right ordered.
+-/
+theorem left_arch_ordered (arch : is_archimedean (α := α)) :
+    ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c := by
+  apply pos_normal_ordered
+  simp [normal_semigroup, PositiveCone]
+  intro g pos_g h
+  -- Assume that `h * g * h⁻¹` is negative for contradiction
+  by_contra not_pos_conj
+  simp at not_pos_conj
+  rcases not_pos_conj.eq_or_lt with conj_eq_one | conj_lt_one
+  · have : g = 1 := by exact conj_eq_one_iff.mp conj_eq_one
+    rw [this] at pos_g
+    exact (lt_self_iff_false 1).mp pos_g
+  by_cases pos_h : 1 < h
+  case neg =>
+    simp at pos_h
+    rcases pos_h.eq_or_lt with h_eq_one | neg_h
+    -- The case where `h = 1`
+    · simp [h_eq_one] at *
+      exact (lt_self_iff_false 1).mp (lt_imp_lt_of_le_imp_le (fun a ↦ not_pos_conj) pos_g)
+    -- The case where `h` is in the negative cone
+    · exact False.elim (neg_case_left_arch_false arch pos_g neg_h conj_lt_one)
+  case pos =>
+    -- The case where `h` is in the positive cone
+    have conjinv_pos : 1 < (h * g * h⁻¹)⁻¹ := one_lt_inv_of_inv conj_lt_one
+    simp at conjinv_pos
+    have hinv_neg : h⁻¹ < 1 := Left.inv_lt_one_iff.mpr pos_h
+    have := neg_case_conj_pos arch conjinv_pos hinv_neg
+    simp at this
+    exact (lt_self_iff_false g).mp (gt_trans pos_g this)
+
+end LeftLinearOrderedGroup
