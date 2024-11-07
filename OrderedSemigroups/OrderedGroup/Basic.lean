@@ -44,17 +44,17 @@ def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
     1 < x^z := by
-    have (b : ℕ) (pos_b : b > 0) : 1 < x^b := one_lt_pow' pos_x (Nat.not_eq_zero_of_lt pos_b)
-    cases z
-    · simp_all
-    · simp_all
+    let b := z.natAbs
+    have hb : z = b := by omega
+    rw [hb, zpow_natCast]
+    exact one_lt_pow' pos_x (by omega)
 
 theorem pos_exp_neg_neg {x : α} (neg_x : x < 1) {z : ℤ} (pos_z : z > 0) :
     x^z < 1 := by
-    have (b : ℕ) (pos_b : b > 0) : x^b < 1 := pow_lt_one' neg_x (Nat.not_eq_zero_of_lt pos_b)
-    cases z
-    · simp_all
-    · simp_all
+    let b := z.natAbs
+    have hb : z = b := by omega
+    rw [hb, zpow_natCast]
+    exact pow_lt_one' neg_x (by omega)
 
 theorem neg_exp_pos_neg {x : α} (pos_x : 1 < x) {z : ℤ} (neg_z : z < 0) :
     x^z < 1 := by
