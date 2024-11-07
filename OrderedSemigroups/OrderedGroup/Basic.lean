@@ -44,34 +44,25 @@ def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
     1 < x^z := by
-    let b := z.natAbs
-    have hb : z = b := by omega
-    rw [hb, zpow_natCast]
+    have h : z = z.natAbs := by omega
+    rw [h, zpow_natCast]
     exact one_lt_pow' pos_x (by omega)
 
 theorem pos_exp_neg_neg {x : α} (neg_x : x < 1) {z : ℤ} (pos_z : z > 0) :
     x^z < 1 := by
-    let b := z.natAbs
-    have hb : z = b := by omega
-    rw [hb, zpow_natCast]
+    have h : z = z.natAbs := by omega
+    rw [h, zpow_natCast]
     exact pow_lt_one' neg_x (by omega)
 
 theorem neg_exp_pos_neg {x : α} (pos_x : 1 < x) {z : ℤ} (neg_z : z < 0) :
     x^z < 1 := by
-    let y := -z
-    have hy : z = -y := by omega
-    rw [hy]
-    field_simp
-    exact pos_exp_pos_pos pos_x (by omega)
+    have h : 1 < x ^ (-z) := pos_exp_pos_pos pos_x (by omega)
+    rwa [zpow_neg, Left.one_lt_inv_iff] at h
 
 theorem neg_exp_neg_pos {x : α} (neg_x : x < 1) {z : ℤ} (neg_z : z < 0) :
     1 < x^z := by
-    let y := -z
-    have hy : z = -y := by omega
-    rw [hy]
-    field_simp
-    rw [one_div]
-    exact one_lt_inv_of_inv (pos_exp_neg_neg neg_x (by omega))
+    have h : x ^ (-z) < 1 := pos_exp_neg_neg neg_x (by omega)
+    rwa [zpow_neg, Left.inv_lt_one_iff] at h
 
 theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
     ∀z : ℤ, x^z > y → z > 0 := by
