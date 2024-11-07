@@ -25,3 +25,9 @@ instance rightOrderedContravariant [RightOrderedGroup α] : ContravariantClass �
   elim a b c bc := by simpa using mul_le_mul_right' bc a⁻¹
 
 class OrderedGroup (α : Type u) extends LeftOrderedGroup α, RightOrderedGroup α
+
+class LeftLinearOrderedGroup (α : Type u) extends LeftOrderedGroup α, LinearOrder α
+
+class RightLinearOrderedGroup (α : Type u) extends RightOrderedGroup α, LinearOrder α
+
+class LinearOrderedgroup (α : Type u) extends LeftLinearOrderedGroup α, RightLinearOrderedGroup α
