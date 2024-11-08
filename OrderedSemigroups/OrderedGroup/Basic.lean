@@ -138,7 +138,23 @@ def normal_semigroup {α : Type u} [Group α] (x : Subsemigroup α) :=
   A left ordered group whose positive cone is a normal semigroup is an ordered group.
 -/
 def pos_normal_ordered (pos_normal : normal_semigroup (PositiveCone α)) :
-    ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c := by sorry
+    ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c := by
+  intro a b a_le_b c
+  simp [normal_semigroup, PositiveCone] at pos_normal
+  have : 1 ≤ a⁻¹ * b := le_inv_mul_iff_le.mpr a_le_b
+  rcases this.eq_or_lt with ainv_b_eq_one | ainv_b_pos
+  -- Case `a = b`
+  · have : a*1 = a*(a⁻¹*b) := congrArg (HMul.hMul a) ainv_b_eq_one
+    simp at this
+    simp [this]
+  -- Case `a < b`
+  have := pos_normal (a⁻¹ * b) ainv_b_pos c⁻¹
+  simp at this
+  have : c * 1 < c * (c⁻¹ * (a⁻¹ * b) * c) := mul_lt_mul_left' this c
+  simp [mul_one, ←mul_assoc] at this
+  have : a * c < a * (a⁻¹ * b * c) := mul_lt_mul_left' this a
+  simp [←mul_assoc] at this
+  exact this.le
 
 end LeftOrdered
 
