@@ -88,7 +88,45 @@ theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
   we have a least z such that x^z > y.
 -/
 theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (pos_y : 1 < y) :
-  ∃z : ℤ, x^z > y ∧ z > 0 ∧ (∀t : ℤ, x^t > y → z < t) := sorry
+  ∃z : ℤ, x^z > y ∧ z > 0 ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
+  -- Define predicate for numbers satisfying x^n > y
+  let P : ℕ → Prop := fun n => x^(n : ℤ) > y
+
+  -- P is a decidable predicate
+  have P_decidable : DecidablePred P := by
+    exact Classical.decPred P
+
+   -- Define the set of natural numbers satisfying P
+  let S := {n : ℕ | P n}
+
+  -- Since x > 1 and y > 1, and the group is Archimedean, there exists some positive n such that x^n > y
+  have exists_P : ∃ n, P n := by
+    have x_not_one : x ≠ 1 := ne_of_gt pos_x
+    obtain ⟨n, hn⟩ := arch x y x_not_one
+    have n_pos : n > 0 := pos_arch pos_x pos_y n hn
+    dsimp [P]
+    use n.natAbs
+    have : |n| = n := by exact abs_of_pos n_pos
+    rwa [Int.cast_natAbs, this]
+
+  -- By the well-ordering principle, S has a least element z₀
+  let z₀ := Nat.find exists_P
+
+  -- z₀ satisfies the required properties
+  use z₀
+  have hz₀ := Nat.find_spec exists_P -- x^z₀ > y
+  constructor
+  · exact hz₀ -- x^z₀ > y
+  constructor
+  · exact_mod_cast pos_arch pos_x pos_y z₀ hz₀ -- z₀ > 0
+  · -- For all t, if x^t > y, then z₀ ≤ t
+    -- t < z₀, but x^t > y, so t ∈ S and t < z₀, contradicting minimality of z₀
+    intro t ht
+    by_contra! h
+    have : t > 0 := pos_arch pos_x pos_y t ht
+    have t_abs : t = t.natAbs := by omega
+    have tS : (t.natAbs) ∈ S := by rwa [t_abs] at ht
+    exact Nat.find_min exists_P (by omega) tS
 
 /--
   The definition of archimedean for groups and the one for semigroups are equivalent.
