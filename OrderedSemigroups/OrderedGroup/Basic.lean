@@ -92,39 +92,34 @@ theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (p
   -- Define predicate for numbers satisfying x^n > y
   let P : ℕ → Prop := fun n => x^(n : ℤ) > y
 
-  -- P is a decidable predicate
-  have P_decidable : DecidablePred P := by
-    exact Classical.decPred P
-
-   -- Define the set of natural numbers satisfying P
+  -- Define the set of natural numbers satisfying P
   let S := {n : ℕ | P n}
 
   -- Since x > 1 and y > 1, and the group is Archimedean, there exists some positive n such that x^n > y
   have exists_P : ∃ n, P n := by
-    have x_not_one : x ≠ 1 := ne_of_gt pos_x
-    obtain ⟨n, hn⟩ := arch x y x_not_one
+    obtain ⟨n, hn⟩ := arch x y (ne_of_gt pos_x)
     have n_pos : n > 0 := pos_arch pos_x pos_y n hn
     dsimp [P]
     use n.natAbs
-    have : |n| = n := by exact abs_of_pos n_pos
-    rwa [Int.cast_natAbs, this]
+    rwa [Int.cast_natAbs, abs_of_pos n_pos]
+
+  -- P is a decidable predicate
+  have : DecidablePred P := Classical.decPred P
 
   -- By the well-ordering principle, S has a least element z₀
   let z₀ := Nat.find exists_P
 
   -- z₀ satisfies the required properties
   use z₀
-  have hz₀ := Nat.find_spec exists_P -- x^z₀ > y
   constructor
-  · exact hz₀ -- x^z₀ > y
+  · exact Nat.find_spec exists_P -- x^z₀ > y
   · -- For all t, if x^t > y, then z₀ ≤ t
-    -- t < z₀, but x^t > y, so t ∈ S and t < z₀, contradicting minimality of z₀
     intro t ht
-    by_contra! h
+    by_contra! h -- t < z₀, but x^t > y, so t ∈ S, contradicting minimality of z₀
     have : t > 0 := pos_arch pos_x pos_y t ht
     have t_abs : t = t.natAbs := by omega
-    have tS : (t.natAbs) ∈ S := by rwa [t_abs] at ht
-    exact Nat.find_min exists_P (by omega) tS
+    have t_in_S : (t.natAbs) ∈ S := by rwa [t_abs] at ht
+    exact Nat.find_min exists_P (by omega) t_in_S
 
 /--
   The definition of archimedean for groups and the one for semigroups are equivalent.
