@@ -88,7 +88,7 @@ theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
   we have a least z such that x^z > y.
 -/
 theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (pos_y : 1 < y) :
-  ∃z : ℤ, x^z > y ∧ z > 0 ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
+  ∃z : ℤ, x^z > y ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
   -- Define predicate for numbers satisfying x^n > y
   let P : ℕ → Prop := fun n => x^(n : ℤ) > y
 
@@ -117,8 +117,6 @@ theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (p
   have hz₀ := Nat.find_spec exists_P -- x^z₀ > y
   constructor
   · exact hz₀ -- x^z₀ > y
-  constructor
-  · exact_mod_cast pos_arch pos_x pos_y z₀ hz₀ -- z₀ > 0
   · -- For all t, if x^t > y, then z₀ ≤ t
     -- t < z₀, but x^t > y, so t ∈ S and t < z₀, contradicting minimality of z₀
     intro t ht
@@ -152,7 +150,7 @@ theorem neg_case_left_arch_false {g h : α} (arch : is_archimedean (α := α)) (
     (conj_lt_one : h * g * h⁻¹ < 1) : False := by
   simp [←arch_group_semigroup] at arch
   have pos_hinv : 1 < h⁻¹ := one_lt_inv_of_inv neg_h
-  obtain ⟨z, gz_gt_hinv, _, z_maximum⟩ := pos_min_arch arch pos_g pos_hinv
+  obtain ⟨z, gz_gt_hinv, z_maximum⟩ := pos_min_arch arch pos_g pos_hinv
   have hinv_lt : h⁻¹ < g⁻¹ * h⁻¹ := by
     have : h⁻¹ * (h * g * h⁻¹) < h⁻¹ * 1 := mul_lt_mul_left' conj_lt_one (h⁻¹)
     simp [mul_assoc] at this
@@ -200,7 +198,7 @@ theorem left_arch_ordered (arch : is_archimedean (α := α)) :
     rcases pos_h.eq_or_lt with h_eq_one | neg_h
     -- The case where `h = 1`
     · simp [h_eq_one] at *
-      exact (lt_self_iff_false 1).mp (lt_imp_lt_of_le_imp_le (fun a ↦ not_pos_conj) pos_g)
+      exact (lt_self_iff_false 1).mp (lt_imp_lt_of_le_imp_le (fun _ ↦ not_pos_conj) pos_g)
     -- The case where `h` is in the negative cone
     · exact False.elim (neg_case_left_arch_false arch pos_g neg_h conj_lt_one)
   case pos =>
