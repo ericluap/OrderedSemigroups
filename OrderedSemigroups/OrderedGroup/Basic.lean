@@ -126,11 +126,6 @@ theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (p
     have tS : (t.natAbs) ∈ S := by rwa [t_abs] at ht
     exact Nat.find_min exists_P (by omega) tS
 
-/--
-  The definition of archimedean for groups and the one for semigroups are equivalent.
--/
-theorem arch_group_semigroup : archimedean_group α ↔ is_archimedean (α := α) := by sorry
-
 def normal_semigroup {α : Type u} [Group α] (x : Subsemigroup α) :=
     ∀s : x, ∀g : α, g * s * g⁻¹ ∈ x
 
@@ -162,9 +157,8 @@ section LeftLinearOrderedGroup
 
 variable [LeftLinearOrderedGroup α]
 
-theorem neg_case_left_arch_false {g h : α} (arch : is_archimedean (α := α)) (pos_g : 1 < g) (neg_h : h < 1)
+theorem neg_case_left_arch_false {g h : α} (arch : archimedean_group α) (pos_g : 1 < g) (neg_h : h < 1)
     (conj_lt_one : h * g * h⁻¹ < 1) : False := by
-  simp [←arch_group_semigroup] at arch
   have pos_hinv : 1 < h⁻¹ := one_lt_inv_of_inv neg_h
   obtain ⟨z, gz_gt_hinv, z_maximum⟩ := pos_min_arch arch pos_g pos_hinv
   have hinv_lt : h⁻¹ < g⁻¹ * h⁻¹ := by
@@ -183,7 +177,7 @@ theorem neg_case_left_arch_false {g h : α} (arch : is_archimedean (α := α)) (
   have := z_maximum (-1 + z) hinv_lt
   omega
 
-theorem neg_case_conj_pos {g h : α} (arch : is_archimedean (α := α)) (pos_g : 1 < g) (neg_h : h < 1)
+theorem neg_case_conj_pos {g h : α} (arch : archimedean_group α) (pos_g : 1 < g) (neg_h : h < 1)
     : 1 < h * g * h⁻¹ := by
   by_contra not_pos_conj
   simp at not_pos_conj
@@ -196,7 +190,7 @@ theorem neg_case_conj_pos {g h : α} (arch : is_archimedean (α := α)) (pos_g :
 /--
   A left ordered group that is Archimedean is right ordered.
 -/
-theorem left_arch_ordered (arch : is_archimedean (α := α)) :
+theorem left_arch_ordered (arch : archimedean_group α) :
     ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c := by
   apply pos_normal_ordered
   simp [normal_semigroup, PositiveCone]
@@ -227,3 +221,14 @@ theorem left_arch_ordered (arch : is_archimedean (α := α)) :
     exact (lt_self_iff_false g).mp (gt_trans pos_g this)
 
 end LeftLinearOrderedGroup
+
+/-
+/--
+  The definition of archimedean for groups and the one for semigroups are equivalent.
+-/
+theorem arch_group_semigroup : archimedean_group α ↔ is_archimedean (α := α) := by
+  simp [archimedean_group, is_archimedean]
+  constructor
+  · intro arch_group a b
+    rcases pos_neg_or_one a with pos_a | neg_a | one_a
+-/
