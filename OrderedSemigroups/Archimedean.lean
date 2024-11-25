@@ -119,7 +119,7 @@ theorem anomalous_pair_same_sign {a b : α} (anomalous : anomalous_pair a b) : s
   case inr.intro.inr.inr =>
     exact False.elim ((lt_self_iff_false b).mp (gt_trans b_gt_ap1 (lt_of_lt_of_eq a_gt_b (id (Eq.symm (one_a a))))))
   all_goals rcases pos_neg_or_one b with pos_b | neg_b | one_b
-  <;> tauto
+  <;> try tauto
   · exact False.elim (pos_not_neg (pos_le_pos pos_a a_lt_b.le) neg_b)
   · exact False.elim (anomalous_not_one' anomalous one_b)
   · exact False.elim (neg_not_pos (le_neg_neg neg_a a_gt_b.le) pos_b)
