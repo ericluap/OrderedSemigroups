@@ -30,4 +30,4 @@ class LeftLinearOrderedGroup (α : Type u) extends LeftOrderedGroup α, LinearOr
 
 class RightLinearOrderedGroup (α : Type u) extends RightOrderedGroup α, LinearOrder α
 
-class LinearOrderedgroup (α : Type u) extends LeftLinearOrderedGroup α, RightLinearOrderedGroup α
+class LinearOrderedGroup (α : Type u) extends LeftLinearOrderedGroup α, RightLinearOrderedGroup α
