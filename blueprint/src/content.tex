@@ -382,8 +382,48 @@ Then the sequence converges by the exercise already proven as we have that
 $|q_g(n_1+n_2) - q_g(n_1) - q_g(n_2)| \le 1$.
 
 The third step:\\ \\
-We define a map that takes each element $g \in G$ to the real number which is the limit
-of the sequence $\frac{q_g(n)}{n}$. We then check that this map is a group homomorphism.
+We define a map $\phi$ that takes each element $g \in G$ to the real number which is the limit
+of the sequence $\frac{q_g(n)}{n}$.
+
+We then check that this map is a group homomorphism.
+Let $g_1,g_2 \in G$. Our goal is to show that $\phi(g_1) + \phi(g_2) = \phi(g_1g_2)$.
+We know that for any $p \in \mathbb{N}$, there exists $q_1$ and $q_2$ such that
+\[
+f^{q_1} \le g_1^p < f^{q_1 + 1}
+\]
+and
+\[
+f^{q_2} \le g_2^p < f^{q_2 + 1}
+\]
+
+We now do case work based on whether $g_1g_2 \le g_2g_1$ or
+$g_2g_1 \le g_1g_2$. Let's look at the first case.
+Then we have that $g_1^pg_2p \le (g_1g_2)^p \le g_2^pg_1^p$.
+Furthermore we have that $f^{q_1+q_2} \le g_1^pg_2^p$ and that
+$g_2^pg_1^p < f^{q_1+q_2+2}$. Therefore,
+\[
+f^{q_1+q_2} \le g_1^pg_2^p \le (g_1g_2)^p \le g_2^pg_1^p < f^{q_1+q_2+2}
+\]
+Therefore, for each $p$
+\[
+q_1+q_2 \le q_{g_1g_2}(p) \le q_1+q_2 + 1
+\]
+And so
+\[
+\lim_{p \to\infty} \frac{q_1+q_2}{p} \le \lim_{p\to\infty} \frac{q_{g_1g_2}(p)}{p}=\phi(g_1g_2) \le \lim_{p\to\infty} \frac{q_1+q_2 + 1}{p}
+\]
+
+Now we have that
+\begin{align*}
+\phi(g_1) + \phi(g_2) &= \lim_{p\to \infty} \frac{q_1}{p} + \lim_{p\to\infty} \frac{q_2}{p}\\
+&= \lim_{p\to\infty} \frac{q_1+q_2}{p}\\
+&\le \phi(g_1g_2)\\
+&\le \lim_{p\to\infty} \frac{q_1+q_2 + 1}{p}
+&= \lim_{p\to\infty} \frac{q_1+q_2}{p}\\
+&= \phi(g_1)+\phi(g_2)
+\end{align*}
+Thus, $\phi(g_1g_2) = \phi(g_1) + \phi(g_2)$.
+And the other case is the same.
 
 The fourth step:\\ \\
 We check that the map is injective and order-preserving.
