@@ -152,5 +152,12 @@ theorem q_convergence (g : α) :
   rw [this]
   exact diff_le_1
 
-noncomputable def φ : α → ℝ :=
+noncomputable def φ' : α → ℝ :=
   fun g ↦ (q_convergence f_pos g).choose
+
+theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := by sorry
+
+noncomputable def φ : α →* ℝ where
+  toFun := φ' f_pos
+  map_one' := sorry
+  map_mul' := sorry
