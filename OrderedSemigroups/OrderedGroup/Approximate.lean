@@ -81,9 +81,9 @@ theorem approximate (g : α) (p : ℕ):
     simp at z_max
     trivial
 
-noncomputable def q (g : α) (p : ℕ): ℤ := (approximate f_pos g p).choose
+noncomputable def q (g : α) (p : ℕ) : ℤ := (approximate f_pos g p).choose
 
-theorem q_spec (g : α) (p : ℕ):
+theorem q_spec (g : α) (p : ℕ) :
   f^(q f_pos g p) ≤ g^p ∧ g^p < f^((q f_pos g p)+1) := by
     have := (approximate f_pos g p).choose_spec
     simp at this
@@ -155,7 +155,10 @@ theorem q_convergence (g : α) :
 noncomputable def φ' : α → ℝ :=
   fun g ↦ (q_convergence f_pos g).choose
 
-theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := by sorry
+theorem φ'_spec (g : α) : Filter.Tendsto (fun p ↦ ((q f_pos g p) : ℝ)/(p : ℝ)) Filter.atTop (nhds (φ' f_pos g)) := by
+  exact (q_convergence f_pos g).choose_spec
+
+theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := sorry
 
 noncomputable def φ : α →* ℝ where
   toFun := φ' f_pos

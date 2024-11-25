@@ -2,3 +2,4 @@
 -- Import modules here that should be built as part of the library.
 import «OrderedSemigroups».Archimedean
 import «OrderedSemigroups».MonoidToGroup
+import OrderedSemigroups.OrderedGroup.Approximate

@@ -147,7 +147,6 @@ def over_one_submonoid : Submonoid (with_division α) where
 theorem over_one_in_subset (a : α) : ⟦(a, 1)⟧ ∈ over_one_subset := by
   simp [over_one_submonoid, over_one_subset]
   use a
-  simp [HasEquiv.Equiv, pair_setoid]
 
 theorem inj_over_one (a b : α) : ⟦(a, 1)⟧ = (⟦(b, 1)⟧ : with_division α) → a = b := by
   intro eq
