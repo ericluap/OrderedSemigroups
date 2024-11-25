@@ -1,4 +1,5 @@
 import OrderedSemigroups.OrderedGroup.Basic
+import OrderedSemigroups.Convergence
 
 /--
   Every nonempty set of integers that is bounded above has a maximum element.
@@ -47,13 +48,17 @@ theorem bounded_above_max {S : Set ℤ} (nonempty : Nonempty S) (upper_bounded :
 
 universe u
 
-variable {α : Type u} [LeftLinearOrderedGroup α] (arch : archimedean_group α) (f : α) (f_pos : 1 < f)
+variable {α : Type u} [LeftLinearOrderedGroup α] {f : α} (f_pos : 1 < f)
+  [arch : Fact (archimedean_group α)]
 
-include f_pos arch in
+instance : LinearOrderedGroup α where
+  mul_le_mul_right := by exact fun a b a_1 c ↦ left_arch_ordered arch.elim a b a_1 c
+
+include f_pos in
 theorem approximate (g : α) (p : ℕ):
   ∃(q : ℤ), f^q ≤ g^p ∧ g^p < f^(q+1) := by
-  obtain ⟨l, hl⟩ := @lt_exp α (left_arch_ordered_group arch) arch f (g^p) (f_pos.ne.symm)
-  obtain ⟨u, hu⟩ := gt_exp arch f (g^p) (f_pos.ne.symm)
+  obtain ⟨l, hl⟩ := lt_exp arch.out f (g^p) (f_pos.ne.symm)
+  obtain ⟨u, hu⟩ := gt_exp arch.out f (g^p) (f_pos.ne.symm)
   set small_exp := {z : ℤ | f^z ≤ g^p}
   have small_exp_nonempty : Nonempty small_exp := by
     use l
@@ -76,17 +81,76 @@ theorem approximate (g : α) (p : ℕ):
     simp at z_max
     trivial
 
-noncomputable def q (g : α) (p : ℕ): ℤ := (approximate arch f f_pos g p).choose
+noncomputable def q (g : α) (p : ℕ): ℤ := (approximate f_pos g p).choose
 
 theorem q_spec (g : α) (p : ℕ):
-  f^(q arch f f_pos g p) ≤ g^p ∧ g^p < f^((q arch f f_pos g p)+1) := by
-    have := (approximate arch f f_pos g p).choose_spec
+  f^(q f_pos g p) ≤ g^p ∧ g^p < f^((q f_pos g p)+1) := by
+    have := (approximate f_pos g p).choose_spec
     simp at this
     simp [q]
     tauto
 
+theorem q_max_lt (g : α) (p : ℕ) {t : ℤ} (ht : f^t ≤ g^p) : t ≤ q f_pos g p := by
+  have ⟨_, gp_lt_fqp1⟩ := q_spec f_pos g p
+  by_contra h
+  simp at h
+  have : q f_pos g p + 1 ≤ t := h
+  have lt_t : f ^ (q f_pos g p + 1) ≤ f^t := pos_exp_le_le f_pos h
+  have : f ^ t < f ^ (q f_pos g p + 1) := lt_of_le_of_lt ht gp_lt_fqp1
+  have : f ^ t < f ^ t := gt_of_ge_of_gt lt_t this
+  exact (lt_self_iff_false (f ^ t)).mp this
+
+theorem qplus1_min_gt (g : α) (p : ℕ) {t : ℤ} (ht : g^p < f^t) : q f_pos g p + 1 ≤ t := by
+  have ⟨fqp_lt_gt, _⟩ := q_spec f_pos g p
+  by_contra h
+  simp at h
+  have : t ≤ q f_pos g p := (Int.add_le_add_iff_right 1).mp h
+  have : f^t ≤ f^(q f_pos g p) := pos_exp_le_le f_pos this
+  have : g^p < f^(q f_pos g p) := gt_of_ge_of_gt this ht
+  have : g^p < g^p := gt_of_ge_of_gt fqp_lt_gt this
+  exact (lt_self_iff_false (g ^ p)).mp this
+
+theorem q_exp_add (g : α) (a b : ℕ) :
+    f^((q f_pos g a) + (q f_pos g b)) ≤ g^(a + b) ∧
+    g^(a+b) < f^((q f_pos g a) + (q f_pos g b)+2) := by
+  have ⟨fqa_le_ga, ga_lt_fa1⟩ := q_spec f_pos g a
+  have ⟨fqb_le_gb, gb_lt_fb1⟩ := q_spec f_pos g b
+  constructor
+  · have : (f ^ q f_pos g a)*(f ^ q f_pos g b) ≤ g^a*g^b :=
+      mul_le_mul' fqa_le_ga fqb_le_gb
+    simp [←zpow_add, ←pow_add] at this
+    trivial
+  · have : (g ^ a) * (g ^ b) < (f ^ (q f_pos g a + 1)) * f ^ (q f_pos g b + 1) :=
+      Left.mul_lt_mul ga_lt_fa1 gb_lt_fb1
+    simp [←zpow_add, ←pow_add] at this
+    have exp_add :
+        q f_pos g a + 1 + (q f_pos g b + 1) = q f_pos g a + q f_pos g b + 2 := by
+      ring
+    simp [exp_add] at this
+    trivial
+
 theorem q_convergence (g : α) :
-  ∃r : ℝ, Filter.Tendsto (fun p ↦ ((q arch f f_pos g p) : ℝ)/(p : ℝ)) Filter.atTop (nhds r) := by sorry
+  ∃r : ℝ, Filter.Tendsto (fun p ↦ ((q f_pos g p) : ℝ)/(p : ℝ)) Filter.atTop (nhds r) := by
+  apply sequence_convergence (C := 1)
+  intro m n
+  obtain ⟨fab_le_gab, gab_lt_abplus2⟩ := q_exp_add f_pos g m n
+  have qmplusqn_le_qmplusn:= q_max_lt f_pos g (m+n) fab_le_gab
+  have qmplusn_le_qmplusqnplus2 := qplus1_min_gt f_pos g (m+n) gab_lt_abplus2
+  have := Int.sub_le_sub_right qmplusn_le_qmplusqnplus2 1
+  simp at this
+  ring_nf at this
+  have diff_le_1: q f_pos g (m+n) - q f_pos g m - q f_pos g n ≤ 1 := by
+    simp
+    rw [add_assoc, add_comm (q f_pos g n), ←add_assoc]
+    trivial
+  have diff_ge_0 : 0 ≤ q f_pos g (m+n) - q f_pos g m - q f_pos g n := by
+    simp
+    have := Int.sub_le_sub_right qmplusqn_le_qmplusn (q f_pos g m)
+    simpa
+  norm_cast
+  have := abs_of_nonneg diff_ge_0
+  rw [this]
+  exact diff_le_1
 
 noncomputable def φ : α → ℝ :=
-  fun g ↦ (q_convergence arch f f_pos g).choose
+  fun g ↦ (q_convergence f_pos g).choose

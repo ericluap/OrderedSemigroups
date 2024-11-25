@@ -159,6 +159,22 @@ section LinearOrderedGroup
 
 variable [LinearOrderedGroup α]
 
+theorem pos_exp_lt_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (a_lt_b : a < b) : f^a < f^b := by
+  have : 0 < b - a := Int.sub_pos_of_lt a_lt_b
+  have : 1 < f ^ (b - a) := pos_exp_pos_pos f_pos this
+  have : 1 < f^(b + (-a)) := this
+  rw [zpow_add] at this
+  have : 1*f^a < (f^b * f^(-a))*f^a := mul_lt_mul_right' this (f ^ a)
+  simpa
+
+theorem pos_exp_le_le {f : α} (f_pos : 1 < f) {a b : ℤ} (a_le_b : a ≤ b) : f^a ≤ f^b := by
+  have : 0 ≤ b - a := Int.sub_nonneg_of_le a_le_b
+  have : 1 ≤ f ^ (b - a) := nonneg_exp_pos_nonneg f_pos this
+  have : 1 ≤ f^(b + (-a)) := this
+  rw [zpow_add] at this
+  have : 1*f^a ≤ (f^b * f^(-a))*f^a := mul_le_mul_right' this (f ^ a)
+  simpa
+
 theorem lt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : ∃z : ℤ, f^z < g := by
   obtain f_le_g | g_lt_f := le_or_lt f g
   · obtain f_lt_one | one_lt_f := lt_or_gt_of_ne f_ne_one

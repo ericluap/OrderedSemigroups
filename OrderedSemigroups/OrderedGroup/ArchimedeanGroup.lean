@@ -17,51 +17,57 @@ def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
     1 < x^z := by
-    have h : z = z.natAbs := by omega
-    rw [h, zpow_natCast]
-    exact one_lt_pow' pos_x (by omega)
+  have h : z = z.natAbs := by omega
+  rw [h, zpow_natCast]
+  exact one_lt_pow' pos_x (by omega)
+
+theorem nonneg_exp_pos_nonneg {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z ≥ 0) :
+    1 ≤ x^z := by
+  obtain z_eq_0 | z_gt_0 := pos_z.eq_or_gt
+  · simp [z_eq_0]
+  · exact (pos_exp_pos_pos pos_x z_gt_0).le
 
 theorem pos_exp_neg_neg {x : α} (neg_x : x < 1) {z : ℤ} (pos_z : z > 0) :
     x^z < 1 := by
-    have h : z = z.natAbs := by omega
-    rw [h, zpow_natCast]
-    exact pow_lt_one' neg_x (by omega)
+  have h : z = z.natAbs := by omega
+  rw [h, zpow_natCast]
+  exact pow_lt_one' neg_x (by omega)
 
 theorem neg_exp_pos_neg {x : α} (pos_x : 1 < x) {z : ℤ} (neg_z : z < 0) :
     x^z < 1 := by
-    have h : 1 < x ^ (-z) := pos_exp_pos_pos pos_x (by omega)
-    rwa [zpow_neg, Left.one_lt_inv_iff] at h
+  have h : 1 < x ^ (-z) := pos_exp_pos_pos pos_x (by omega)
+  rwa [zpow_neg, Left.one_lt_inv_iff] at h
 
 theorem neg_exp_neg_pos {x : α} (neg_x : x < 1) {z : ℤ} (neg_z : z < 0) :
     1 < x^z := by
-    have h : x ^ (-z) < 1 := pos_exp_neg_neg neg_x (by omega)
-    rwa [zpow_neg, Left.inv_lt_one_iff] at h
+  have h : x ^ (-z) < 1 := pos_exp_neg_neg neg_x (by omega)
+  rwa [zpow_neg, Left.inv_lt_one_iff] at h
 
 theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
     ∀z : ℤ, x^z > y → z > 0 := by
-    intro z
-    by_contra!
-    obtain ⟨h, hz⟩ := this -- h : x ^ z > y, hz : z ≤ 0
-    obtain hz | hz := Int.le_iff_eq_or_lt.mp hz
-    · -- case z = 0
-      have : (1 : α) < 1 := by calc
-        1 < y := pos_y
-        _ < x^z := h
-        _ = 1 := by rw [hz, zpow_zero]
-      exact (lt_self_iff_false 1).mp this
-    · -- case z < 0
-      have : x^z < x^z := by calc
-        x^z < 1 := neg_exp_pos_neg pos_x hz
-        _ < y := pos_y
-        _ < x^z := h
-      exact (lt_self_iff_false (x ^ z)).mp this
+  intro z
+  by_contra!
+  obtain ⟨h, hz⟩ := this -- h : x ^ z > y, hz : z ≤ 0
+  obtain hz | hz := Int.le_iff_eq_or_lt.mp hz
+  · -- case z = 0
+    have : (1 : α) < 1 := by calc
+      1 < y := pos_y
+      _ < x^z := h
+      _ = 1 := by rw [hz, zpow_zero]
+    exact (lt_self_iff_false 1).mp this
+  · -- case z < 0
+    have : x^z < x^z := by calc
+      x^z < 1 := neg_exp_pos_neg pos_x hz
+      _ < y := pos_y
+      _ < x^z := h
+    exact (lt_self_iff_false (x ^ z)).mp this
 
 /--
   If x and y are both positive, then by Archimedneaness
   we have a least z such that x^z > y.
 -/
 theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (pos_y : 1 < y) :
-  ∃z : ℤ, x^z > y ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
+    ∃z : ℤ, x^z > y ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
   -- Define predicate for numbers satisfying x^n > y
   let P : ℕ → Prop := fun n => x^(n : ℤ) > y
 

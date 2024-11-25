@@ -11,7 +11,7 @@ lemma arch_nat {e C : ℝ} (C_pos : C > 0) (e_pos : e > 0) : ∃n : ℕ+, 1 / n 
 
 -- Exercise 3.1.5 https://arxiv.org/pdf/1408.5805
 -- Formalized with the help of Tomas Ortega
-lemma sequence_convergence
+lemma sequence_convergence_unique
   (a : ℕ → ℝ) -- sequence indexed by integers
   (C : ℝ) -- the constant from the bound
   (h_bound : ∀ m n : ℕ, |a (m + n) - a m - a n| ≤ C) :
@@ -141,3 +141,13 @@ lemma sequence_convergence
   · trivial
   · intro y hy
     exact tendsto_nhds_unique hy this
+
+lemma sequence_convergence
+  (a : ℕ → ℝ) -- sequence indexed by integers
+  (C : ℝ) -- the constant from the bound
+  (h_bound : ∀ m n : ℕ, |a (m + n) - a m - a n| ≤ C) :
+  ∃ θ : ℝ, -- exists unique θ
+  -- conclusion: θ is the limit of a_n/n at +∞
+  (Filter.Tendsto (fun n ↦ a n / (n : ℝ)) Filter.atTop (nhds θ)) := by
+  obtain ⟨t, ht, _⟩ := sequence_convergence_unique a C h_bound
+  use t
