@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Order.Group.Basic
+import OrderedSemigroups.Basic
 
 universe u
 
@@ -6,8 +7,6 @@ variable {α : Type u}
 
 class LeftOrderedGroup (α : Type u) extends Group α, PartialOrder α where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
-
-variable [LeftOrderedGroup α]
 
 instance leftOrderedCovariant [LeftOrderedGroup α] : CovariantClass α α (· * ·) (· ≤ ·) where
   elim a b c bc := LeftOrderedGroup.mul_le_mul_left b c bc a
@@ -26,8 +25,15 @@ instance rightOrderedContravariant [RightOrderedGroup α] : ContravariantClass �
 
 class OrderedGroup (α : Type u) extends LeftOrderedGroup α, RightOrderedGroup α
 
+instance [OrderedGroup α] : OrderedSemigroup α where
+  mul_le_mul_left := OrderedGroup.toLeftOrderedGroup.mul_le_mul_left
+  mul_le_mul_right := OrderedGroup.toRightOrderedGroup.mul_le_mul_right
+
 class LeftLinearOrderedGroup (α : Type u) extends LeftOrderedGroup α, LinearOrder α
 
 class RightLinearOrderedGroup (α : Type u) extends RightOrderedGroup α, LinearOrder α
 
 class LinearOrderedGroup (α : Type u) extends LeftLinearOrderedGroup α, RightLinearOrderedGroup α
+
+instance [LinearOrderedGroup α] : OrderedGroup α where
+  mul_le_mul_right := LinearOrderedGroup.toRightLinearOrderedGroup.mul_le_mul_right

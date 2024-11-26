@@ -4,6 +4,25 @@ universe u
 
 variable {α : Type u}
 
+section Group
+variable [Group α]
+
+theorem pnat_pow_eq_nat_pow (x : α) (n : ℕ+) : x^(n.val) = x^n := by
+  induction n using PNat.recOn with
+  | p1 => simp
+  | hp n ih =>
+    simp [ppow_succ, pow_succ, ih]
+
+theorem split_first_and_last_factor_of_product_group {a b : α} {n : ℕ} :
+  (a*b)^(n+1) = a*(b*a)^n*b := by
+  obtain n_eq_0 | n_gt_0 := Nat.eq_zero_or_pos n
+  · simp [n_eq_0]
+  · set n' : ℕ+ := ⟨n, n_gt_0⟩
+    have : (a*b)^(n'+1) = a*(b*a)^n'*b := split_first_and_last_factor_of_product
+    simpa [←pnat_pow_eq_nat_pow]
+
+end Group
+
 section LeftOrdered
 
 variable [LeftOrderedGroup α]
@@ -158,6 +177,22 @@ end LeftLinearOrderedGroup
 section LinearOrderedGroup
 
 variable [LinearOrderedGroup α]
+
+theorem comm_factor_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : a^n * b^n ≤ (a*b)^n := by
+  obtain n_eq_0 | n_gt_0 := Nat.eq_zero_or_pos n
+  · simp [n_eq_0]
+  · set n' : ℕ+ := ⟨n, n_gt_0⟩
+    have := comm_factor_le h n'
+    simpa [←pnat_pow_eq_nat_pow]
+
+theorem comm_swap_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : (a*b)^n ≤ (b*a)^n := pow_le_pow_left' h n
+
+theorem comm_dist_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : (b*a)^n ≤ b^n * a^n := by
+  obtain n_eq_0 | n_gt_0 := Nat.eq_zero_or_pos n
+  · simp [n_eq_0]
+  · set n' : ℕ+ := ⟨n, n_gt_0⟩
+    have := comm_dist_le h n'
+    simpa [←pnat_pow_eq_nat_pow]
 
 theorem pos_exp_lt_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (a_lt_b : a < b) : f^a < f^b := by
   have : 0 < b - a := Int.sub_pos_of_lt a_lt_b

@@ -1,5 +1,6 @@
 import OrderedSemigroups.OrderedGroup.Basic
 import OrderedSemigroups.Convergence
+import OrderedSemigroups.Basic
 
 /--
   Every nonempty set of integers that is bounded above has a maximum element.
@@ -158,7 +159,87 @@ noncomputable def φ' : α → ℝ :=
 theorem φ'_spec (g : α) : Filter.Tendsto (fun p ↦ ((q f_pos g p) : ℝ)/(p : ℝ)) Filter.atTop (nhds (φ' f_pos g)) := by
   exact (q_convergence f_pos g).choose_spec
 
-theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := sorry
+theorem φ'_def (g : α) {s : ℝ} (s_lim : Filter.Tendsto (fun p ↦ ((q f_pos g p) : ℝ)/(p : ℝ)) Filter.atTop (nhds s)) :
+    φ' f_pos g = s := by
+  have := φ'_spec f_pos g
+  exact tendsto_nhds_unique this s_lim
+
+theorem φ'_hom_case (a b : α) :
+    ∀p : ℕ, q f_pos a p + q f_pos b p ≤ q f_pos (a*b) p ∧
+      q f_pos (a*b) p ≤ q f_pos a p + q f_pos b p + 1 := by
+  intro p
+  obtain ⟨a_spec1, a_spec2⟩ := q_spec f_pos a p
+  obtain ⟨b_spec1, b_spec2⟩ := q_spec f_pos b p
+  obtain ab_le_ba | ba_le_ab := LinearOrder.le_total (a * b) (b * a)
+  · constructor
+    · have factor_le : a^p*b^p ≤ (a*b)^p := comm_factor_le_group ab_le_ba p
+      have : f^(q f_pos a p) * f^(q f_pos b p) ≤ a^p * b^p := mul_le_mul' a_spec1 b_spec1
+      have : f^(q f_pos a p) * f^(q f_pos b p) ≤ (a*b)^p := Preorder.le_trans _ _ _ this factor_le
+      simp [←zpow_add] at this
+      exact q_max_lt f_pos (a * b) p this
+    · have dist_le : (b*a)^p ≤ b^p*a^p := by exact comm_dist_le_group ab_le_ba p
+      have : (a*b)^p ≤ (b*a)^p := by exact comm_swap_le_group ab_le_ba p
+      have prod_le : (a*b)^p ≤ b^p*a^p := by exact Preorder.le_trans _ _ _ this dist_le
+      have : b^p*a^p < f ^ (q f_pos b p + 1) * f ^ (q f_pos a p + 1) :=
+        Left.mul_lt_mul b_spec2 a_spec2
+      simp [←zpow_add] at this
+      have exp_rw : (q f_pos b p + 1) + (q f_pos a p + 1) = q f_pos a p + q f_pos b p + 2 := by
+        ring
+      simp [exp_rw] at this
+      have : (a * b)^p < f^(q f_pos a p + q f_pos b p + 2) := lt_of_le_of_lt prod_le this
+      have : q f_pos (a*b) p + 1 ≤ q f_pos a p + q f_pos b p + 2 :=
+        qplus1_min_gt f_pos (a * b) p this
+      have : q f_pos (a*b) p + 1 - 1 ≤ q f_pos a p + q f_pos b p + 2 - 1 :=
+        Int.sub_le_sub_right this 1
+      ring_nf at this
+      ring_nf
+      trivial
+  · constructor
+    · have factor_le : b^p*a^p ≤ (b*a)^p := comm_factor_le_group ba_le_ab p
+      have : (b*a)^p ≤ (a*b)^p := by exact comm_swap_le_group ba_le_ab p
+      have factor_le' : b^p*a^p ≤ (a*b)^p := Preorder.le_trans _ _ _ factor_le this
+      have : f^(q f_pos b p) * f^(q f_pos a p) ≤ b^p * a^p := mul_le_mul' b_spec1 a_spec1
+      have : f^(q f_pos b p) * f^(q f_pos a p) ≤ (a*b)^p := Preorder.le_trans _ _ _ this factor_le'
+      simp [←zpow_add] at this
+      have := q_max_lt f_pos (a * b) p this
+      rw [←add_comm]
+      trivial
+    · have : a^p*b^p < f ^ (q f_pos a p + 1)*f ^ (q f_pos b p + 1) := Left.mul_lt_mul a_spec2 b_spec2
+      have dist_le : (a*b)^p ≤ a^p*b^p := comm_dist_le_group ba_le_ab p
+      have : (a*b)^p < f ^ (q f_pos a p + 1)*f ^ (q f_pos b p + 1) := lt_of_le_of_lt dist_le this
+      simp [←zpow_add] at this
+      have := qplus1_min_gt f_pos (a*b) p this
+      have exp_rw : (q f_pos a p + 1) + (q f_pos b p + 1) = q f_pos a p + q f_pos b p + 2 := by
+        ring
+      rw [exp_rw] at this
+      have : q f_pos (a*b) p + 1 - 1 ≤ q f_pos a p + q f_pos b p + 2 - 1 := Int.sub_le_sub_right this 1
+      ring_nf at this
+      ring_nf
+      trivial
+
+theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := by
+  have sequence_le := φ'_hom_case f_pos a b
+  have a_spec := φ'_spec f_pos a
+  have b_spec := φ'_spec f_pos b
+  have ab_spec := φ'_spec f_pos (a*b)
+  have sequence_sum : Filter.Tendsto (fun p ↦ (q f_pos a p : ℝ) / (p : ℝ) + (q f_pos b p : ℝ) / p) Filter.atTop (nhds (φ' f_pos a + φ' f_pos b)) := by
+    exact Filter.Tendsto.add a_spec b_spec
+  have : (fun p ↦ (q f_pos a p : ℝ) / (p : ℝ) + (q f_pos b p : ℝ) / p) = (fun p ↦ ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) / (p : ℝ)) := by
+    ext z
+    ring
+  rw [this] at sequence_sum
+  have : ∀p : ℕ, ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) ≤ (q f_pos (a*b) p : ℝ) := by
+    intro p
+    norm_cast
+    obtain ⟨le, _⟩ := sequence_le p
+    exact le
+  have (p : ℕ) (p_pos : 0 < p) : ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) / (p : ℝ) ≤ (q f_pos (a*b) p : ℝ) / (p : ℝ) := by
+    have rp_pos : (p : ℝ) > 0 := Nat.cast_pos'.mpr p_pos
+    exact (div_le_div_iff_of_pos_right rp_pos).mpr (this p)
+  have h1 : φ' f_pos a + φ' f_pos b ≤ φ' f_pos (a*b) := by sorry
+  have h2 : φ' f_pos (a*b) ≤ φ' f_pos a + φ' f_pos b := by sorry
+  have := PartialOrder.le_antisymm (a := φ' f_pos a + φ' f_pos b) (b := φ' f_pos (a*b)) h1 h2
+  exact this.symm
 
 noncomputable def φ : α →* ℝ where
   toFun := φ' f_pos
