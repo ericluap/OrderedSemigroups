@@ -222,12 +222,14 @@ theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := by
   have a_spec := φ'_spec f_pos a
   have b_spec := φ'_spec f_pos b
   have ab_spec := φ'_spec f_pos (a*b)
+
   have sequence_sum : Filter.Tendsto (fun p ↦ (q f_pos a p : ℝ) / (p : ℝ) + (q f_pos b p : ℝ) / p) Filter.atTop (nhds (φ' f_pos a + φ' f_pos b)) := by
     exact Filter.Tendsto.add a_spec b_spec
   have : (fun p ↦ (q f_pos a p : ℝ) / (p : ℝ) + (q f_pos b p : ℝ) / p) = (fun p ↦ ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) / (p : ℝ)) := by
     ext z
     ring
   rw [this] at sequence_sum
+
   have : ∀p : ℕ, ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) ≤ (q f_pos (a*b) p : ℝ) := by
     intro p
     norm_cast
@@ -236,8 +238,38 @@ theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := by
   have (p : ℕ) (p_pos : 0 < p) : ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) / (p : ℝ) ≤ (q f_pos (a*b) p : ℝ) / (p : ℝ) := by
     have rp_pos : (p : ℝ) > 0 := Nat.cast_pos'.mpr p_pos
     exact (div_le_div_iff_of_pos_right rp_pos).mpr (this p)
-  have h1 : φ' f_pos a + φ' f_pos b ≤ φ' f_pos (a*b) := by sorry
-  have h2 : φ' f_pos (a*b) ≤ φ' f_pos a + φ' f_pos b := by sorry
+  have : ∀ᶠ p in Filter.atTop, ((q f_pos a p : ℝ) + (q f_pos b p : ℝ) : ℝ) / (p : ℝ) ≤ (q f_pos (a*b) p : ℝ) / (p : ℝ) := by
+    simp
+    use 1
+    exact fun b a ↦ this b a
+
+  have h1 := le_of_tendsto_of_tendsto sequence_sum ab_spec this
+
+  have h2 : φ' f_pos (a*b) ≤ φ' f_pos a + φ' f_pos b := by
+    have : Filter.Tendsto (fun x : ℕ => 1 / (x : ℝ)) Filter.atTop (nhds 0) := by
+      simp only [one_div]
+      exact tendsto_inverse_atTop_nhds_zero_nat
+    have convergence : Filter.Tendsto (fun p ↦ ((q f_pos a p) + (q f_pos b p)) / (p : ℝ) + 1 / (p : ℝ)) Filter.atTop (nhds (φ' f_pos a + φ' f_pos b + 0)) := by
+        apply Filter.Tendsto.add
+        <;> trivial
+    have : (fun p ↦ ((q f_pos a p) + (q f_pos b p)) / (p : ℝ) + 1 / (p : ℝ)) = (fun p ↦ ((q f_pos a p) + (q f_pos b p) + 1) / (p : ℝ)) := by
+      field_simp
+    rw [this] at convergence
+    simp at convergence
+
+    have : ∀p : ℕ, (q f_pos (a*b) p : ℝ) ≤ q f_pos a p + q f_pos b p + 1 := by
+      intro p
+      norm_cast
+      obtain ⟨_, le⟩ := sequence_le p
+      exact le
+    have (p : ℕ) (p_pos : 0 < p) : (q f_pos (a*b) p : ℝ) / (p : ℝ) ≤ (q f_pos a p + q f_pos b p + 1) / (p : ℝ) := by
+      have rp_pos : (p : ℝ) > 0 := Nat.cast_pos'.mpr p_pos
+      exact (div_le_div_iff_of_pos_right rp_pos).mpr (this p)
+    have : ∀ᶠ p in Filter.atTop, (q f_pos (a*b) p : ℝ) / (p : ℝ) ≤ (q f_pos a p + q f_pos b p + 1) / (p : ℝ) := by
+      simp
+      use 1
+      exact fun b a ↦ this b a
+    exact le_of_tendsto_of_tendsto ab_spec convergence this
   have := PartialOrder.le_antisymm (a := φ' f_pos a + φ' f_pos b) (b := φ' f_pos (a*b)) h1 h2
   exact this.symm
 
