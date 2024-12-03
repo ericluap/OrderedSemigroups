@@ -273,7 +273,34 @@ theorem φ'_hom (a b : α) : φ' f_pos (a * b) = φ' f_pos a + φ' f_pos b := by
   have := PartialOrder.le_antisymm (a := φ' f_pos a + φ' f_pos b) (b := φ' f_pos (a*b)) h1 h2
   exact this.symm
 
-noncomputable def φ : α →* ℝ where
+noncomputable def φ : α →* (Multiplicative ℝ) where
   toFun := φ' f_pos
-  map_one' := sorry
-  map_mul' := sorry
+  map_one' := by
+    have : ∀p : ℕ, q f_pos 1 p = 0 := by
+      intro p
+      have : f^(0 : ℤ) ≤ 1^p := by
+        simp
+      have zero_le := q_max_lt f_pos 1 p this
+      have : 1^p < f^(1 : ℤ) := by
+        simp
+        exact f_pos
+      have := qplus1_min_gt f_pos 1 p this
+      have le_zero : q f_pos 1 p ≤ 0 := by exact (Int.add_le_add_iff_right 1).mp this
+      exact Eq.symm (Int.le_antisymm zero_le le_zero)
+    have eventually_zero : (fun p ↦ ((q f_pos 1 p) : ℝ)/(p : ℝ)) =ᶠ[Filter.atTop] 0 := by
+      simp [Filter.EventuallyEq]
+      use 1
+      intro b one_le_b
+      left
+      exact this b
+    have : Filter.Tendsto (fun p ↦ ((q f_pos 1 p) : ℝ)/(p : ℝ)) Filter.atTop (nhds 0) := by
+      have : Filter.Tendsto 0 (Filter.atTop : Filter ℕ) (nhds (0 : ℝ)) :=
+        tendsto_const_nhds
+      apply Filter.Tendsto.congr'
+      exact id (Filter.EventuallyEq.symm eventually_zero)
+      trivial
+    apply φ'_def
+    trivial
+  map_mul' := by
+    simp
+    exact φ'_hom f_pos
