@@ -95,7 +95,7 @@ theorem q_max_lt (g : α) (p : ℕ) {t : ℤ} (ht : f^t ≤ g^p) : t ≤ q f g p
   by_contra h
   simp at h
   have : q f g p + 1 ≤ t := h
-  have lt_t : f ^ (q f g p + 1) ≤ f^t := pos_exp_le_le f h
+  have lt_t : f ^ (q f g p + 1) ≤ f^t := pos_exp_le_le f_pos.out h
   have : f ^ t < f ^ (q f g p + 1) := lt_of_le_of_lt ht gp_lt_fqp1
   have : f ^ t < f ^ t := gt_of_ge_of_gt lt_t this
   exact (lt_self_iff_false (f ^ t)).mp this
