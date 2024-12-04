@@ -365,3 +365,15 @@ theorem injective_φ : Function.Injective (φ f) := by
   have zero_lt_one : (0 : ℝ) < 1 := Real.zero_lt_one
   have : 0 < 0 := lt_imp_lt_of_le_imp_le (fun a ↦ zero_le_one) zero_lt_one
   exact Nat.not_succ_le_zero 0 this
+
+theorem strict_order_preserving_φ {a b : α}: a ≤ b ↔ (φ f a) ≤ (φ f b) := by
+  constructor
+  · exact fun a_1 ↦ order_preserving_φ f a_1
+  · intro φa_le_φb
+    by_contra h
+    simp at h
+    have := order_preserving_φ f h.le
+    have : (φ f) a = (φ f) b := PartialOrder.le_antisymm _ _ φa_le_φb this
+    have := injective_φ f this
+    rw [this] at h
+    exact (lt_self_iff_false b).mp h
