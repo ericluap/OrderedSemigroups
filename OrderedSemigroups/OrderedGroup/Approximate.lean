@@ -1,5 +1,5 @@
 import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
-import OrderedSemigroups.Convergence
+import OrderedSemigroups.OrderedGroup.Convergence
 import OrderedSemigroups.Basic
 
 /-!

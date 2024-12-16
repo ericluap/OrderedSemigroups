@@ -1,5 +1,15 @@
 import Mathlib.Analysis.Normed.Order.Lattice
 
+/-!
+# Convergence of a particular sequence
+
+This file proves that sequences satisfying a particular condition converge.
+This is used in the proof of Holder's theorem to show that the
+sequence of approximations do converge.
+
+-/
+
+
 open Filter
 
 lemma arch_nat {e C : ℝ} (C_pos : C > 0) (e_pos : e > 0) : ∃n : ℕ+, 1 / n < e/(2*C) := by
