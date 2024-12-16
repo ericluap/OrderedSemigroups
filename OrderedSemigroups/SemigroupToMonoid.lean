@@ -112,8 +112,7 @@ end CommSemigroup'
 section LinearOrderedCancelSemigroup
 variable [LinearOrderedCancelCommSemigroup α] [not_one : Fact (∀x : α, ¬is_one x)]
 
-set_option maxHeartbeats 500000
-instance to_monoid [not_one : Fact (∀x : α, ¬is_one x)] : LinearOrderedCancelCommMonoid (with_one α) where
+instance : OrderedCommMonoid (with_one α) where
   le := by
     intro x y
     rcases x with x | _
@@ -161,20 +160,21 @@ instance to_monoid [not_one : Fact (∀x : α, ¬is_one x)] : LinearOrderedCance
     · exact x_le_y
     · exact not_neg_right (not_neg_iff.mpr x_le_y) z
     · trivial
+
+instance to_monoid : LinearOrderedCancelCommMonoid (with_one α) where
   le_total := by
     intro x y
     rcases x with x | one
     <;> rcases y with y | one
-    <;> simp only [ge_iff_le, or_self] at *
     · exact LinearOrder.le_total x y
     · exact LinearOrder.le_total (x * x) x
     · exact LinearOrder.le_total y (y * y)
+    · simp
   decidableLE := by
     simp [DecidableRel]
     intro x y
     rcases x with x | one
     <;> rcases y with y | one
-    <;> simp at *
     · exact instDecidableLe_mathlib x y
     · exact instDecidableLe_mathlib (x * x) x
     · exact instDecidableLe_mathlib y (y * y)
