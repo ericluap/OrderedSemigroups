@@ -1,6 +1,17 @@
-import OrderedSemigroups.OrderedGroup.Basic
+import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
 import OrderedSemigroups.Convergence
 import OrderedSemigroups.Basic
+
+/-!
+# Approximate
+
+This file defines the homomorphsim from a left linear ordered group
+to the real numbers by fixing an element `f` of the group
+and approximating all the others with respect to it.
+Most of the content of Holder's theorem is proved here.
+
+-/
+
 
 /--
   Every nonempty set of integers that is bounded above has a maximum element.

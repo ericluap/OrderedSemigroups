@@ -1,6 +1,13 @@
 import Mathlib.Algebra.Order.Group.Basic
 import OrderedSemigroups.Basic
 
+/-!
+# Ordered Groups
+
+This file defines ordered groups and provides some basic instances.
+
+-/
+
 universe u
 
 variable {α : Type u}
