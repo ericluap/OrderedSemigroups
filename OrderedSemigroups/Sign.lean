@@ -50,6 +50,12 @@ theorem one_not_neg {a : α} (is_zer : is_one a) : ¬is_negative a := by
   rw [is_zer a] at is_neg
   exact (lt_self_iff_false a).mp is_neg
 
+theorem pos_sq_pos {a : α} (is_pos : is_positive a) : is_positive (a*a) := by
+  simp [is_positive]
+  intro x
+  have := gt_trans (is_pos (a * x)) (is_pos x)
+  simpa [mul_assoc]
+
 /-
 theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
   fun x ↦ lt_mul_of_lt_mul_right (pos x) h
@@ -158,8 +164,14 @@ variable [OrderedSemigroup α]
 theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
   fun x ↦ lt_mul_of_lt_mul_right (pos x) h
 
+theorem pos_lt_pos {a b : α} (pos : is_positive a) (h : a < b) : is_positive b :=
+  pos_le_pos pos h.le
+
 theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative b :=
   fun x ↦ mul_lt_of_mul_lt_right (neg x) h
+
+theorem lt_neg_neg {a b : α} (neg : is_negative a) (h : b < a) : is_negative b :=
+  le_neg_neg neg h.le
 
 end OrderedSemigroup
 

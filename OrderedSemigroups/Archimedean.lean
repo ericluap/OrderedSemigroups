@@ -380,6 +380,10 @@ theorem not_anomalous_comm_and_arch (not_anomalous : ¬has_anomalous_pair (α :=
   · have := mt (non_archimedean_anomalous_pair (α := α)) not_anomalous
     simpa
 
+def not_anomalous_comm_semigroup (not_anomalous : ¬has_anomalous_pair (α := α)) :
+    LinearOrderedCancelCommSemigroup α where
+  mul_comm a b := not_anomalous_pair_commutative not_anomalous a b
+
 theorem lt_not_anomalous_difference {a b : α} (h : a < b) (not_anomalous : ¬has_anomalous_pair (α := α)) :
     ∃n : ℕ+, a^(n+1) ≤ b^n := by
   by_contra hx
@@ -530,5 +534,115 @@ theorem not_anomalous_iff_large_difference : ¬has_anomalous_pair (α := α) ↔
   constructor
   · exact fun a ↦ not_anomalous_large_difference a
   · exact fun a ↦ large_difference_not_anomalous a
+
+theorem pos_large_elements (not_anomalous : ¬has_anomalous_pair (α := α)) (pos_elem : ∃a : α, is_positive a) :
+    ∀x : α, ∃y : α, is_positive y ∧ is_positive (x*y) := by
+  intro x
+  obtain ⟨z, hz⟩ := pos_elem
+  obtain pos_x | neg_x | one_x := pos_neg_or_one x
+  -- If `x` is positive we're immediately done
+  · use x
+    constructor
+    · trivial
+    · exact pos_sq_pos pos_x
+  -- `x` is negative
+  · by_contra! all_pos_small
+    have xzn2_negative (n : ℕ+) : is_negative (x * z^(n+2)) := by
+      have zn2_lt_zn3 : z^(n+2) < z^(n+3) := by
+        calc z^(n+3)
+        _ = z^(n+2)*z := ppow_succ (n + 2) z
+        _ > z^(n+2) := pos_right hz (z ^ (n + 2))
+      have  xzn3_lt_xzn3 : x*z^(n+2) < x*z^(n+3) := mul_lt_mul_left' zn2_lt_zn3 x
+      have : is_positive (z^(n+3)) := pos_pow_pos hz (n + 3)
+      have zn3_not_pos := all_pos_small (z^(n+3)) this
+      rw [not_pos_or] at zn3_not_pos
+      obtain zn3_neg | zn3_one := zn3_not_pos
+      · exact lt_neg_neg zn3_neg xzn3_lt_xzn3
+      · exact lt_one_neg zn3_one xzn3_lt_xzn3
+    have : has_anomalous_pair (α := α) := by
+      simp [has_anomalous_pair]
+      use x*z, x
+      simp [anomalous_pair]
+      intro n
+      right
+      obtain ⟨is_comm, _⟩ := not_anomalous_comm_and_arch not_anomalous
+      constructor
+      · have : (x*z)^n = x^n * z^n := mul_pow_comm_semigroup is_comm x z n
+        rw [this]
+        have : is_positive (z^n) := pos_pow_pos hz n
+        exact pos_right this (x ^ n)
+      · have := xzn2_negative n
+        calc x^n
+        _ > x^n*(x*z^(n+2)) := neg_right (xzn2_negative n) (x ^ n)
+        _ = (x^n*x)*(z^(n+2)) := by simp [mul_assoc]
+        _ = x^(n+1) * (z^(n+2)) := by simp [ppow_succ]
+        _ = x^(n+1) * (z^(n+1) * z) := by
+          have : n+2 = (n+1)+1 := rfl
+          simp [this, ppow_succ]
+        _ = x^(n+1) * z^(n+1) * z := by simp [mul_assoc]
+        _ = (x * z)^(n+1) * z := by simp [mul_pow_comm_semigroup is_comm]
+        _ > (x * z)^(n+1) := pos_right hz ((x * z) ^ (n + 1))
+    contradiction
+  -- If `x` is one, we're immediately done
+  · use z
+    constructor
+    · trivial
+    · have : x * z = z := one_x z
+      simpa [this]
+
+theorem neg_large_elements (not_anomalous : ¬has_anomalous_pair (α := α)) (neg_elem : ∃a : α, is_negative a) :
+    ∀x : α, ∃y : α, is_negative y ∧ is_negative (x*y) := by
+  intro x
+  obtain ⟨z, hz⟩ := neg_elem
+  obtain pos_x | neg_x | one_x := pos_neg_or_one x
+  -- `x` is positive
+  · by_contra! all_neg_small
+    have xzn2_positive (n : ℕ+) : is_positive (x * z^(n+2)) := by
+      have zn2_gt_zn3 : z^(n+2) > z^(n+3) := by
+        calc z^(n+3)
+        _ = z^(n+2)*z := ppow_succ (n + 2) z
+        _ < z^(n+2) := neg_right hz (z ^ (n + 2))
+      have  xzn3_lt_xzn3 : x*z^(n+2) > x*z^(n+3) := mul_lt_mul_left' zn2_gt_zn3 x
+      have : is_negative (z^(n+3)) := neg_pow_neg hz (n + 3)
+      have zn3_not_neg := all_neg_small (z^(n+3)) this
+      rw [not_neg_or] at zn3_not_neg
+      obtain zn3_pos | zn3_one := zn3_not_neg
+      · exact pos_lt_pos zn3_pos xzn3_lt_xzn3
+      · exact gt_one_pos zn3_one xzn3_lt_xzn3
+    have : has_anomalous_pair (α := α) := by
+      simp [has_anomalous_pair]
+      use x*z, x
+      simp [anomalous_pair]
+      intro n
+      left
+      obtain ⟨is_comm, _⟩ := not_anomalous_comm_and_arch not_anomalous
+      constructor
+      · have : (x*z)^n = x^n * z^n := mul_pow_comm_semigroup is_comm x z n
+        rw [this]
+        have : is_negative (z^n) := neg_pow_neg hz n
+        exact neg_right this (x ^ n)
+      · have := xzn2_positive n
+        calc x^n
+        _ < x^n*(x*z^(n+2)) := pos_right (xzn2_positive n) (x ^ n)
+        _ = (x^n*x)*(z^(n+2)) := by simp [mul_assoc]
+        _ = x^(n+1) * (z^(n+2)) := by simp [ppow_succ]
+        _ = x^(n+1) * (z^(n+1) * z) := by
+          have : n+2 = (n+1)+1 := rfl
+          simp [this, ppow_succ]
+        _ = x^(n+1) * z^(n+1) * z := by simp [mul_assoc]
+        _ = (x * z)^(n+1) * z := by simp [mul_pow_comm_semigroup is_comm]
+        _ < (x * z)^(n+1) := neg_right hz ((x * z) ^ (n + 1))
+    contradiction
+  -- If `x` is negative, we're immediately done
+  · use x
+    constructor
+    · trivial
+    · exact product_of_neg_neg neg_x
+  -- If `x` is one, we're immediately done
+  · use z
+    constructor
+    · trivial
+    · have : x * z = z := one_x z
+      simpa [this]
 
 end LinearOrderedCancelSemigroup

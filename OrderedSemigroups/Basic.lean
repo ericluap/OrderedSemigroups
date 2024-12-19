@@ -15,7 +15,7 @@ variable {α : Type u}
 section Semigroup'
 variable [Semigroup' α]
 
-theorem nppow_eq_nppowRec : Semigroup'.nppow = nppowRec (α := α) := by
+theorem nppow_eq_nppowRec : Semigroup'.nppow = nppowRec (α := α):= by
   ext x y
   induction x using PNat.recOn with
   | p1 => simp [Semigroup'.nppow_one, nppowRec_one]
@@ -68,6 +68,16 @@ theorem split_first_and_last_factor_of_product {a b : α} {n : ℕ+} :
       _                   = a * ((b*a)^n * (b*a)) * b := by simp [mul_assoc]
       _                   = a * (b*a)^(n+1) * b := by rw [←ppow_succ]
 
+theorem mul_pow_comm_semigroup (is_comm : ∀x y : α, x * y = y * x)
+    (a b : α) (n : ℕ+) : (a*b)^n = a^n * b^n := by
+  induction n using PNat.recOn with
+  | p1 => simp
+  | hp n ih =>
+    simp [ppow_succ, ih]
+    calc a ^ n * b ^ n * (a * b)
+    _ = a ^ n * (b ^ n * a) * b := by simp [mul_assoc]
+    _ = a ^ n * (a * b ^ n) * b := by simp [is_comm]
+    _ = a ^ n * a * (b ^ n * b) := by simp [mul_assoc]
 end Semigroup'
 
 section OrderedSemigroup

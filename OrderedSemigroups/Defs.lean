@@ -57,6 +57,8 @@ class Semigroup' (α : Type u) extends Semigroup α where
   nppow_one : ∀ x, nppow 1 x = x := by intros x; exact nppowRec_one x
   nppow_succ : ∀ (n : ℕ+) (x), nppow (n+1) x = nppow n x * x := by intros x; exact nppowRec_succ x
 
+instance {β : Type*} [Semigroup β] : Semigroup' β where
+
 /-- Define the exponentiation notation for the action of ℕ+ on a semigroup' -/
 instance [Semigroup' α] : Pow α ℕ+ :=
   ⟨fun x n ↦ Semigroup'.nppow n x⟩
@@ -109,7 +111,7 @@ instance [LinearOrderedCancelSemigroup α] : LinearOrderedSemigroup α where
   max_def := LinearOrderedCancelSemigroup.max_def
   compare_eq_compareOfLessAndEq := LinearOrderedCancelSemigroup.compare_eq_compareOfLessAndEq
 
-class CommSemigroup' (G : Type u) extends Semigroup' G, CommMagma G where
+class CommSemigroup' (G : Type u) extends Semigroup' G, CommSemigroup G where
 
 class LinearOrderedCancelCommSemigroup (α : Type u) extends LinearOrderedCancelSemigroup α, CommSemigroup' α where
 
