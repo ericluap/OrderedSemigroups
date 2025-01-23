@@ -62,7 +62,6 @@ theorem anomalous_not_one {a b : α} (anomalous : anomalous_pair a b) : ¬is_one
     exact (lt_self_iff_false (b)).mp (gt_trans b_gt_ap1 a_gt_b)
 
 end OrderedSemigroup
-
 section LinearOrderedCancelSemigroup
 variable [LinearOrderedCancelSemigroup α]
 
@@ -371,14 +370,18 @@ theorem not_anomalous_pair_commutative (not_anomalous : ¬has_anomalous_pair (α
       exact one_unique this one_ba
   · exact neg_not_anomalous_comm neg_a neg_b not_anomalous
 
+theorem not_anomalous_arch (not_anomalous : ¬has_anomalous_pair (α := α)) :
+    is_archimedean (α := α) := by
+  have := mt (non_archimedean_anomalous_pair (α := α)) not_anomalous
+  simpa
+
 /-- If a linear ordered cancel semigroup does not have an anomalous pair,
 then it is commutative and Archimedean. -/
 theorem not_anomalous_comm_and_arch (not_anomalous : ¬has_anomalous_pair (α := α)) :
     (∀a b : α, a * b = b * a) ∧ is_archimedean (α := α) := by
   constructor
   · exact fun a b ↦ not_anomalous_pair_commutative not_anomalous a b
-  · have := mt (non_archimedean_anomalous_pair (α := α)) not_anomalous
-    simpa
+  · exact not_anomalous_arch not_anomalous
 
 def not_anomalous_comm_semigroup (not_anomalous : ¬has_anomalous_pair (α := α)) :
     LinearOrderedCancelCommSemigroup α where

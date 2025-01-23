@@ -5,11 +5,13 @@ universe u
 variable {α : Type u}
 
 def with_one (α : Type u) := α ⊕ Unit
+def to_withOne (x : α ⊕ Unit) : with_one α := x
+
+abbrev inl (a : α) : with_one α := Sum.inl a
+abbrev inr : with_one α := Sum.inr ()
 
 section Semigroup
 variable [Semigroup α]
-
-instance {β : Type*} [Semigroup β] : Semigroup' β where
 
 instance : Semigroup (with_one α) where
   mul x y :=
@@ -90,6 +92,20 @@ theorem pow_without_one {a : α} (n : ℕ+):
     simp
     rfl
 
+@[simp]
+theorem mul_push {a b : α} : inl (a * b) = inl a * inl b := by
+  unfold_projs
+  simp [inl]
+
+@[simp]
+theorem pow_push {a : α} (n : ℕ+) :
+    (@HPow.hPow (with_one α) ℕ+ (with_one α) _ (inl a) n)
+    = inl (a ^ n) := by
+  induction n using PNat.recOn with
+  | p1 => simp
+  | hp n ih =>
+    simp [ppow_succ, ih]
+
 end Semigroup
 
 section CommSemigroup'
@@ -109,7 +125,7 @@ instance : CommMonoid (with_one α) where
 
 end CommSemigroup'
 
-section LinearOrderedCancelSemigroup
+section LinearOrderedCancelCommSemigroup
 variable [LinearOrderedCancelCommSemigroup α] [not_one : Fact (∀x : α, ¬is_one x)]
 
 instance : OrderedCommMonoid (with_one α) where
@@ -205,6 +221,32 @@ theorem inr_is_one : @is_one (with_one α) _ (Sum.inr ()) := by
   <;> unfold_projs
   <;> simp
 
+@[simp]
+theorem le_push {a b : α} : inl a ≤ inl b ↔ a ≤ b := by
+  constructor
+  · intro sum_le
+    unfold_projs at sum_le
+    simp at sum_le
+    trivial
+  · intro le
+    unfold_projs
+    simpa
+
+@[simp]
+theorem lt_push {a b : α} : inl a < inl b ↔ a < b := by
+  constructor
+  · intro sum_lt
+    unfold_projs at sum_lt
+    simp at sum_lt
+    obtain ⟨_, lt⟩ := sum_lt
+    trivial
+  · intro lt
+    unfold_projs
+    simp
+    constructor
+    · exact lt.le
+    · exact lt
+
 theorem pos_without_one {a : α} : @is_positive (with_one α) _ (Sum.inl a) ↔ is_positive a := by
   constructor
   · simp only [is_positive] at *
@@ -264,14 +306,6 @@ theorem same_sign_without_one {a b : α} : @same_sign (with_one α) _ (Sum.inl a
 
 theorem arch_wrt_without_one {a b : α} : @is_archimedean_wrt (with_one α) _ (Sum.inl a) (Sum.inl b) ↔ is_archimedean_wrt a b := by
   simp [is_archimedean_wrt, pos_without_one, neg_without_one, HPow.hPow, Pow.pow, pow_without_one, nppow_eq_nppowRec]
-  unfold_projs
-  have {a b : α} : a ≤ b ∧ a < b ↔ a < b := by
-    constructor
-    · rintro ⟨-, this⟩
-      exact this
-    · intro h
-      exact ⟨h.le, h⟩
-  simp [this]
 
 theorem arch_semigroup_arch_monoid (arch : is_archimedean (α := α)) :
     @is_archimedean (with_one α) _ := by
@@ -289,4 +323,66 @@ theorem arch_semigroup_arch_monoid (arch : is_archimedean (α := α)) :
   · left
     exact inr_is_one
 
-end LinearOrderedCancelSemigroup
+theorem not_anom_semigroup_not_anom_monoid (not_anom : ¬has_anomalous_pair (α := α)) :
+    ¬has_anomalous_pair (α := with_one α) := by
+  simp [has_anomalous_pair] at *
+  intro x y
+  cases' x with x x
+  <;> cases' y with y y
+  <;> simp
+  · obtain ⟨z, ⟨l, r⟩⟩ := not_anom x y
+    use z
+    constructor
+    · intro h
+      unfold_projs at h l ⊢
+      simp [←nppow_eq_nppowRec] at h ⊢
+      specialize l h
+      trivial
+    · intro h
+      unfold_projs at h r ⊢
+      simp [←nppow_eq_nppowRec] at h ⊢
+      specialize r h
+      trivial
+  · use 1
+    simp
+    constructor
+    · intro h
+      simp [ppow_succ]
+      calc inl x * inl x
+      _ ≤ inl x := le_of_lt h
+      _ ≤ Sum.inr y := le_of_lt h
+    · intro h
+      simp [ppow_succ]
+      exact le_mul_of_le_of_one_le h.le h.le
+  · use 1
+    simp
+    constructor
+    · intro h
+      simp [ppow_succ]
+      unfold_projs
+      simp
+      have : is_positive y := by
+        apply pos_without_one.mp
+        simp [is_positive]
+        exact h
+      exact le_of_lt (this y)
+    · intro h
+      simp [ppow_succ]
+      unfold_projs
+      simp
+      have : is_negative y := by
+        apply neg_without_one.mp
+        simp [is_negative]
+        exact h
+      exact le_of_lt (this y)
+
+
+
+
+
+
+
+
+
+
+end LinearOrderedCancelCommSemigroup

@@ -1,8 +1,8 @@
 import OrderedSemigroups.Defs
 import OrderedSemigroups.OrderedGroup.Defs
 import Mathlib.Data.Set.Basic
-import OrderedSemigroups.SemigroupToMonoid
 import Mathlib.Algebra.Group.Subsemigroup.Basic
+import OrderedSemigroups.Archimedean
 
 /-!
 # Basic ordered group facts
