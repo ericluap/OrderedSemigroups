@@ -27,7 +27,8 @@ abbrev anomalous_pair (a b : α) := ∀n : ℕ+, (a^n < b^n ∧ b^n < a^(n+1)) �
 
 /-- An ordered semigroup has an anomalous pair if there exist elements `a` and `b` such that
 `a` and `b` form an anomalous pair. -/
-abbrev has_anomalous_pair := ∃a b : α, anomalous_pair a b
+abbrev has_anomalous_pair (α : Type u) [LeftOrderedSemigroup α] :=
+  ∃a b : α, anomalous_pair a b
 
 /-- An ordered semigroup is Archimedean if for all elements `a` and `b` of it, either
 `a` is one, `b` is one, or if `a` and `b` have the same sign, then `a` is Archimedean with respect to `b`.-/

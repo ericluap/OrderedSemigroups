@@ -14,32 +14,29 @@ def not_anom_to_comm (not_anomalous : ¬has_anomalous_pair (α := α)) :
     LinearOrderedCancelCommSemigroup α where
   mul_comm a b := not_anomalous_pair_commutative not_anomalous a b
 
+--set_option pp.all true in
 theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
     ∃M : Type u, ∃m : LinearOrderedCancelCommMonoid M, ¬has_anomalous_pair (α := M) ∧
       ∃H : Subsemigroup M, Nonempty (α ≃* H) := by
-  have := not_anom_to_comm not_anomalous
+  set not_anom := not_anom_to_comm not_anomalous
+    with not_anom_def
+  have not_anom2 : ¬@has_anomalous_pair α
+      (@OrderedSemigroup.toLeftOrderedSemigroup α
+        (@LinearOrderedSemigroup.toOrderedSemigroup α
+          (@instLinearOrderedSemigroupOfLinearOrderedCancelSemigroup α
+            instLinearOrderedCancelSemigroupOfLinearOrderedCancelCommSemigroup)))
+      := by
+    simp at not_anomalous ⊢
+    tauto
   by_cases not_one : ∀a : α, ¬(∀x : α, a*x = x)
   ·
-    have := @to_monoid α this (Fact.mk not_one)
+    have := @to_monoid α not_anom (Fact.mk not_one)
     use (with_one α), this
     constructor
-    /-· exact @not_anom_semigroup_not_anom_monoid α _ (Fact.mk not_one)
-        (by
-          simp_all
-          intro x y
-          obtain ⟨z, ⟨l, r⟩⟩ := not_anomalous x y
-          use z
-          constructor
-          · intro t
-            unfold_projs
-            simp
-            unfold LT.lt
-            unfold_projs
-            simp
-
-
-        )-/
-    sorry
+    ·
+      have := not_anom_semigroup_not_anom_monoid (α := α) (not_one := Fact.mk not_one) not_anom2
+      convert this
+      sorry
     sorry
   sorry
 
