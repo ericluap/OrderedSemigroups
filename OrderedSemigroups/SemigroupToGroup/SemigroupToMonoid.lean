@@ -376,13 +376,34 @@ theorem not_anom_semigroup_not_anom_monoid (not_anom : ¬has_anomalous_pair (α 
         exact h
       exact le_of_lt (this y)
 
+end LinearOrderedCancelCommSemigroup
 
+section LinearOrderedCancelCommSemigroup
+variable [LinearOrderedCancelCommSemigroup α]
 
+def has_one_to_monoid (one : α) (hone : ∀x : α, one * x = x) :
+    LinearOrderedCancelCommMonoid α where
+  __ := inferInstanceAs (LinearOrderedCancelCommSemigroup α)
+  one := one
+  one_mul := hone
+  mul_one := by
+    intro a
+    rw [mul_comm]
+    exact hone a
 
+def has_one_to_leftordsemi (t : LinearOrderedCancelCommMonoid α) :
+    LeftOrderedSemigroup α := inferInstance
 
-
-
-
-
+theorem has_one_not_anom_not_anom (one : α) (hone : ∀x : α, one * x = x)
+    (not_anom : ¬has_anomalous_pair α) :
+    ¬@has_anomalous_pair α (has_one_to_leftordsemi (has_one_to_monoid one hone)) := by
+  simp at *
+  intro x y
+  specialize not_anom x y
+  obtain ⟨z, hz⟩ := not_anom
+  use z
+  simp [has_one_to_leftordsemi, inferInstance]
+  convert hz
+  <;> sorry
 
 end LinearOrderedCancelCommSemigroup

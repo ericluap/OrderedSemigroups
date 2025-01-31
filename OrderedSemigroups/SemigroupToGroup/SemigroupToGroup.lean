@@ -20,25 +20,25 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
       ∃H : Subsemigroup M, Nonempty (α ≃* H) := by
   set not_anom := not_anom_to_comm not_anomalous
     with not_anom_def
-  have not_anom2 : ¬@has_anomalous_pair α
-      (@OrderedSemigroup.toLeftOrderedSemigroup α
-        (@LinearOrderedSemigroup.toOrderedSemigroup α
-          (@instLinearOrderedSemigroupOfLinearOrderedCancelSemigroup α
-            instLinearOrderedCancelSemigroupOfLinearOrderedCancelCommSemigroup)))
-      := by
-    simp at not_anomalous ⊢
-    tauto
   by_cases not_one : ∀a : α, ¬(∀x : α, a*x = x)
-  ·
-    have := @to_monoid α not_anom (Fact.mk not_one)
-    use (with_one α), this
+  · set not_anom_monoid := @to_monoid α not_anom (Fact.mk not_one)
+      with not_anom_monoid_def
+    use (with_one α), not_anom_monoid
+    constructor
+    · exact not_anom_semigroup_not_anom_monoid (α := α) (not_one := Fact.mk not_one) not_anomalous
+    · use without_one, iso_without_one (α := α)
+      simp
+  · simp at not_one
+    obtain ⟨one, hone⟩ := not_one
+    set not_anom_monoid := has_one_to_monoid one hone
+      with not_anom_monoid_def
+    use α, not_anom_monoid
     constructor
     ·
-      have := not_anom_semigroup_not_anom_monoid (α := α) (not_one := Fact.mk not_one) not_anom2
-      convert this
-      sorry
-    sorry
-  sorry
+      norm_cast
+      convert not_anomalous
+
+
 
 theorem to_arch_group (not_anomalous : ¬has_anomalous_pair (α := α)) :
     ∃G : Type v, ∃g : LinearOrderedCommGroup G, archimedean_group G ∧
