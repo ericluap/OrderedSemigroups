@@ -20,9 +20,9 @@ section Group
 variable [Group α]
 
 theorem pnat_pow_eq_nat_pow (x : α) (n : ℕ+) : x^(n.val) = x^n := by
-  induction n using PNat.recOn with
-  | p1 => simp
-  | hp n ih =>
+  induction n with
+  | one => simp
+  | succ n ih =>
     simp [ppow_succ, pow_succ, ih]
 
 theorem split_first_and_last_factor_of_product_group {a b : α} {n : ℕ} :

@@ -18,7 +18,6 @@ instance toLeftLinearOrderedGroup [LinearOrderedCommGroup α] : LeftLinearOrdere
   __ := inferInstanceAs (LinearOrderedCommGroup α)
   mul_le_mul_left _ _ a b := mul_le_mul_left' a b
 
-
 section LinearOrderedCommGroup
 variable [LinearOrderedCommGroup α]
 

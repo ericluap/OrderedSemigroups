@@ -32,11 +32,11 @@ theorem nppowRec_one [Mul α] (x : α) : nppowRec 1 x = x := by
   simp
 
 theorem nppowRec_succ [Mul α] (n : ℕ+) (x : α) : nppowRec (n + 1) x = nppowRec n x * x := by
-  induction n using PNat.recOn with
-  | p1 =>
+  induction n with
+  | one =>
     unfold nppowRec
     simp [nppowRec_one]
-  | hp n ih =>
+  | succ n ih =>
     unfold nppowRec
     have : (n + 1) = ⟨↑n + 1, nppowRec.proof_1 ↑n⟩ := by rfl
     simp

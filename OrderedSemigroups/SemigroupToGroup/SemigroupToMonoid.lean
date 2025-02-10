@@ -80,9 +80,9 @@ noncomputable def iso_without_one : α ≃* without_one (α := α) where
 
 theorem pow_without_one {a : α} (n : ℕ+):
     (Semigroup'.nppow n (Sum.inl a : with_one α) : with_one α) = (Sum.inl (a ^ n) : with_one α) := by
-  induction n using PNat.recOn with
-  | p1 => simp [Semigroup'.nppow_one]
-  | hp n ih =>
+  induction n with
+  | one => simp [Semigroup'.nppow_one]
+  | succ n ih =>
     simp [Semigroup'.nppow_succ, ih]
     unfold_projs
     simp [nppowRec_succ n a]
@@ -101,9 +101,9 @@ theorem mul_push {a b : α} : inl (a * b) = inl a * inl b := by
 theorem pow_push {a : α} (n : ℕ+) :
     (@HPow.hPow (with_one α) ℕ+ (with_one α) _ (inl a) n)
     = inl (a ^ n) := by
-  induction n using PNat.recOn with
-  | p1 => simp
-  | hp n ih =>
+  induction n with
+  | one => simp
+  | succ n ih =>
     simp [ppow_succ, ih]
 
 end Semigroup

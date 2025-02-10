@@ -66,27 +66,27 @@ theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative 
 
 theorem pos_pow_pos {a : α} (pos : is_positive a) (n : ℕ+) : is_positive (a^n) := by
   intro x
-  induction n using PNat.recOn with
-  | p1 => simp [pos x]
-  | hp n ih =>
+  induction n with
+  | one => simp [pos x]
+  | succ n ih =>
     simp [ppow_succ']
     have : a * a^n * x > a^n * x := by simp [pos (a^n*x), mul_assoc]
     exact gt_trans this ih
 
 theorem neg_pow_neg {a : α} (neg : is_negative a) (n : ℕ+) : is_negative (a^n) := by
   intro x
-  induction n using PNat.recOn with
-  | p1 => simp [neg x]
-  | hp n ih =>
+  induction n with
+  | one => simp [neg x]
+  | succ n ih =>
     simp [ppow_succ']
     have : a * a^n * x < a^n * x := by simp [neg (a^n*x), mul_assoc]
     exact gt_trans ih this
 
 theorem one_pow_one {a : α} (one : is_one a) (n : ℕ+) : is_one (a^n) := by
   intro x
-  induction n using PNat.recOn with
-  | p1 => simp [one x]
-  | hp n ih => simp [ppow_succ', mul_assoc, ih, one x]
+  induction n with
+  | one => simp [one x]
+  | succ n ih => simp [ppow_succ', mul_assoc, ih, one x]
 
 def same_sign (a b : α) :=
   (is_positive a ∧ is_positive b) ∨

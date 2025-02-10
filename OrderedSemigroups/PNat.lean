@@ -21,12 +21,12 @@ lemma lt_sub {x y : ℕ+} (h : x + 1 < y) : x < y - 1 := by
 
 lemma le.dest : ∀{n m : ℕ+}, n < m → ∃k : ℕ+, n + k = m := by
   intro n
-  induction n using PNat.recOn with
-  | p1 =>
+  induction n with
+  | one =>
     intro m h
     use (m - 1)
     exact PNat.add_sub_of_lt h
-  | hp n ih =>
+  | succ n ih =>
     intro m h
     have : n < m - 1 := lt_sub h
     obtain ⟨k, hk⟩ := ih this

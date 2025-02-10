@@ -75,7 +75,7 @@ lemma sequence_convergence_unique
     dsimp [I]
     rw [sub_self, abs_zero]
     obtain rfl | npos := Nat.eq_zero_or_pos n
-    · rw [CharP.cast_eq_zero, div_zero]
+    · simp
     · positivity
 
   let h_Icc (n : ℕ) := Set.Icc ((a n) / n - C / n) ((a n) / n + C / n)
