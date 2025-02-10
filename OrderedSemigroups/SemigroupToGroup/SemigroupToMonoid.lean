@@ -391,19 +391,15 @@ def has_one_to_monoid (one : α) (hone : ∀x : α, one * x = x) :
     rw [mul_comm]
     exact hone a
 
-def has_one_to_leftordsemi (t : LinearOrderedCancelCommMonoid α) :
-    LeftOrderedSemigroup α := inferInstance
+abbrev has_one_to_leftordsemi {α : Type*} (_ : LinearOrderedCancelCommMonoid α) :
+    LeftOrderedSemigroup α where
+  __ := inferInstanceAs (LinearOrderedCancelCommMonoid α)
 
 theorem has_one_not_anom_not_anom (one : α) (hone : ∀x : α, one * x = x)
     (not_anom : ¬has_anomalous_pair α) :
-    ¬@has_anomalous_pair α (has_one_to_leftordsemi (has_one_to_monoid one hone)) := by
-  simp at *
-  intro x y
-  specialize not_anom x y
-  obtain ⟨z, hz⟩ := not_anom
-  use z
-  simp [has_one_to_leftordsemi, inferInstance]
-  convert hz
-  <;> sorry
+    ¬(@has_anomalous_pair α (has_one_to_leftordsemi (has_one_to_monoid one hone))) := by
+  simp only [has_one_to_leftordsemi] at *
+  convert not_anom
+  exact Eq.symm nppow_eq_nppowRec
 
 end LinearOrderedCancelCommSemigroup

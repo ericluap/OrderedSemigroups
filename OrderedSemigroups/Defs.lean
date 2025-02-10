@@ -105,11 +105,7 @@ class LinearOrderedSemigroup (α : Type u) extends OrderedSemigroup α, LinearOr
 class LinearOrderedCancelSemigroup (α : Type u) extends OrderedCancelSemigroup α, LinearOrder α
 
 instance [LinearOrderedCancelSemigroup α] : LinearOrderedSemigroup α where
-  le_total := LinearOrderedCancelSemigroup.le_total
-  decidableLE := LinearOrderedCancelSemigroup.decidableLE
-  min_def := LinearOrderedCancelSemigroup.min_def
-  max_def := LinearOrderedCancelSemigroup.max_def
-  compare_eq_compareOfLessAndEq := LinearOrderedCancelSemigroup.compare_eq_compareOfLessAndEq
+  __ := inferInstanceAs (LinearOrderedCancelSemigroup α)
 
 class CommSemigroup' (G : Type u) extends Semigroup' G, CommSemigroup G where
 

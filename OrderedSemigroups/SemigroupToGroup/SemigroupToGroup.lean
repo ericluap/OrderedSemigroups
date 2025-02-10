@@ -14,9 +14,8 @@ def not_anom_to_comm (not_anomalous : ¬has_anomalous_pair (α := α)) :
     LinearOrderedCancelCommSemigroup α where
   mul_comm a b := not_anomalous_pair_commutative not_anomalous a b
 
---set_option pp.all true in
 theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
-    ∃M : Type u, ∃m : LinearOrderedCancelCommMonoid M, ¬has_anomalous_pair (α := M) ∧
+    ∃M : Type u, ∃_ : LinearOrderedCancelCommMonoid M, ¬has_anomalous_pair (α := M) ∧
       ∃H : Subsemigroup M, Nonempty (α ≃* H) := by
   set not_anom := not_anom_to_comm not_anomalous
     with not_anom_def
@@ -34,11 +33,20 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
       with not_anom_monoid_def
     use α, not_anom_monoid
     constructor
-    ·
-      norm_cast
-      convert not_anomalous
-
-
+    · exact has_one_not_anom_not_anom one hone not_anomalous
+    · set whole : Subsemigroup α := {
+        carrier := Set.univ
+        mul_mem' := by simp
+      } with whole_def
+      use whole
+      constructor
+      exact {
+        toFun := fun x => ⟨x, by simp [whole_def]⟩
+        invFun := fun x => x
+        left_inv := by simp [Function.LeftInverse]
+        right_inv := by simp [Function.RightInverse, Function.LeftInverse]
+        map_mul' := by simp
+      }
 
 theorem to_arch_group (not_anomalous : ¬has_anomalous_pair (α := α)) :
     ∃G : Type v, ∃g : LinearOrderedCommGroup G, archimedean_group G ∧
