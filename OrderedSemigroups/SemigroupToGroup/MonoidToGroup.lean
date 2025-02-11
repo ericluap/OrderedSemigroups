@@ -3,6 +3,17 @@ import Mathlib.Data.Setoid.Basic
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.Algebra.Order.Monoid.Basic
 import Mathlib.Algebra.Order.Group.Basic
+import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
+
+/-!
+# Monoid to Group
+
+This file proves that for a suitable monoid `α` there exists a larger group
+`with_division α` that contains it.
+In particular, it shows that for every linear ordered cancel commutative monoid `α`,
+`with_division α` is a linear ordered commutative group that contains it.
+
+-/
 
 universe u
 variable {α : Type u}
@@ -312,7 +323,15 @@ instance : OrderedCommGroup (with_division α) where
       exact this
     · right
       simp [x_eq_y]
-
+/-
+def ordiso_over_one : α ≃*o over_one_submonoid (α := α) where
+  toFun := iso_over_one
+  invFun := iso_over_one.symm
+  left_inv := by simp [iso_over_one]
+  right_inv := _
+  map_mul' := _
+  map_le_map_iff' := _
+-/
 end OrderedCancelCommMonoid
 
 section LinearOrderedCancelCommMonoid
@@ -340,5 +359,15 @@ noncomputable instance : LinearOrderedCommGroup (with_division α) where
       simp [CommMonoid.mul_comm x.2 y.1, CommMonoid.mul_comm x.1 y.2] at y_lt_x
       simp [y_lt_x]
   decidableLE := Classical.decRel fun x1 x2 ↦ x1 ≤ x2
+
+instance : LeftOrderedSemigroup α where
+  __ := inferInstanceAs (LinearOrderedCancelCommMonoid α)
+
+noncomputable instance : LeftOrderedGroup (with_division α) where
+  __ := inferInstanceAs (LinearOrderedCommGroup (with_division α))
+
+theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
+    archimedean_group (with_division α) := by
+  sorry
 
 end LinearOrderedCancelCommMonoid

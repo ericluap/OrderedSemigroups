@@ -1,11 +1,20 @@
 import Mathlib.Algebra.Order.Group.Basic
 import OrderedSemigroups.Archimedean
 
+/-!
+# Semigroup to Monoid
+
+This file proves that for a suitable semigroup `α` there exists a larger monoid
+`with_one α` that contains it.
+In particular, it shows that for every linear ordered cancel commutative semigroup `α`,
+`with_one α` is a linear ordered cancel commutative monoid that contains it.
+
+-/
+
 universe u
 variable {α : Type u}
 
 def with_one (α : Type u) := α ⊕ Unit
-def to_withOne (x : α ⊕ Unit) : with_one α := x
 
 abbrev inl (a : α) : with_one α := Sum.inl a
 abbrev inr : with_one α := Sum.inr ()

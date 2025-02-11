@@ -4,6 +4,14 @@ import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
 import OrderedSemigroups.OrderedGroup.Holder
 import OrderedSemigroups.Sign
 
+/-!
+# Archimedean semigroups and groups
+
+This file proves the equivalence of the definition of Archimedean semigroup
+and of Archimedean group.
+
+-/
+
 universe u
 variable {α : Type u}
 
