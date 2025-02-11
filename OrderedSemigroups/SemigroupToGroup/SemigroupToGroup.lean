@@ -50,6 +50,7 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
         left_inv := by simp [Function.LeftInverse]
         right_inv := by simp [Function.RightInverse, Function.LeftInverse]
         map_mul' := by simp
+        map_le_map_iff' := by simp
       }
 
 
@@ -61,7 +62,7 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
 theorem compose_subsemigroup {G M : Type u} [OrderedGroup G] [Monoid M]
     [Preorder G] [Preorder M]
     {G' : Submonoid G} {M' : Subsemigroup M} (f : M ≃*o G') (g : α ≃*o M') :
-    ∃H : Subsemigroup G, Nonempty (α ≃* H) := by
+    ∃H : Subsemigroup G, Nonempty (α ≃*o H) := by
   set α_to_group : α →ₙ* G := {
     toFun x := f (g x).val
     map_mul' := by simp
@@ -91,6 +92,7 @@ theorem compose_subsemigroup {G M : Type u} [OrderedGroup G] [Monoid M]
       <;> simp [img, hyx]
     map_mul' := by
       simp [α_to_group]
+    map_le_map_iff' := by simp [α_to_group]
   }
 
 /--
@@ -101,7 +103,7 @@ theorem compose_subsemigroup {G M : Type u} [OrderedGroup G] [Monoid M]
 theorem compose_subsemigroup' {G : Type*} {M : Type*} [Group G] [Group M]
     [Preorder G] [Preorder M]
     {G' : Subgroup G} {M' : Subsemigroup M} (f : M ≃*o G') (g : α ≃*o M') :
-    ∃H : Subsemigroup G, Nonempty (α ≃* H) := by
+    ∃H : Subsemigroup G, Nonempty (α ≃*o H) := by
   set α_to_group : α →ₙ* G := {
     toFun x := f (g x).val
     map_mul' := by simp
@@ -131,10 +133,9 @@ theorem compose_subsemigroup' {G : Type*} {M : Type*} [Group G] [Group M]
       <;> simp [img, hyx]
     map_mul' := by
       simp [α_to_group]
+    map_le_map_iff' := by simp [α_to_group]
   }
 
-instance : Preorder α := by infer_instance
-instance {M : Type*} [LinearOrderedCancelCommMonoid M] : Preorder M := by infer_instance
 /--
   If `α` is a linear ordered cancel semigroup that does not have anomalous pairs,
   then there exists a linear ordered commutative group `G` that is Archimedean
@@ -148,7 +149,6 @@ theorem to_arch_group (not_anomalous : ¬has_anomalous_pair (α := α)) :
   use (with_division M), inferInstance
   constructor
   · exact not_anom_to_arch not_anom_M
-  · sorry
-    --have := compose_subsemigroup iso_over_one subsemi_H
+  · exact compose_subsemigroup ordiso_over_one subsemi_H
 
 end LinearOrderedCancelSemigroup

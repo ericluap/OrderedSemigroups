@@ -539,6 +539,57 @@ theorem not_anomalous_iff_large_difference : ¬has_anomalous_pair (α := α) ↔
   · exact fun a ↦ not_anomalous_large_difference a
   · exact fun a ↦ large_difference_not_anomalous a
 
+theorem same_sign_differences_and_arch_to_large_difference
+    (all_same : ∀x y : α, is_one x ∨ is_one y ∨ same_sign x y) (arch : is_archimedean (α := α))
+    (differences : ∀x y : α, x < y → ∃z : α, x * z = y) :
+    has_large_differences (α := α) := by
+  simp [has_large_differences]
+  intro x y
+  constructor
+  · intro pos x_lt_y
+    obtain ⟨z, hz⟩ := (differences x y x_lt_y)
+    use z
+    constructor
+    · simp [is_archimedean] at arch
+      by_cases one_x : is_one x
+      · exact pos_not_one pos one_x |>.elim
+      by_cases one_z : is_one z
+      · simp [one_right one_z x] at hz
+        exact x_lt_y.ne hz |>.elim
+      obtain one_z' | one_x' | same := arch z x
+      · contradiction
+      · contradiction
+      apply same
+      obtain one_z' | one_x' | z_x_same := all_same z x
+      · contradiction
+      · contradiction
+      exact z_x_same
+    · use 1
+      simp [hz]
+  · intro neg y_lt_x
+    obtain ⟨z, hz⟩ := (differences y x y_lt_x)
+    use z
+    constructor
+    · simp [is_archimedean] at arch
+      by_cases one_x : is_one x
+      · exact neg_not_one neg one_x |>.elim
+      by_cases one_z : is_one z
+      · simp [one_right one_z y] at hz
+        exact y_lt_x.ne hz |>.elim
+      obtain one_z' | one_x' | same := arch z x
+      · contradiction
+      · contradiction
+      apply same
+      obtain one_z' | one_x' | z_x_same := all_same z x
+      · contradiction
+      · contradiction
+      exact z_x_same
+    · use 1
+      simp
+      have : y * z < x * z := mul_lt_mul_right' y_lt_x z
+      rw [hz] at this
+      exact (gt_trans this y_lt_x).le
+
 theorem pos_large_elements (not_anomalous : ¬has_anomalous_pair (α := α)) (pos_elem : ∃a : α, is_positive a) :
     ∀x : α, ∃y : α, is_positive y ∧ is_positive (x*y) := by
   intro x

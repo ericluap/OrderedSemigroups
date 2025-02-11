@@ -323,15 +323,17 @@ instance : OrderedCommGroup (with_division α) where
       exact this
     · right
       simp [x_eq_y]
-/-
-def ordiso_over_one : α ≃*o over_one_submonoid (α := α) where
-  toFun := iso_over_one
-  invFun := iso_over_one.symm
-  left_inv := by simp [iso_over_one]
-  right_inv := _
-  map_mul' := _
-  map_le_map_iff' := _
--/
+
+noncomputable def ordiso_over_one : α ≃*o over_one_submonoid (α := α) :=
+  OrderMonoidIso.mk iso_over_one (by
+    simp [iso_over_one]
+    unfold_projs
+    simp [with_division_lt, pair_lt, pair_setoid]
+    have one_mul (a : α) : a * One.one = a := mul_right_eq_self.mpr rfl
+    have one_mul' (b : α) : One.one * b = b := mul_left_eq_self.mpr rfl
+    simp [one_mul, one_mul', le_iff_lt_or_eq]
+    )
+
 end OrderedCancelCommMonoid
 
 section LinearOrderedCancelCommMonoid

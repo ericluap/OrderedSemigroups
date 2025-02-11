@@ -348,7 +348,6 @@ theorem not_pos_right {a : α} (not_pos : ¬is_positive a) : ∀x : α, x * a �
   · exact le_of_lt (neg_right neg_a x)
   · exact le_of_eq (one_right one_a x)
 
-
 theorem not_negative {a : α} (not_neg : ¬is_negative a) : ∀x : α, a * x ≥ x := by
   intro x
   obtain pos_a | one_a := not_neg_or.1 not_neg
