@@ -85,7 +85,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v1
         with:
-          arifact_name: pages
+          artifact_name: pages
 
       - name: Make sure the cache works
         run: |
