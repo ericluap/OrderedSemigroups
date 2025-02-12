@@ -160,4 +160,70 @@ theorem lt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : �
     simp at hz
     use z
 
+theorem pos_arch_arch (pos_arch : ∀g h : α, 1 < g → 1 < h → ∃n : ℕ, g^n > h) :
+    archimedean_group α := by
+  simp [archimedean_group]
+  intro g h g_not_one
+  obtain one_lt_g | one_eq_g | g_lt_one := lt_trichotomy 1 g
+  <;> obtain one_lt_h | one_eq_h | h_lt_one := lt_trichotomy 1 h
+  · obtain ⟨n, hn⟩ := pos_arch g h one_lt_g one_lt_h
+    use n
+    norm_cast
+  · use 1
+    simp [←one_eq_h, one_lt_g]
+  · use 1
+    simp
+    exact gt_trans one_lt_g h_lt_one
+  · exact (g_not_one one_eq_g.symm).elim
+  · exact (g_not_one one_eq_g.symm).elim
+  · use 1
+    simp [←one_eq_g, h_lt_one]
+  · have : 1 < g⁻¹ := by exact Right.one_lt_inv_iff.mpr g_lt_one
+    obtain ⟨n, hn⟩ := pos_arch g⁻¹ h this one_lt_h
+    have : (g⁻¹)^n = g^(-n : ℤ) := by simp
+    rw [this] at hn
+    use -n
+  · use -1
+    simp [←one_eq_h, g_lt_one]
+  · use -1
+    have : 1 < g⁻¹ := by exact Right.one_lt_inv_iff.mpr g_lt_one
+    have : h < g⁻¹ := by exact gt_trans this h_lt_one
+    simpa
+
+theorem neg_arch_arch (neg_arch : ∀g h : α, g < 1 → h < 1 → ∃n : ℕ, g^n < h) :
+    archimedean_group α := by
+  simp [archimedean_group]
+  intro g h g_not_one
+  obtain one_lt_g | one_eq_g | g_lt_one := lt_trichotomy 1 g
+  <;> obtain one_lt_h | one_eq_h | h_lt_one := lt_trichotomy 1 h
+  · have ginv : g⁻¹ < 1 := by exact Left.inv_lt_one_iff.mpr one_lt_g
+    have hinv : h⁻¹ < 1 := by exact Left.inv_lt_one_iff.mpr one_lt_h
+    obtain ⟨n, hn⟩ := neg_arch g⁻¹ h⁻¹ ginv hinv
+    have : (g⁻¹)^n = g^(-n : ℤ) := by simp
+    rw [this] at hn
+    simp at hn
+    use n
+    norm_cast
+  · use 1
+    simp [←one_eq_h, one_lt_g]
+  · use 1
+    simp
+    exact gt_trans one_lt_g h_lt_one
+  · exact (g_not_one one_eq_g.symm).elim
+  · exact (g_not_one one_eq_g.symm).elim
+  · use 1
+    simp [←one_eq_g, h_lt_one]
+  · have : h⁻¹ < 1 := by exact Left.inv_lt_one_iff.mpr one_lt_h
+    obtain ⟨n, hn⟩ := neg_arch g h⁻¹ g_lt_one this
+    have : (h⁻¹)⁻¹ < (g^n)⁻¹ := by exact inv_lt_inv_iff.mpr hn
+    simp at this
+    use -n
+    simpa
+  · use -1
+    simp [←one_eq_h, g_lt_one]
+  · use -1
+    have : 1 < g⁻¹ := by exact Right.one_lt_inv_iff.mpr g_lt_one
+    have : h < g⁻¹ := by exact gt_trans this h_lt_one
+    simpa
+
 end LinearOrderedGroup

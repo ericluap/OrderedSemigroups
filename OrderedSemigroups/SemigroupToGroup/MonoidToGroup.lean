@@ -85,6 +85,13 @@ theorem pair_inv_well_defined : ∀(a b : α × α), (pair_setoid α).r a b → 
 
 def lift_inv := Quotient.lift (pair_inv_quot (α := α)) pair_inv_well_defined
 
+def all_one_div_one (all_one : ∀x : α, x = 1) :
+    ∀z : with_division α, z = Quotient.mk (pair_setoid α) (1, 1) := by
+  intro z
+  induction' z using Quot.ind with z
+  apply Quot.sound
+  simp [pair_setoid, all_one]
+
 /--
   Shows that `with_division α` is a commutative group
 -/
@@ -368,8 +375,245 @@ instance : LeftOrderedSemigroup α where
 noncomputable instance : LeftOrderedGroup (with_division α) where
   __ := inferInstanceAs (LinearOrderedCommGroup (with_division α))
 
+theorem not_one_div_not_one {x : with_division α}
+    (not_one_div : ¬is_one x) : ∃t : α, ¬is_one t := by
+  by_contra!
+  induction' x using Quot.ind with x
+  simp [is_one] at *
+  have x1_one : x.1 = 1 := this x.1
+  have x2_one : x.2 = 1 := this x.2
+  have : ⟦x⟧ = (1 : with_division α) := by
+    have : x = (x.1, x.2) := rfl
+    rw [this, x1_one, x2_one]
+    unfold_projs
+    simp
+  contradiction
+
+instance : LinearOrderedCancelSemigroup α where
+  __ := inferInstanceAs (LinearOrderedCancelCommMonoid α)
+  mul_le_mul_right := by simp
+  le_of_mul_le_mul_right := by simp
+
+noncomputable instance : LinearOrderedGroup (with_division α) where
+  __ := inferInstanceAs (LinearOrderedCommGroup (with_division α))
+  mul_le_mul_right := by simp
+
+theorem not_anom_pos_pair (not_anom : ¬has_anomalous_pair α)
+    {t : α} (pos_t : is_positive t) :
+    ∀z : with_division α, ¬is_one z → ∃x y : α,
+    is_positive x ∧ is_positive y ∧ ⟦(x,y)⟧ = z := by
+  intro z not_one_z
+  induction' z using Quot.ind with z
+  obtain ⟨z1', pos_z1', pos_z1_z1'⟩ := pos_large_elements not_anom (by use t) z.1
+  obtain ⟨z2', pos_z2', pos_z2_z2'⟩ := pos_large_elements not_anom (by use t) z.2
+  have pos_numerator : is_positive (z.1*z1'*z2') := pos_lt_pos pos_z2' (pos_z1_z1' z2')
+  have pos_denominator : is_positive (z.2*z1'*z2') := by
+    have := not_anomalous_pair_commutative not_anom z1' z2'
+    rw [mul_assoc, this, ←mul_assoc]
+    exact pos_lt_pos pos_z1' (pos_z2_z2' z1')
+  use (z.1 * z1' * z2'), (z.2 * z1' * z2')
+  constructor
+  · exact pos_numerator
+  constructor
+  · exact pos_denominator
+  apply Quot.sound
+  simp [pair_setoid]
+  calc z.1 * z1' * z2' * z.2
+  _ = z.2 * (z.1 * z1' * z2') := not_anomalous_pair_commutative not_anom _ _
+  _ = z.2 * (z.1 * (z1' * z2')) := by simp [mul_assoc]
+  _ = z.2 * (z1' * z2' * z.1) := by simp [not_anomalous_pair_commutative not_anom]
+  _ = z.2 * z1' * z2' * z.1 := by simp [mul_assoc]
+
+theorem not_anom_neg_pair (not_anom : ¬has_anomalous_pair α)
+    {t : α} (neg_t : is_negative t) :
+    ∀z : with_division α, ¬is_one z → ∃x y : α,
+    is_negative x ∧ is_negative y ∧ ⟦(x,y)⟧ = z := by
+  intro z not_one_z
+  induction' z using Quot.ind with z
+  obtain ⟨z1', neg_z1', neg_z1_z1'⟩ := neg_large_elements not_anom (by use t) z.1
+  obtain ⟨z2', neg_z2', neg_z2_z2'⟩ := neg_large_elements not_anom (by use t) z.2
+  have neg_numerator : is_negative (z.1*z1'*z2') := lt_neg_neg neg_z2' (neg_z1_z1' z2')
+  have neg_denominator : is_negative (z.2*z1'*z2') := by
+    have := not_anomalous_pair_commutative not_anom z1' z2'
+    rw [mul_assoc, this, ←mul_assoc]
+    exact lt_neg_neg neg_z1' (neg_z2_z2' z1')
+  use (z.1 * z1' * z2'), (z.2 * z1' * z2')
+  constructor
+  · exact neg_numerator
+  constructor
+  · exact neg_denominator
+  apply Quot.sound
+  simp [pair_setoid]
+  calc z.1 * z1' * z2' * z.2
+  _ = z.2 * (z.1 * z1' * z2') := not_anomalous_pair_commutative not_anom _ _
+  _ = z.2 * (z.1 * (z1' * z2')) := by simp [mul_assoc]
+  _ = z.2 * (z1' * z2' * z.1) := by simp [not_anomalous_pair_commutative not_anom]
+  _ = z.2 * z1' * z2' * z.1 := by simp [mul_assoc]
+
+theorem exists_pos_neg_all_one :
+    (∀t : α, is_one t) ∨ (∃t : α, is_positive t) ∨ (∃t : α, is_negative t) := by
+  by_cases h : ∃t : α, is_positive t
+  · right; left; trivial
+  simp at h
+  by_cases h' : ∃t : α, is_negative t
+  · right; right; trivial
+  simp at h'
+  left
+  intro t
+  obtain pos | neg | one := pos_neg_or_one t
+  · exact (h t pos).elim
+  · exact (h' t neg).elim
+  · exact one
+
+theorem with_div_pos_ineq {x y : α}
+    (pos : is_positive (⟦(x,y)⟧ : with_division α)) :
+    y < x := by
+  simp [is_positive] at *
+  unfold_projs at pos
+  simp [with_division_lt, pair_lt, pair_setoid] at pos
+  tauto
+
+theorem with_div_neg_ineq {x y : α}
+    (neg : is_negative (⟦(x,y)⟧ : with_division α)) :
+    x < y := by
+  simp [is_negative] at *
+  unfold_projs at neg
+  simp [with_division_lt, pair_lt, pair_setoid] at neg
+  tauto
+
+theorem with_div_pow (not_anom : ¬has_anomalous_pair (α := α))
+    (n : ℕ) (g1 g2 : α) :
+    (⟦(g1, g2)⟧ : with_division α)^n = ⟦(g1^n, g2^n)⟧ := by
+  unfold_projs
+  unfold npowRecAuto
+  induction n with
+  | zero =>
+    unfold npowRec
+    simp
+    unfold_projs
+    simp
+  | succ n ih =>
+    simp at ih ⊢
+    unfold npowRec
+    simp [ih]
+    apply Quot.sound
+    simp [pow_succ, pair_setoid]
+    simp [not_anomalous_pair_commutative not_anom]
+
+theorem monoid_ppow_rec_eq (n : ℕ+) (x : α) : x^(n : ℕ) = x^n := by
+  induction n with
+  | one => simp
+  | succ n ih =>
+    simp [pow_succ, ppow_succ, ih]
+
 theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
     archimedean_group (with_division α) := by
-  sorry
+  have arch : is_archimedean (α := α) := not_anomalous_arch not_anom
+  obtain all_one | ⟨t, pos_t⟩ | ⟨t, neg_t⟩ :=
+    exists_pos_neg_all_one (α := α)
+  · simp [archimedean_group]
+    intro g _ g_not_one
+    have : ¬is_one g := by simp [is_one, g_not_one]
+    have all_one : ∀t : α, t = 1 := by
+      simp [is_one] at all_one
+      exact all_one
+    have := all_one_div_one all_one
+    exact (g_not_one (this g)).elim
+  · apply pos_arch_arch
+    intro g h pos_g pos_h
+    have pos_g : is_positive g := by simpa [is_positive]
+    have pos_h : is_positive h := by simpa [is_positive]
+    obtain ⟨g1, g2, pos_g1, pos_g2, eq_g⟩ :=
+      not_anom_pos_pair not_anom pos_t g (pos_not_one pos_g)
+    obtain ⟨h1, h2, pos_h1, pos_h2, eq_h⟩ :=
+      not_anom_pos_pair not_anom pos_t h (pos_not_one pos_h)
+    simp [←eq_g, ←eq_h]
+    simp [is_archimedean] at arch
+    obtain one_g2 | one_h1 | imp := arch g2 h1
+    · exact (pos_not_one pos_g2 one_g2).elim
+    · exact (pos_not_one pos_h1 one_h1).elim
+    have : same_sign g2 h1 := by
+      simp [same_sign]
+      tauto
+    specialize imp this
+    simp [is_archimedean_wrt] at imp
+    subst_vars
+    obtain ⟨N, hN⟩ := imp
+    obtain ⟨pos, big⟩ | ⟨neg, small⟩ := hN N (by simp)
+    · have : g2 < g1 := with_div_pos_ineq pos_g
+      obtain ⟨N1, hN1⟩ := not_anom_big_sep not_anom N this
+      use N1
+      simp [with_div_pow not_anom]
+      unfold_projs
+      simp
+      simp [with_division_lt, pair_lt, pair_setoid, mul_comm]
+      have : h1 * g2 ^ (N1 : ℕ) < h2 * g1 ^ (N1 : ℕ) :=
+        calc h1 * g2^ (N1 : ℕ)
+        _ < g2^(N : ℕ) * g2^(N1 : ℕ) := by
+          simp
+          convert big
+          exact monoid_ppow_rec_eq N g2
+        _ = g2^(N1 + N : ℕ) := by simp [pow_add, mul_comm]
+        _ < g1^(N1 : ℕ) := by
+          have : g2 ^ ((N1 + N) : ℕ) = g2 ^ (N1 + N) := by
+            rw [←monoid_ppow_rec_eq]
+            norm_cast
+          simp [this, monoid_ppow_rec_eq, hN1]
+        _ < h2 * g1^(N1 : ℕ) := pos_h2 (g1 ^ ↑N1)
+      constructor
+      · left
+        exact this
+      · constructor
+        · exact this.le
+        · exact this.ne.symm
+    · exact (pos_not_neg pos_h1 neg).elim
+  · apply neg_arch_arch
+    intro g h neg_g neg_h
+    have neg_g : is_negative g := by simpa [is_negative]
+    have neg_h : is_negative h := by simpa [is_negative]
+    obtain ⟨g1, g2, neg_g1, neg_g2, eq_g⟩ :=
+      not_anom_neg_pair not_anom neg_t g (neg_not_one neg_g)
+    obtain ⟨h1, h2, neg_h1, neg_h2, eq_h⟩ :=
+      not_anom_neg_pair not_anom neg_t h (neg_not_one neg_h)
+    simp [←eq_g, ←eq_h]
+    simp [is_archimedean] at arch
+    obtain one_g2 | one_h1 | imp := arch g2 h1
+    · exact (neg_not_one neg_g2 one_g2).elim
+    · exact (neg_not_one neg_h1 one_h1).elim
+    have : same_sign g2 h1 := by
+      simp [same_sign]
+      tauto
+    specialize imp this
+    simp [is_archimedean_wrt] at imp
+    subst_vars
+    obtain ⟨N, hN⟩ := imp
+    obtain ⟨pos, big⟩ | ⟨neg, small⟩ := hN N (by simp)
+    · exact (neg_not_pos neg_h1 pos).elim
+    · have : g1 < g2 := with_div_neg_ineq neg_g
+      obtain ⟨N1, hN1⟩ := not_anom_big_sep' not_anom N this
+      use N1
+      simp [with_div_pow not_anom]
+      unfold_projs
+      simp
+      simp [with_division_lt, pair_lt, pair_setoid, mul_comm]
+      have : h1 * g2 ^ (N1 : ℕ) > h2 * g1 ^ (N1 : ℕ) :=
+        calc h1 * g2 ^ (N1 : ℕ)
+        _ > g2^(N : ℕ) * g2^(N1 : ℕ) := by
+          simp
+          convert small
+          exact monoid_ppow_rec_eq N g2
+        _ = g2^(N1 + N : ℕ) := by simp [pow_add, mul_comm]
+        _ > g1^(N1 : ℕ) := by
+          have : g2 ^ ((N1 + N) : ℕ) = g2 ^ (N1 + N) := by
+            rw [←monoid_ppow_rec_eq]
+            norm_cast
+          simp [this, monoid_ppow_rec_eq, hN1]
+        _ > h2 * g1^(N1 : ℕ) := neg_h2 (g1 ^ ↑N1)
+      constructor
+      · left
+        exact this
+      · constructor
+        · exact this.le
+        · exact this.ne.symm
 
 end LinearOrderedCancelCommMonoid

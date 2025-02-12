@@ -98,7 +98,6 @@ theorem archimedean_same_sign {a b : α} (arch : is_archimedean_wrt a b) : same_
     · exact pow_le_neg_neg neg_b N h.le
     · trivial
 
-
 lemma rw_pow_one_plus_one (a : α) : a^(1 + (1 : ℕ+)) = a * a := by
   exact ppow_two a
 
@@ -699,5 +698,61 @@ theorem neg_large_elements (not_anomalous : ¬has_anomalous_pair (α := α)) (ne
     · trivial
     · have : x * z = z := one_x z
       simpa [this]
+
+theorem not_anom_big_sep {a b : α} (not_anom : ¬has_anomalous_pair (α := α)) (n : ℕ+)
+    (a_lt_b : a < b) : ∃N : ℕ+, a^(N+n) < b^N := by
+  induction n with
+  | one =>
+    simp at not_anom
+    obtain ⟨M, ⟨hM, _⟩⟩ := not_anom a b
+    specialize hM (lt_pow a_lt_b M)
+    have : a^(M+1) * a < b^M * b := mul_lt_mul_of_le_of_lt hM a_lt_b
+    simp [←ppow_succ] at this
+    use (M+1)
+  | succ n ih =>
+    obtain ⟨N, hN⟩ := ih
+    simp at not_anom
+    obtain ⟨M, ⟨hM, _⟩⟩ := not_anom a b
+    specialize hM (lt_pow a_lt_b M)
+    have : a^(M+1) * a^(N+n) < b^M * b^N := mul_lt_mul_of_le_of_lt hM hN
+    simp [←ppow_add] at this
+    use (N+M)
+    have change_expr : (N+M) + (n + 1) = M+1+(N+n) := by
+      calc (N+M) + n + 1
+      _ = M + N + n + 1 := by simp [add_comm]
+      _ = M + ((N + n) + 1) := by simp [add_assoc]
+      _ = M + (1 + (N + n)) := by simp [add_comm]
+      _ = M + 1 + (N + n) := by simp [add_assoc]
+    rw [change_expr]
+    rw [add_comm N M]
+    exact this
+
+theorem not_anom_big_sep' {a b : α} (not_anom : ¬has_anomalous_pair (α := α)) (n : ℕ+)
+    (a_lt_b : a < b) : ∃N : ℕ+, a^N < b^(N+n) := by
+  induction n with
+  | one =>
+    simp at not_anom
+    obtain ⟨M, ⟨_, hM⟩⟩ := not_anom b a
+    specialize hM (lt_pow a_lt_b M)
+    have : a^M * a < b^(M+1) * b := mul_lt_mul_of_le_of_lt hM a_lt_b
+    simp [←ppow_succ] at this
+    use (M+1)
+  | succ n ih =>
+    obtain ⟨N, hN⟩ := ih
+    simp at not_anom
+    obtain ⟨M, ⟨_, hM⟩⟩ := not_anom b a
+    specialize hM (lt_pow a_lt_b M)
+    have : a^M * a^N < b^(M+1) * b^(N+n) := mul_lt_mul_of_le_of_lt hM hN
+    simp [←ppow_add] at this
+    use (N+M)
+    have change_expr : (N+M) + (n + 1) = M+1+(N+n) := by
+      calc (N+M) + n + 1
+      _ = M + N + n + 1 := by simp [add_comm]
+      _ = M + ((N + n) + 1) := by simp [add_assoc]
+      _ = M + (1 + (N + n)) := by simp [add_comm]
+      _ = M + 1 + (N + n) := by simp [add_assoc]
+    rw [change_expr]
+    rw [add_comm N M]
+    exact this
 
 end LinearOrderedCancelSemigroup
