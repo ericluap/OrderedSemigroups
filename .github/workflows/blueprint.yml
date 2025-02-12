@@ -86,7 +86,9 @@ jobs:
         uses: actions/deploy-pages@v1
         with:
           artifact_name: pages
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Make sure the cache works
         run: |
           mv docs/docs .lake/build/doc
