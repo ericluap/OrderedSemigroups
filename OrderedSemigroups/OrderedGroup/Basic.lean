@@ -7,8 +7,7 @@ import OrderedSemigroups.Archimedean
 /-!
 # Basic ordered group facts
 
-This file proves some basic facts about ordered groups and
-positive cones.
+This file proves some basic facts about ordered groups.
 
 -/
 

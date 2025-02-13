@@ -4,6 +4,14 @@ import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
 import OrderedSemigroups.OrderedGroup.Holder
 import OrderedSemigroups.SemigroupToGroup.Basic
 
+/-!
+# Semigroup to Group
+
+This file proves that for a suitable semigroup `α`,
+there exists a larger Archimedean group containing `α`.
+
+-/
+
 universe u
 variable {α : Type u}
 section LinearOrderedCancelSemigroup

@@ -1,2 +1,4 @@
 /.lake
 .DS_STORE
+/blueprint/web
+/blueprint/src/web.paux

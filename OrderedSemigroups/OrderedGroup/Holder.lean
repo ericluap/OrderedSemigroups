@@ -1,9 +1,9 @@
 import OrderedSemigroups.OrderedGroup.Approximate
 
 /-!
-# Holder's Theorem
+# Holder's Theorem for Groups
 
-This file contains the proof of Holder's theorem.
+This file contains the proof of Holder's theorem for groups.
 
 -/
 

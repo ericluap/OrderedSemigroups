@@ -6,6 +6,106 @@
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
 
+\chapter{Groups}
+In this chapter, we prove Holder's theorem for groups. We follow the proof in
+``Groups, Orders, and Dynamics'' by Deroin, Navas, and Rivas.
+
+We choose an element of the ordered group $f$ and map it to $1$ in the real numbers.
+Then for any other element $g$ of the ordered group, we use $f$ to construct
+a sequence of rational approximations of $g$. We map $g$ to the real number that
+is the limit of this sequence of approximations. We then prove that this map is
+injective and order preserving.
+
+\section{Definitions}
+We begin with basic definitions of ordered groups.
+
+\begin{definition}\label{def:LeftOrderedGroup}
+    \lean{LeftOrderedGroup}\leanok
+    A \textbf{left ordered group} $G$ is a group and a partial order such that for all $x, y, z \in G$,
+    if $x \le y$, then $z * x \le z * y$.
+\end{definition}
+
+\begin{definition}\label{def:LeftLinearOrderedGroup}
+    \lean{LeftLinearOrderedGroup}\uses{def:LeftOrderedGroup}\leanok
+    A \textbf{left linear ordered group} $G$ is a left ordered group that is also a linear order.
+\end{definition}
+
+\begin{definition}\label{def:archimedean_group}
+    \lean{archimedean_group}\uses{def:LeftOrderedGroup}\leanok
+    An \textbf{Archimedean group} is a left ordered group such that
+    for any $g, h \in G$ where $g \ne 1$, there exists an integer $z$
+    such that $h \lt g^z$.
+\end{definition}
+
+\section{Approximation}
+In this section we assume that $G$ is a left linear ordered group
+that is Archimedean. Furthermore, we assume we have an element $f\in G$
+such that $1 < f$.
+\begin{theorem}\label{approximate}
+    \lean{approximate}\leanok
+    For any $g \in G$ and $p \in \mathbb{N}$,
+    there exists an integer $q \in \mathbb{Z}$
+    such that
+    \[
+        f^q \le g^p \lt f^{q+1}
+    \]
+\end{theorem}
+\begin{proof}\leanok
+Since $G$ is an Archimedean group, we can construct exponents integer $l$ and $u$
+such that $f^l \lt g^p \lt f^u$. Therefore, there must exist some integer $q$
+which satisfies what we want.
+\end{proof}
+
+\begin{definition}\label{def:q}
+    \lean{q}\leanok\uses{approximate}
+    We define a function $q \colon G \to \mathbb{N} \to \mathbb{R}$
+    using \Cref{approximate} such that for any $g\in G$ and $n \in \N$,
+    \[
+        f^{q_g(n)} \le g^n \lt f^{q_g(n)}
+    \]
+\end{definition}
+
+\begin{theorem}\label{sequence_convergence}
+    \lean{sequence_convergence}\leanok
+    For any sequence $a_n$ of real numbers,
+    if there exists $C \in \R$ such that for all $m,n\in \N$
+    we have that
+    \[
+        |a_{m+n} - a_m - a_n| \le C
+    \]
+    then sequence $\frac{a_n}{n}$ converges.
+\end{theorem}
+
+\begin{theorem}\label{q_convergence}
+    \lean{q_convergence}\leanok\uses{sequence_convergence, def:q}
+    For any $g \in G$, the sequence $\frac{q_g(n)}{n}$ converges.
+\end{theorem}
+\begin{proof}\leanok
+This follows from \Cref{sequence_convergence} with $C = 1$ after
+showing that $q_g$ does indeed satisfy the hypothesis
+for the theorem.
+\end{proof}
+
+\section{Map}
+We make the same assumptions as in the previous section.
+So we assume that $G$ is a left linear ordered group
+that is Archimedean, $f\in G$, and $1 < f$.
+
+We now define the map from the $G$ to $\R$ and prove its properties.
+
+\begin{definition}\label{def:phi'}
+    \lean{φ'}\leanok\uses{q_convergence}
+    We define a map $\phi\colon G \to \R$ by mapping $g$
+    to the real number that $\frac{q_g(n)}{n}$ converges to
+    as we know from \Cref{q_convergence}.
+\end{definition}
+
+\begin{theorem}\label{phi'_hom}
+    \lean{φ'_hom}\leanok\uses{def:phi'}
+    The map $\phi$ is a homomorphism.
+\end{theorem}
+
+\chapter{Semigroups}
 \section{Introduction}
 We follow the paper ``On ordered semigroups'' by
 N. G. Alimov.
