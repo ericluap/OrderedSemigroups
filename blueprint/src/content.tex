@@ -34,7 +34,7 @@ We begin with basic definitions of ordered groups.
     \lean{archimedean_group}\uses{def:LeftOrderedGroup}\leanok
     An \textbf{Archimedean group} is a left ordered group such that
     for any $g, h \in G$ where $g \ne 1$, there exists an integer $z$
-    such that $h \lt g^z$.
+    such that $h < g^z$.
 \end{definition}
 
 \section{Approximation}
@@ -47,12 +47,12 @@ such that $1 < f$.
     there exists an integer $q \in \mathbb{Z}$
     such that
     \[
-        f^q \le g^p \lt f^{q+1}
+        f^q \le g^p < f^{q+1}
     \]
 \end{theorem}
 \begin{proof}\leanok
 Since $G$ is an Archimedean group, we can construct exponents integer $l$ and $u$
-such that $f^l \lt g^p \lt f^u$. Therefore, there must exist some integer $q$
+such that $f^l < g^p < f^u$. Therefore, there must exist some integer $q$
 which satisfies what we want.
 \end{proof}
 
@@ -61,7 +61,7 @@ which satisfies what we want.
     We define a function $q \colon G \to \mathbb{N} \to \mathbb{R}$
     using \Cref{approximate} such that for any $g\in G$ and $n \in \N$,
     \[
-        f^{q_g(n)} \le g^n \lt f^{q_g(n)}
+        f^{q_g(n)} \le g^n < f^{q_g(n)}
     \]
 \end{definition}
 
