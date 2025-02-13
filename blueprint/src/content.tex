@@ -5,3 +5,426 @@
 % If you want to split the blueprint content into several files then
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
+
+\section{Introduction}
+We follow the paper ``On ordered semigroups'' by
+N. G. Alimov.
+
+\section{Content}
+
+\begin{definition}\label{def:OrderedSemigroup}\lean{OrderedSemigroup}\leanok
+An \textbf{ordered semigroup} $S$ is a semigroup with a partial order such that
+for all $a,b,c\in S$ such that $a \le b$
+\begin{enumerate}
+    \item $a * c \le b * c$ and
+    \item $c * a \le c * b$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}\label{def:OrderedCancelSemigroup}\lean{OrderedCancelSemigroup}\leanok
+\uses{def:OrderedSemigroup}
+An \textbf{ordered cancel semigroup} $S$ is an ordered semigroup such that for all $a,b,c\in S$,
+if $a * b \le a * c$ then $b \le c$ and if $b * a \le c * a$ then $b \le c$.
+\end{definition}
+
+\begin{definition}\label{def:LinearOrderedSemigroup}\lean{LinearOrderedSemigroup}\leanok
+\uses{def:OrderedSemigroup}
+A \textbf{linear ordered semigroup} is an ordered semigroup where its partial order is a linear order.
+\end{definition}
+
+\begin{definition}\label{def:LinearOrderedCancelSemigroup}\lean{LinearOrderedCancelSemigroup}\leanok
+\uses{def:OrderedCancelSemigroup}
+A \textbf{linear ordered cancel semigroup} is an ordered cancel semigroup where its partial order is a linear order.
+\end{definition}
+
+\begin{definition}\label{def:positive}\lean{is_positive}\leanok
+\uses{def:OrderedSemigroup}
+An element $a$ of an ordered semigroup $S$ is \textbf{positive} if for all $x\in S$, $a*x > x$.
+\end{definition}
+
+\begin{definition}\label{def:negative}\lean{is_negative}\leanok
+\uses{def:OrderedSemigroup}
+An element $a$ of an ordered semigroup $S$
+is \textbf{negative} if for all $x\in S$, $a*x < x$.
+\end{definition}
+
+\begin{definition}\label{def:one}\lean{is_one}\leanok
+\uses{def:OrderedSemigroup}
+An element $a$ of an ordered semigroup $S$
+is \textbf{one} if for all $x\in S$, $a*x = x$.
+\end{definition}
+
+\begin{theorem}\label{thm:pos_neg_or_one}\lean{pos_neg_or_one}\leanok
+\uses{def:positive, def:negative, def:one, def:LinearOrderedCancelSemigroup}
+Each element $a$ of a linear ordered cancel semigroup $S$ is either positive, negative, or one.
+\end{theorem}
+\begin{proof}
+Let $a\in S$ and $b\in S$. Since the $S$ is a linear order we have one of the following cases.
+
+The first case is that $b * a > b$. Then for all $x\in S$ we have that $b * a * x > b * x$
+and so $a * x > x$. Therefore, $a$ is positive.
+
+The second case is that $b * a < b$. Then for all $x\in S$ we have that $b * a * x < b * x$
+and so $a * x < x$. Therefore, $a$ is negative.
+
+The last case is that $b * a = b$. Then for all $x\in S$ we have that $b * a * x = b * x$
+and so $a * x = x$. Therefore, $a$ is zero.
+\end{proof}
+
+\begin{corollary}\label{lem:right_forall}\lean{pos_right_pos_forall, neg_right_neg_forall, one_right_one_forall}\leanok
+\uses{def:positive, def:negative, def:one}
+Let $a$ be an element of a linear ordered cancel semigroup $S$. 
+
+If there exists a $b\in S$ such that $b * a > b$, $a$ is positive.
+
+If there exists a $b\in S$ such that $b * a < b$, $a$ is negative.
+
+If there exists a $b\in S$ such that $b * a = b$, $a$ is one.
+\end{corollary}
+
+\begin{theorem}\label{thm:neg_lt_pos}\lean{neg_lt_pos}\leanok
+\uses{def:positive, def:negative}
+Let $a$ and $b$ be elements of a linear ordered cancel semigroup $S$.
+
+If $a$ is negative and $b$ is positive, then $a < b$.
+\end{theorem}
+\begin{proof}
+Let $a$ be negative and $b$ be positive. Then for all $x\in S$ we have that $a * x < x$.
+Likewise, for all $x\in S$ we have that $b * x > x$.
+Therefore, $a * x < x < b + x$ and so $a < b$.
+\end{proof}
+
+\begin{lemma}\label{split_first_and_last}\lean{split_first_and_last_factor_of_product}\leanok
+Let $a$ and $b$ be elements of a semigroup $S$.
+
+For all $n > 1$, $(a*b)^n = a * (b+a)^{n-1} * b$.
+\end{lemma}
+\begin{proof}
+Let $n=2$. Then $(a+b)^2 = a * (b*a)^{2-1} * b$.
+
+Assume that the statement holds for $n$.
+Then we have that $(a*b)^{n+1} = a * b * (a*b)^n = a * b * a * (b*a)^{n-1} * b = a * (b*a)^n * b$.
+\end{proof}
+
+\begin{lemma}\label{thm:comm_ineq}\lean{comm_factor_le, comm_swap_le, comm_dist_le}\leanok
+Let $a$ and $b$ be elements of an ordered semigroup $S$.
+
+If $a * b \le b * a$, then for any $n\in \mathbb{N}^+$, we have that
+\[a^n * b^n \le (a*b)^n \le (b*a)^n \le b^n * a^n\]
+\end{lemma}
+\begin{proof}
+If $n=1$, then we are done.
+
+Assume that the statement holds for $n$.
+Then we have that
+\begin{align}
+a^{n+1} + b^{n+1} &= a * a^n * b^n * b \\
+\text{by the induction hypothesis}\\
+&< a * (a * b)^n * b \\
+\text{since $a*b < b*a$}\\
+&< a * (b * a)^n * b \\
+\text{by the previous lemma}\\
+&= (a * b)^{n+1} \\
+&< (b * a)^{n+1} \\
+\text{by the previous lemma}\\
+&= b * (a * b)^n * a \\
+&< b * (b * a)^n * a \\
+\text{by the induction hypothesis}\\
+&< b * b^n * a^n * a \\
+&= b^{n+1} * a^{n+1}
+\end{align}
+\end{proof}
+
+\begin{definition}\label{def:arch_wrt}\lean{is_archimedean_wrt}\leanok
+\uses{def:positive, def:negative}
+Let $a$ and $b$ be elements of an ordered semigroup $S$ that are not one.
+
+Then $a$ is said to be \textbf{Archimedean with respect to} $b$
+if there exists an $N\in \mathbb{N}^+$ such that for $n > N$,
+the inequality $b < a^n$ holds if $b$ is positive,
+and the inequality $b > a^n$ holds if $b$ is negative.
+\end{definition}
+
+\begin{definition}\label{def:arch}\lean{is_archimedean}\leanok
+\uses{def:one, def:arch_wrt}
+An ordered semigroup is \textbf{Archimedean} if any two of its elements
+of the same sign are mutually Archimedean.
+\end{definition}
+
+\begin{definition}\label{def:anomalous_pair}\lean{anomalous_pair}\leanok
+Let $a$ and $b$ be elements of an ordered semigroup $S$.
+
+Then $a$ and $b$ are said to form an \textbf{anomalous pair}
+if for all $n\in \mathbb{N}^+$, one of the following holds
+\begin{align}
+a^n < b^n < a^{n+1} \\
+a^n > b^n > a^{n+1}
+\end{align}
+\end{definition}
+
+\begin{theorem}\label{non_arch_anomalous}\lean{non_archimedean_anomalous_pair}\leanok
+\uses{def:anomalous_pair, def:arch}
+If $S$ is a non-Archimedean linear ordered cancel semigroup, then there exists an anomalous pair.
+\end{theorem}
+\begin{proof}
+Since $S$ is non-Archimedean, there exists $a,b\in S$ such that
+$a$ and $b$ have the sign and are not mutually Archimedean.
+
+First, we look at the case where $a$ and $b$ are positive.
+Then since they are not mutually Archimedean, without loss of generality, for all $n\in \mathbb{N}^+$,
+$a^n < b$.
+
+Then we either have that $a * b \le b * a$ or that $b*a\le a * b$.
+In the first case, we have that
+\[
+a^n + b^n \le (a*b)^n \le b^n + a^n
+\]
+which means that, since $a^n < b$,
+\[
+b^n < (a*b)^n < b^{n+1}
+\]
+And so $b$ and $a*b$ form an anomalous pair.
+
+The other cases follow similarly.
+\end{proof}
+
+\begin{theorem}\label{non_anomalous_comm_and_arch}\lean{not_anomalous_comm_and_arch}\leanok
+\uses{def:anomalous_pair, def:arch}
+A linear ordered cancel semigroup without anomalous pairs is an Archimedean commutative semigroup.
+\end{theorem}
+\begin{proof}
+Let $a$ and $b$ be elements of an ordered semigroup $S$.
+If either $a$ or $b$ is one, then they commute.
+
+We begin with the case that $a$ and $b$ are positive.
+If $a * b < b * a$, then for all $n\in \mathbb{N}^+$, we have that
+\begin{align}
+(a*b)^{n+1} &= a * (b*a)^n * b \\
+&> (b*a)^n * b \\
+&> (b*a)^n \\
+&> (a*b)^n
+\end{align}
+And so $a*b$ and $b*a$ form an anomalous pair.
+
+The same for the case that $b * a < a * b$.
+Therefore, we must have that $a*b = b*a$.
+
+The case where $a$ and $b$ are negative follows similarly.
+
+We now look at the case where $a$ is negative and $b$ is positive.
+If the element $1$ exists and $a*b = 1$, then $a * b * a = a$ and so $b*a = 1$.
+Therefore, $a$ and $b$ commute.
+
+If $a * b$ is positive, then
+\begin{align}
+(a*b) * (a*b) &> a * b \\
+(b * a) * b &> b \\
+b * a &> 0
+\end{align}
+
+We already showed that positive elements commute and so
+\[ (b*a) * b = b * (b * a)\]
+
+Now we look at the case where $a*b < b*a$.
+Then we have that
+\begin{align}
+(a * b)^2 &= a * ((b*a) * b) \\
+&= a * (b * (b * a)) \\
+&= (a * b) * (b * a) \\
+&> (a * b) * (a * b) \\
+&= (a * b)^2
+\end{align}
+Which is a contradiction.
+We get a similar contradiction in the case that $b*a < a*b$.
+Therefore, $a*b = b*a$.
+
+The case where $a*b$ is negative follows similarly.
+The case where $b$ is negative and $a$ is positive is symmetric.
+\end{proof}
+
+\begin{definition}\label{def:has_large_differences}\lean{has_large_differences}\leanok
+An ordered semigroup $S$ has \textbf{large differences} if
+for all $a,b\in S$, the two following implications hold
+\begin{itemize}
+\item if $a$ is positive and $a<b$, then there exists $c\in S$
+and $n\in \mathbb{N}^+$ such that $c$ is Archimedean with respect to $a$
+and $a^n*c \le b^n$
+\item if $a$ is negative and $b < a$, then there exists $c\in S$
+and $n\in \mathbb{N}^+$ such that $c$ is Archimedean with respect to $a$
+and $a^n*c \ge b^n$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}\lean{not_anomalous_iff_large_difference}\leanok
+\uses{def:arch_wrt, def:anomalous_pair, def:has_large_differences}
+In a linear ordered cancel semigroup $S$, there are no anomalous pairs
+if and only if there are large differences.
+\end{theorem}
+\begin{proof}
+($\Rightarrow$)
+If $a$ and $b$ are positive and $a < b$, then we have that $a^n < b^n$ for all $n$.
+Therefore, there must exist an $n$ such that $a^{n+1} \le b^n$
+as otherwise $a$ and $b$ would form an anomalous pair.
+Thus, the theorem is satisfied with $c = a$.
+
+Similarly if $a$ and $b$ are negatiave.
+
+($\Leftarrow$)
+We look first at the case where $a$ and $b$ are positive and $a < b$.
+Then we have $c\in S$ Archimedean with respect to $a$ and $m\in \mathbb{N}^+$ such that
+$a^m * c \le b^m$.
+
+Therefore, for any $n \in \mathbb{N}^+$,
+either
+\[(a^m)^n * c^n \le (a^m*c)^n \le (b^m)^n\]
+or
+\[c^n * (a^m)^n \le (a^m*c)^n \le (b^m)^n\]
+holds.
+
+Since $c$ is Archimedean with respect to $a$, there exists an $N$
+such that for all $n \ge N$, $a < c^n$. Thus, for any $n \ge N$,
+we get from the previous relations that
+\[a^{mn + 1} \le b^{mn}\]
+and so $a$ and $b$ do not form an anomalous pair.
+
+Similalry if $a$ and $b$ are negative.
+\end{proof}
+
+\section{Holder's Theorem}
+We follow the proof from ``Groups, Orders, and Dynamics'' by Deroin, Navas, and Rivas.
+
+\begin{lemma}\leanok
+Let $G$ be a left ordered group. 
+If its positive cone is a normal subsemigroup, then $G$ is a bi-ordered group.
+\end{lemma}
+\begin{proof}
+Let $x,y,z \in G$ such that $x \le y$. Since $G$ is a left ordered group, we then know that $zx \le zy$.
+Our goal is to show that $xz \le yz$.
+
+Since $x \le y$, we either have that $x = y$ or $x < y$.
+In the first case, it is true that $xz = yz$ and so $xz \le yz$ and we are done.
+
+In the second case, since $x < y$, we have that $1 < x^{-1}y$.
+So $x^{-1}y$ is in the positive cone. Since the positive cone is normal, we have that
+$1 < z^{-1}x^{-1}yz$. Therefore, $xz < yz$ and we are done.
+\end{proof}
+
+\begin{lemma}\leanok
+Let $G$ be a left ordered group.
+If $G$ is Archimedean, then it is bi-ordered.
+\end{lemma}
+\begin{proof}
+By the previous lemma, it suffices to show that its positive cone is a normal semigroup.
+Let $g$ be an element of the positive cone and let $h$ be an element of $G$.
+Our goal is to show that $hgh^{-1}$ is in the positive cone.
+
+Assume for the sake of contradiction that $hgh^{-1}$ is not in the positive cone.
+We then split into two cases based on whether or not $h$ is in the positive or negative cone.
+Notice that since $h \ne 1$, it must be in one of the cones.
+
+Let's first look at the case where $h$ is in the negative cone.
+Since $G$ is Archimedean, there exists a smallest nonnegative integer $n$
+such that $h^{-1} < g^n$ (we can guarantee its nonnegative as both $g$ and $h^{-1}$ are positive).
+Since $h < 1$, $1 < h^{-1}$ and so $n > 0$.
+
+Notice that since $g$ and $h$ are not the identity,
+and $hgh^{-1}$ is not in the positive cone, it must be in the negative cone.
+So $hgh^{-1} < 1$ and thus, we have that $h^{-1} < g^{-1}h^{-1}$. And since
+$h^{-1} < g^n$, we have that $g^{-1}h^{-1} < g^{n-1}$. Therefore,
+we have that $h^{-1} < g^{-1}h^{-1} < g^{n-1}$. So then $h^{-1} < g^{n-1}$.
+Since $n > 0$, $n-1$ is a smaller nonnegative integer such that $h^{-1} < g^{n-1}$. 
+This contradicts the minimality of $n$.
+
+The remaining case is where $h$ is in the positive cone.
+As before, $hgh^{-1}$ must be in the negative cone so
+$hgh^{-1} < 1$. Therefore, $1 < hg^{-1}h^{-1}$.
+
+We have that $h^{-1}$ is in the negative cone
+and so from the first half of this proof, we know that
+$h^{-1}(hg^{-1}h^{-1})h$ is in the positive cone.
+Simplifying, we get that $g^{-1}$ is in the positive cone.
+So then we have that $1 < g^{-1}$ and $1 < g$ which is a contradiction.
+
+So we have shown that the positive cone is a normal subsemigroup
+and thus that the group $G$ is bi-ordered.
+\end{proof}
+
+\begin{theorem}\leanok
+A left-ordered group that is Archimedean is isomorphic to a
+subgroup of $\mathbb{R}$.
+\end{theorem}
+\begin{proof}
+The first step is to define the following map:\\ \\
+Let $G$ be a bi-ordered Archimedean group.
+Fix a positive element $f \in G$. Then for each $g \in G$
+we can define a function $q_g\colon \mathbb{N} \to \mathbb{N}$ where
+for each $n \in \mathbb{N}$, $q_g(n)$ is the unique integer satisfying
+\[
+f^{q_g(n)} \le g^n < f^{q_g(n) + 1}
+\]
+
+The second step:\\ \\ 
+We prove that for each $g \in G$,
+the sequence $\frac{q_g(n)}{n}$ converges to a real number as $n$
+goes to infinity.
+Let $n_1$ and $n_2$ be natural numbers. Then
+$f^{q_g(n_1)} \le g^{n_1} < f^{q_g(n_1) + 1}$ and
+$f^{q_g(n_2)} \le g^{n_2} < f^{q_g(n_2) + 1}$.
+Therefore,
+\[
+f^{q_g(n_1)+q_g(n_2)} \le g^{n_1+n_2} < f^{q_g(n_1) + q_g(n_2) + 2}
+\]
+And so it must be that 
+\[
+q_g(n_1) + q_g(n_2) \le q_g(n_1 + n_2) \le q_g(n_1) + q_g(n_2) + 1
+\]
+Then the sequence converges by the exercise already proven as we have that
+$|q_g(n_1+n_2) - q_g(n_1) - q_g(n_2)| \le 1$.
+
+The third step:\\ \\
+We define a map $\phi$ that takes each element $g \in G$ to the real number which is the limit
+of the sequence $\frac{q_g(n)}{n}$.
+
+We then check that this map is a group homomorphism.
+Let $g_1,g_2 \in G$. Our goal is to show that $\phi(g_1) + \phi(g_2) = \phi(g_1g_2)$.
+We know that for any $p \in \mathbb{N}$, there exists $q_1$ and $q_2$ such that
+\[
+f^{q_1} \le g_1^p < f^{q_1 + 1}
+\]
+and
+\[
+f^{q_2} \le g_2^p < f^{q_2 + 1}
+\]
+
+We now do case work based on whether $g_1g_2 \le g_2g_1$ or
+$g_2g_1 \le g_1g_2$. Let's look at the first case.
+Then we have that $g_1^pg_2p \le (g_1g_2)^p \le g_2^pg_1^p$.
+Furthermore we have that $f^{q_1+q_2} \le g_1^pg_2^p$ and that
+$g_2^pg_1^p < f^{q_1+q_2+2}$. Therefore,
+\[
+f^{q_1+q_2} \le g_1^pg_2^p \le (g_1g_2)^p \le g_2^pg_1^p < f^{q_1+q_2+2}
+\]
+Therefore, for each $p$
+\[
+q_1+q_2 \le q_{g_1g_2}(p) \le q_1+q_2 + 1
+\]
+And so
+\[
+\lim_{p \to\infty} \frac{q_1+q_2}{p} \le \lim_{p\to\infty} \frac{q_{g_1g_2}(p)}{p}=\phi(g_1g_2) \le \lim_{p\to\infty} \frac{q_1+q_2 + 1}{p}
+\]
+
+Now we have that
+\begin{align*}
+\phi(g_1) + \phi(g_2) &= \lim_{p\to \infty} \frac{q_1}{p} + \lim_{p\to\infty} \frac{q_2}{p}\\
+&= \lim_{p\to\infty} \frac{q_1+q_2}{p}\\
+&\le \phi(g_1g_2)\\
+&\le \lim_{p\to\infty} \frac{q_1+q_2 + 1}{p}\\
+&= \lim_{p\to\infty} \frac{q_1+q_2}{p}\\
+&= \phi(g_1)+\phi(g_2)
+\end{align*}
+Thus, $\phi(g_1g_2) = \phi(g_1) + \phi(g_2)$.
+And the other case is the same.
+
+The fourth step:\\ \\
+We check that the map is injective and order-preserving.
+\end{proof}
