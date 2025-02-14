@@ -4,9 +4,16 @@ archimedean_group
 approximate
 q
 sequence_convergence
+q_exp_add
 q_convergence
 φ'
+φ'_hom_case
 φ'_hom
+order_preserving_φ
+f_maps_one_φ
+injective_φ
+strict_order_preserving_φ
+holders_theorem
 OrderedSemigroup
 OrderedCancelSemigroup
 LinearOrderedSemigroup
