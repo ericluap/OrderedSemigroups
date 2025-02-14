@@ -1,9 +1,10 @@
 # OrderedSemigroups
 
-Formalization of results regarding ordered semigroups.
+Formalization of Holder's Theorem for semigroups (and for groups).
 
-[Here is the blueprint](https://ericluap.github.io/OrderedSemigroups/blueprint/) and [here is the documentation](https://ericluap.github.io/OrderedSemigroups/docs/) for the project.
-The blueprint contains natural language versions of what is proved and links to the corresponding formalization in the documentation.
+[Here is more information](https://ericluap.github.io/OrderedSemigroups/) on the project. That page also link to the
+[the blueprint](https://ericluap.github.io/OrderedSemigroups/blueprint/) and [the documentation](https://ericluap.github.io/OrderedSemigroups/docs/) for the project.
 
-The formalization follows the paper "On ordered semigroups" by N.G. Alimov.
+The formalization follows the paper "On ordered semigroups" by N.G. Alimov and
+"Groups, Orders, and Dynamics" by Deroin, Navas, and Rivas.
 
