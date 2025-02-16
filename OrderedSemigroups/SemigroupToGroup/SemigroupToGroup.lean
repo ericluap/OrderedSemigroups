@@ -152,11 +152,10 @@ theorem compose_subsemigroup' {G : Type*} {M : Type*} [Group G] [Group M]
 theorem to_arch_group (not_anomalous : ¬has_anomalous_pair (α := α)) :
     ∃G : Type u, ∃_ : LinearOrderedCommGroup G, archimedean_group G ∧
       ∃H : Subsemigroup G, Nonempty (α ≃*o H) := by
-  have : is_archimedean (α := α) := not_anomalous_arch not_anomalous
   obtain ⟨M, monoid_M, not_anom_M, H, ⟨subsemi_H⟩⟩ := to_not_anom_monoid not_anomalous
   use (with_division M), inferInstance
   constructor
   · exact not_anom_to_arch not_anom_M
-  · exact compose_subsemigroup ordiso_over_one subsemi_H
+  · exact compose_subsemigroup iso_over_one subsemi_H
 
 end LinearOrderedCancelSemigroup
