@@ -32,4 +32,9 @@ non_archimedean_anomalous_pair
 not_anomalous_comm_and_arch
 not_anomalous_iff_large_difference
 to_not_anom_monoid
+pos_large_elements
+neg_large_elements
+not_anom_pos_pair
+not_anom_to_arch
 to_arch_group
+holder_not_anom

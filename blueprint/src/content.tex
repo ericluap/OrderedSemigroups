@@ -518,8 +518,8 @@ Similalry if $a$ and $b$ are negative.
     If $S$ is a linear ordered cancel semigroup
     without anomalous pairs, then there exists a
     linear ordered cancel commutative monoid $M$
-    such that $S$ is isomorphic to a subsemigroup
-    of $M$.
+    without anomalous pairs such that $S$ is isomorphic
+    to a subsemigroup of $M$.
 \end{theorem}
 \begin{proof}\leanok
 We do casework on whether or not $S$ has an element
@@ -535,26 +535,114 @@ then we let $M$ be $S$ with one added.
 We define one to be less than every positive element and
 greater than every negative element. By \Cref{non_anomalous_comm_and_arch},
 we know that $S$ is commutative and so $M$ is too.
+Furthermore, it is clear that $M$ has no anomalous pairs still.
 Then $S$ is isomorphic to the subsemigroup of $M$
 that is all its elements except for the added one.
 \end{proof}
 
-\begin{definition}\label{def:with_division}
-    \lean{with_division}\leanok
-    Given a cancel commutative monoid $M$,
-    we define $G_M$ to be the set $M\times M$
-    quotiened by the equivalence relation
-    \[
-    (x_1,x_2)\sym (y_1,y_2) \iff x.1*y.2 = x.2*y.1
-    \]
-    
-    So $G_M$ 
-\end{definition}
+\begin{theorem}\label{pos_large_elements}
+    \lean{pos_large_elements, neg_large_elements}\leanok
+    \uses{non_anomalous_comm_and_arch}
+    Let $S$ be a linear ordered cancel semigroup without anomalous pairs
+    such that there exists a positive element of $S$.
+    Then for all $x \in S$, there exists a $y \in S$
+    such that $y$ is positive and $x*y$ is positive.
 
+    Similarly, if there exists a negative element of $S$
+    then for all $x \in S$ there exists a $y \in S$
+    such that $y$ is negative and $x*y$ is negative.
+\end{theorem}
+\begin{proof}\leanok
+We look at the positive case. If $x$ is positive then
+we are done as $x*x$ is positive.
+
+Next we look at the case where $x$ is negative.
+Assume for the sake of contradiction that for all $y \in S$,
+if $y$ is positive then $x*y$ is negative. Let $z$
+be a positive element we assumed existed in $S$.
+Then for all positive $n \in \N$, we have that
+$x * z^{n+2}$ is negative. 
+Recall that from \Cref{non_anomalous_comm_and_arch} we have
+commutativity.
+From there we have an anomalous pair:
+\begin{align*}
+(x * z)^n &= x^n * z^n \ge x^n
+&\ge x^n * (x * z^{n+2})\\
+&= (x * z)^{n+1} * z > (x*z)^{n+1}
+\end{align*}
+Contradiction. And similarly for the negative case.
+\end{proof}
+
+\begin{theorem}\label{not_anom_pos_pair}
+    \lean{not_anom_pos_pair}\leanok
+    \uses{pos_large_elements, neg_large_elements}
+    Let $M$ be a linear ordered cancel commutative monoid
+    without anomalous pairs and let $G$ be its Grothendieck group.
+    If $M$ has a positive (negative) element, then
+    for any element $\frac{a}{b} \in G$ where $a,b \in M$,
+    there exist $a', b' \in M$ such that $a'$ and $b'$ are positive (negative)
+    and $\frac{a}{b} = \frac{a'}{b'}$.
+\end{theorem}
+\begin{proof}\leanok
+Let $\frac{a}{b}\in G$ where $a,b\in M$.
+Since $M$ has a positive element, by \Cref{pos_large_elements},
+we have $a_2, b_2\in M$ such that $a*a_2$ and $b*b_2$ are positive.
+Let $a' = a*a_2$ and $b' = b*b_2$. Then $\frac{a}{b} = \frac{a'}{b'}$
+and $a'$ and $b'$ are positive.
+
+And similarly for the negative case.
+\end{proof}
+
+\begin{theorem}\label{not_anom_to_arch}
+    \lean{not_anom_to_arch}\leanok
+    \uses{not_anom_pos_pair, non_anomalous_comm_and_arch}
+    Let $M$ be a linear ordered cancel commutative
+    monoid. If $M$ does not have anomalous pairs,
+    then its Grothendieck group is Archimedean.
+\end{theorem}
+\begin{proof}\leanok
+If $M$ is trivial then we are done.
+Otherwise, it has a positive element of a negative element.
+
+We look at the case where $M$ has a positive element $t$.
+We now want to show that the Grothendieck group $G$ of $M$
+is Archimedean. It suffices to show that for any positive
+$g, h \in G$, there exists an integer $n$ such that $g^n > h$.
+Since $g, h \in G$, there exist $g_1,g_2,h_1,h_2 \in M$ such that
+$g = \frac{g_1}{g_2}$ and $h = \frac{h_1}{h_2}$, and
+by \Cref{not_anom_pos_pair}, we can assume that
+$g_1$, $g_2$, $h_1$, and $h_2$ are positive.
+
+Then since $M$ does not have anomalous pairs, we have by
+\Cref{non_anomalous_comm_and_arch} that $M$ is Archimedean.
+Since $g_1$ and $h_1$ are positive and $M$ is Archimedean,
+there exists a positive $N \in \mathbb{N}$ such that
+for all $n \ge N$, $g_2^n > h_1$. So in particular,
+we have that $g_2^N > h_1$.
+
+Notice that since $\frac{g_1}{g_2}$ positive, we have that $g_2 < g_1$.
+And therefore, since $M$ does not have anomalous pairs, there
+exists a positive natural number $N_1$ such that
+$g_2^{N_1+N} < g_1^{N_1}$.
+
+We now claim that $g^{N_1} > h$. This is equivalent to
+showing that $g_2^{N_1}*h_1 < h_2*g_1^{N_1}$. 
+And we have that
+\begin{align*}
+g_2^{N_1} * h_1 &= h_1 * g_2^{N_1}\\
+&< g_2^N * g_2^{N_1} = g_2^{N_1 + N}\\
+&< g_1^{N_1} \\
+&< h_1 * g_1^{N_1}
+\end{align*}
+And so we are done.
+
+The final case where $M$ has a negative element
+follows similarly.
+\end{proof}
 
 \begin{theorem}\label{to_arch_group}
     \lean{to_arch_group}\leanok
-    \uses{to_not_anom_monoid, def:anomalous_pair}
+    \uses{to_not_anom_monoid, def:anomalous_pair, not_anom_to_arch}
     If $S$ is a linear ordered cancel semigroup
     that does not have anomalous pairs, then
     there exists a linear ordered commutative group $G$
@@ -567,5 +655,26 @@ $S$ is isomorphic to a subsemigroup of a
 linear ordered cancel commutative monoid $M$ that
 does not have anomalous pairs.
 
-We 
+We let $G$ be the Grothendieck group of $M$.
+Then by \Cref{not_anom_to_arch} we know that $G$
+is Archimedean. Since $G$ is the Grothendieck group of $M$,
+$M$ is isomorphic to a submonoid of $G$. Thus,
+we have that $S$ is isomorphic to a subsemigroup of $G$.
+\end{proof}
+
+\section{Holder's Theorem}
+
+\begin{theorem}\label{holder_not_anom}
+    \lean{holder_not_anom}\leanok
+    \uses{to_arch_group, holders_theorem}
+    Let $S$ be a linear ordered cancel semigroup
+    with out anomalous pairs. Then $S$ is isomorphic
+    to a subsemigroup of the real numbers.
+\end{theorem}
+\begin{proof}\leanok
+By \Cref{to_arch_group}, there exists a linear ordered commutative
+Archimedean group $G$
+such that $S$ is isomorphic to a subsemigroup of $G$.
+By \Cref{holders_theorem}, $G$ is isomorphic to a subgroup of $\R$.
+Therefore, $S$ is isomorphic to a subsemigroup of $\R$.
 \end{proof}

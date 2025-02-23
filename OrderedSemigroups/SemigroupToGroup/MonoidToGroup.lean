@@ -228,21 +228,19 @@ theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
       use N1
       simp [with_div_pow]
       simp [with_division.mk, Localization.mk_lt_mk]
-      have : g2 ^ (N1 : ℕ) * h1 < h2 * g1 ^ (N1 : ℕ) :=
-        calc g2^ (N1 : ℕ) * h1
-        _ = h1 * g2 ^ (N1 : ℕ) := by simp [mul_comm]
-        _ < g2^(N : ℕ) * g2^(N1 : ℕ) := by
-          simp
-          convert big
-          exact monoid_ppow_rec_eq N g2
-        _ = g2^(N1 + N : ℕ) := by simp [pow_add, mul_comm]
-        _ < g1^(N1 : ℕ) := by
-          have : g2 ^ ((N1 + N) : ℕ) = g2 ^ (N1 + N) := by
-            rw [←monoid_ppow_rec_eq]
-            norm_cast
-          simp [this, monoid_ppow_rec_eq, hN1]
-        _ < h2 * g1^(N1 : ℕ) := pos_h2 (g1 ^ ↑N1)
-      exact this
+      calc g2^ (N1 : ℕ) * h1
+      _ = h1 * g2 ^ (N1 : ℕ) := by simp [mul_comm]
+      _ < g2^(N : ℕ) * g2^(N1 : ℕ) := by
+        simp
+        convert big
+        exact monoid_ppow_rec_eq N g2
+      _ = g2^(N1 + N : ℕ) := by simp [pow_add, mul_comm]
+      _ < g1^(N1 : ℕ) := by
+        have : g2 ^ ((N1 + N) : ℕ) = g2 ^ (N1 + N) := by
+          rw [←monoid_ppow_rec_eq]
+          norm_cast
+        simp [this, monoid_ppow_rec_eq, hN1]
+      _ < h2 * g1^(N1 : ℕ) := pos_h2 (g1 ^ ↑N1)
     · exact (pos_not_neg pos_h1 neg).elim
   · apply neg_arch_arch
     intro g h neg_g neg_h
