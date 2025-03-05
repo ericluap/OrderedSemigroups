@@ -77,13 +77,13 @@ theorem pos_arch {x y : α} (pos_x : 1 < x) (pos_y : 1 < y) :
       1 < y := pos_y
       _ < x^z := h
       _ = 1 := by rw [hz, zpow_zero]
-    exact (lt_self_iff_false 1).mp this
+    order
   · -- case z < 0
     have : x^z < x^z := by calc
       x^z < 1 := neg_exp_pos_neg pos_x hz
       _ < y := pos_y
       _ < x^z := h
-    exact (lt_self_iff_false (x ^ z)).mp this
+    order
 
 theorem pos_lt_exp_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (f_lt : f^a < f^b) : a < b := by
   have swap : (f^a)⁻¹ * f^a < (f^a)⁻¹ * f^b  := mul_lt_mul_left' f_lt (f ^ a)⁻¹
@@ -99,7 +99,7 @@ theorem pos_lt_exp_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (f_lt : f^a < f^b) : 
     · have : -a + b < 0 := by exact neg_add_neg_iff.mpr b_lt_a
       have : f ^ (-a + b) < 1 := by exact neg_exp_pos_neg f_pos this
       have : f ^ (-a + b) < f^(-a + b) := by exact gt_trans one_lt_prod this
-      exact (lt_self_iff_false (f ^ (-a + b))).mp this
+      order
   exact lt_neg_add_iff_lt.mp this
 
 instance : LeftOrderedSemigroup α where
@@ -124,6 +124,7 @@ theorem pos_neg_disjoint :
   ext x
   constructor
   · intro x_in_S
+    -- TODO: replace line with call to `order`
     exact (lt_self_iff_false x).mp (gt_trans (S_subset_pos x_in_S) (S_subset_neg x_in_S))
   · intro x_in_empty
     contradiction

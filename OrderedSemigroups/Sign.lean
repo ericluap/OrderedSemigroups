@@ -1,4 +1,5 @@
 import OrderedSemigroups.Basic
+import Mathlib.Tactic.Order
 
 /-!
 # Sign of element in Ordered Semigroup
@@ -41,28 +42,20 @@ theorem one_not_pos {a : α} (is_zer : is_one a) : ¬is_positive a := by
   rw [is_positive, is_one] at *
   have is_pos := is_pos a
   rw [is_zer a] at is_pos
-  exact (lt_self_iff_false a).mp is_pos
+  order
 
 theorem one_not_neg {a : α} (is_zer : is_one a) : ¬is_negative a := by
   intro is_neg
   rw [is_negative, is_one] at *
   have is_neg := is_neg a
   rw [is_zer a] at is_neg
-  exact (lt_self_iff_false a).mp is_neg
+  order
 
 theorem pos_sq_pos {a : α} (is_pos : is_positive a) : is_positive (a*a) := by
   simp [is_positive]
   intro x
   have := gt_trans (is_pos (a * x)) (is_pos x)
   simpa [mul_assoc]
-
-/-
-theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
-  fun x ↦ lt_mul_of_lt_mul_right (pos x) h
-
-theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative b :=
-  fun x ↦ mul_lt_of_mul_lt_right (neg x) h
--/
 
 theorem pos_pow_pos {a : α} (pos : is_positive a) (n : ℕ+) : is_positive (a^n) := by
   intro x
@@ -71,7 +64,7 @@ theorem pos_pow_pos {a : α} (pos : is_positive a) (n : ℕ+) : is_positive (a^n
   | succ n ih =>
     simp [ppow_succ']
     have : a * a^n * x > a^n * x := by simp [pos (a^n*x), mul_assoc]
-    exact gt_trans this ih
+    order
 
 theorem neg_pow_neg {a : α} (neg : is_negative a) (n : ℕ+) : is_negative (a^n) := by
   intro x
@@ -80,7 +73,7 @@ theorem neg_pow_neg {a : α} (neg : is_negative a) (n : ℕ+) : is_negative (a^n
   | succ n ih =>
     simp [ppow_succ']
     have : a * a^n * x < a^n * x := by simp [neg (a^n*x), mul_assoc]
-    exact gt_trans ih this
+    order
 
 theorem one_pow_one {a : α} (one : is_one a) (n : ℕ+) : is_one (a^n) := by
   intro x
@@ -205,23 +198,23 @@ lemma one_right_one_forall {a b : α} (h : b * a = b) : is_one a := by
 theorem pos_right {a : α} (pos : is_positive a) : ∀x : α, x * a > x := by
   intro x
   rcases lt_trichotomy (x*a) x with h | h | h
-  · exact False.elim (neg_not_pos (neg_right_neg_forall h) pos)
-  · exact False.elim (one_not_pos (one_right_one_forall h) pos)
+  · exact (neg_not_pos (neg_right_neg_forall h) pos).elim
+  · exact (one_not_pos (one_right_one_forall h) pos).elim
   · trivial
 
 theorem neg_right {a : α} (neg : is_negative a) : ∀x : α, x * a < x := by
   intro x
   rcases lt_trichotomy (x*a) x with h | h | h
   · trivial
-  · exact False.elim (one_not_neg (one_right_one_forall h) neg)
-  · exact False.elim (pos_not_neg (pos_right_pos_forall h) neg)
+  · exact (one_not_neg (one_right_one_forall h) neg).elim
+  · exact (pos_not_neg (pos_right_pos_forall h) neg).elim
 
 theorem one_right {a : α} (one : is_one a) : ∀x : α, x * a = x := by
   intro x
   rcases lt_trichotomy (x*a) x with h | h | h
-  · exact False.elim (neg_not_one (neg_right_neg_forall h) one)
+  · exact (neg_not_one (neg_right_neg_forall h) one).elim
   · trivial
-  · exact False.elim (pos_not_one (pos_right_pos_forall h) one)
+  · exact (pos_not_one (pos_right_pos_forall h) one).elim
 
 theorem neg_lt_one {a b : α} (neg : is_negative a) (one : is_one b) : a < b :=
   lt_of_eq_of_lt (id (Eq.symm (one_right one a))) (neg b)
@@ -242,14 +235,14 @@ theorem pos_neg_or_one : ∀a : α, is_positive a ∨ is_negative a ∨ is_one a
 theorem pow_pos_pos {a : α} (n : ℕ+) (positive : is_positive (a^n)) : is_positive a := by
   rcases pos_neg_or_one a with pos | neg | one
   · trivial
-  · exact False.elim (neg_not_pos (neg_pow_neg neg n) positive)
-  · exact False.elim (one_not_pos (one_pow_one one n) positive)
+  · exact (neg_not_pos (neg_pow_neg neg n) positive).elim
+  · exact (one_not_pos (one_pow_one one n) positive).elim
 
 theorem pow_neg_neg {a : α} (n : ℕ+) (negative : is_negative (a^n)) : is_negative a := by
   rcases pos_neg_or_one a with pos | neg | one
-  · exact False.elim (pos_not_neg (pos_pow_pos pos n) negative)
+  · exact (pos_not_neg (pos_pow_pos pos n) negative).elim
   · trivial
-  · exact False.elim (one_not_neg (one_pow_one one n) negative)
+  · exact (one_not_neg (one_pow_one one n) negative).elim
 
 theorem pos_le_pow_pos {a b : α} (pos : is_positive a) (n : ℕ+) (h : a ≤ b^n) : is_positive b :=
   pow_pos_pos n (pos_le_pos pos h)

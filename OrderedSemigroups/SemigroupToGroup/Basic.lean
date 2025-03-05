@@ -82,9 +82,9 @@ theorem arch_semigroup_to_arch_group :
   -- Both `g` and `h` are positive
   · specialize is_arch g h
     obtain g_eq_one | h_eq_one | same_sign_arch := is_arch
-    · exact False.elim (g_ne_one g_eq_one)
+    · order
     · rw [h_eq_one] at one_lt_h
-      exact False.elim ((lt_self_iff_false 1).mp one_lt_h)
+      order
     · have : same_sign g h := by
         simp [same_sign, is_positive]
         tauto
@@ -96,19 +96,19 @@ theorem arch_semigroup_to_arch_group :
       · convert h_lt_gN
         norm_cast
         exact pnat_pow_eq_nat_pow g N
-      · exact False.elim ((lt_self_iff_false h).mp (gt_trans one_lt_h h_lt_one))
+      · order
   · use 1
     simpa [←one_eq_h]
   · use 1
     simp
-    exact gt_trans one_lt_g h_lt_one
+    order
   -- `g` is negative and `h` is positive
   · specialize is_arch g⁻¹ h
     obtain g_eq_one | h_eq_one | same_sign_arch := is_arch
     · simp at g_eq_one
       contradiction
     · rw [h_eq_one] at one_lt_h
-      exact False.elim ((lt_self_iff_false 1).mp one_lt_h)
+      order
     · have : same_sign g⁻¹ h := by
         simp [same_sign, is_positive]
         tauto
@@ -122,14 +122,13 @@ theorem arch_semigroup_to_arch_group :
       · convert h_lt_gN
         norm_cast
         exact pnat_pow_eq_nat_pow g⁻¹ N
-      · exact False.elim ((lt_self_iff_false h).mp (gt_trans one_lt_h h_lt_one))
+      · order
   · use -1
     simpa [←one_eq_h]
   · use -1
-    have : 1 < g⁻¹ :=
-    Right.one_lt_inv_iff.mpr g_lt_one
+    have : 1 < g⁻¹ := Right.one_lt_inv_iff.mpr g_lt_one
     simp
-    exact gt_trans this h_lt_one
+    order
 
 theorem pos_pos_arch_group_to_arch_semigroup (arch : archimedean_group α)
     {g : α} (one_lt_g : 1 < g) (one_lt_h : 1 < h) :
@@ -137,7 +136,7 @@ theorem pos_pos_arch_group_to_arch_semigroup (arch : archimedean_group α)
   obtain ⟨z, hz⟩ := arch g h (ne_of_gt one_lt_g)
   intro same_sign_gh
   simp [is_archimedean_wrt]
-  have z_gt_zero : z > 0 := by exact pos_arch one_lt_g one_lt_h z hz
+  have z_gt_zero : z > 0 := pos_arch one_lt_g one_lt_h z hz
   obtain ⟨N, hN⟩ := (CanLift.prf z z_gt_zero.le : ∃N : ℕ, N = z)
   have N_gt_zero : N > 0 := by
     zify
@@ -152,7 +151,7 @@ theorem pos_pos_arch_group_to_arch_semigroup (arch : archimedean_group α)
     calc h
     _ < g ^ z := hz
     _ = g ^ N := by simp [←hN]
-    _ = g ^ N' := by exact Eq.symm (pnat_eq_nat_pow g rfl)
+    _ = g ^ N' := Eq.symm (pnat_eq_nat_pow g rfl)
     _ ≤ g ^ n := pos_pnat_le_pnat_pow one_lt_g N_le_n
 
 theorem neg_neg_arch_group_to_arch_semigroup (arch : archimedean_group α)
@@ -164,7 +163,7 @@ theorem neg_neg_arch_group_to_arch_semigroup (arch : archimedean_group α)
   obtain ⟨z, hz⟩ := arch g⁻¹ h⁻¹ (ne_of_gt one_lt_ginv)
   intro same_sign_gh
   simp [is_archimedean_wrt]
-  have z_gt_zero : z > 0 := by exact pos_arch one_lt_ginv one_lt_hinv z hz
+  have z_gt_zero : z > 0 := pos_arch one_lt_ginv one_lt_hinv z hz
   obtain ⟨N, hN⟩ := (CanLift.prf z z_gt_zero.le : ∃N : ℕ, N = z)
   have N_gt_zero : N > 0 := by
     zify
@@ -197,17 +196,15 @@ theorem arch_group_to_arch_semigroup :
     intro same_sign_gh
     simp [same_sign, is_positive, is_negative, is_one] at same_sign_gh
     obtain ⟨_, h_pos⟩ | ⟨g_neg, _⟩ | ⟨g_one, _⟩ := same_sign_gh
-    · exact False.elim ((lt_self_iff_false h).mp (gt_trans h_pos h_lt_one))
-    · exact False.elim ((lt_self_iff_false g).mp (gt_trans one_lt_g g_neg))
+    · order
+    · order
     · rw [g_one] at one_lt_g
-      exact False.elim ((lt_self_iff_false 1).mp one_lt_g)
+      order
   · right; right;
     intro same_sign_gh
     simp [same_sign, is_positive, is_negative, is_one] at same_sign_gh
     obtain ⟨g_neg, _⟩ | ⟨_, h_neg⟩ | ⟨g_one, _⟩ := same_sign_gh
-    · exact (lt_asymm g_neg g_lt_one).elim
-    · exact (lt_asymm one_lt_h h_neg).elim
-    · exact (g_lt_one.ne g_one).elim
+    <;> order
   · right; right
     exact neg_neg_arch_group_to_arch_semigroup arch g_lt_one h_lt_one
 

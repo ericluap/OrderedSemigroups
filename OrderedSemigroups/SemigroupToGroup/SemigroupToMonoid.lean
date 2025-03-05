@@ -156,7 +156,7 @@ instance : OrderedCommMonoid (with_one α) where
     <;> rcases y with y | one
     <;> rcases z with z | one
     <;> simp only [ge_iff_le] at *
-    · exact Preorder.le_trans x y z x_le_y y_le_z
+    · order
     · rw [←not_pos_iff]
       exact le_not_pos_not_pos (not_pos_iff.mpr y_le_z) x_le_y
     · exact not_pos_le_not_neg (not_pos_iff.mpr x_le_y) (not_neg_iff.mpr y_le_z)

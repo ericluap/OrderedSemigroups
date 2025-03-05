@@ -94,7 +94,7 @@ theorem le_pow {a b : α} (h : a ≤ b) (n : ℕ+) : a^n ≤ b^n := by
 theorem middle_swap {a b c d : α} (h : a ≤ b) : c * a * d ≤ c * b * d := by
   have : a * d ≤ b * d := OrderedSemigroup.mul_le_mul_right a b h d
   have : c * (a * d) ≤ c * (b * d) := LeftOrderedSemigroup.mul_le_mul_left (a*d) (b*d) this c
-  simp [mul_assoc]
+  simp only [mul_assoc]
   trivial
 
 theorem comm_factor_le {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : a^n * b^n ≤ (a*b)^n := by

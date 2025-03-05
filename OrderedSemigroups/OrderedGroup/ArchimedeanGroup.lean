@@ -97,9 +97,8 @@ theorem neg_case_conj_pos {g h : α} (arch : archimedean_group α) (pos_g : 1 < 
   simp at not_pos_conj
   rcases not_pos_conj.eq_or_lt with conj_eq_one | conj_lt_one
   · have : g = 1 := by exact conj_eq_one_iff.mp conj_eq_one
-    rw [this] at pos_g
-    exact (lt_self_iff_false 1).mp pos_g
-  exact False.elim (neg_case_left_arch_false arch pos_g neg_h conj_lt_one)
+    order
+  exact (neg_case_left_arch_false arch pos_g neg_h conj_lt_one).elim
 
 /--
   A left ordered group that is Archimedean is right ordered.
@@ -114,17 +113,16 @@ theorem left_arch_ordered (arch : archimedean_group α) :
   simp at not_pos_conj
   rcases not_pos_conj.eq_or_lt with conj_eq_one | conj_lt_one
   · have : g = 1 := by exact conj_eq_one_iff.mp conj_eq_one
-    rw [this] at pos_g
-    exact (lt_self_iff_false 1).mp pos_g
+    order
   by_cases pos_h : 1 < h
   case neg =>
     simp at pos_h
     rcases pos_h.eq_or_lt with h_eq_one | neg_h
     -- The case where `h = 1`
     · simp [h_eq_one] at *
-      exact (lt_self_iff_false 1).mp (lt_imp_lt_of_le_imp_le (fun _ ↦ not_pos_conj) pos_g)
+      order
     -- The case where `h` is in the negative cone
-    · exact False.elim (neg_case_left_arch_false arch pos_g neg_h conj_lt_one)
+    · exact (neg_case_left_arch_false arch pos_g neg_h conj_lt_one).elim
   case pos =>
     -- The case where `h` is in the positive cone
     have conjinv_pos : 1 < (h * g * h⁻¹)⁻¹ := one_lt_inv_of_inv conj_lt_one
@@ -132,7 +130,7 @@ theorem left_arch_ordered (arch : archimedean_group α) :
     have hinv_neg : h⁻¹ < 1 := Left.inv_lt_one_iff.mpr pos_h
     have := neg_case_conj_pos arch conjinv_pos hinv_neg
     simp at this
-    exact (lt_self_iff_false g).mp (gt_trans pos_g this)
+    order
 
 def left_arch_ordered_group (arch : archimedean_group α) : LinearOrderedGroup α where
   mul_le_mul_right := by exact fun a b a_1 c ↦ left_arch_ordered arch a b a_1 c
@@ -149,11 +147,11 @@ theorem lt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : �
     · have : f*f < f := (mul_lt_iff_lt_one_right' f).mpr f_lt_one
       use 2
       simp [zpow_two f]
-      exact mul_lt_of_le_of_lt_one f_le_g f_lt_one
+      order
     · have : f⁻¹ < f := by exact Right.inv_lt_self one_lt_f
       use -1
       simp
-      exact gt_of_ge_of_gt f_le_g this
+      order
   · have : f⁻¹ < g⁻¹ := inv_lt_inv_iff.mpr g_lt_f
     have finv_ne_one : f⁻¹ ≠ 1 := inv_ne_one.mpr f_ne_one
     obtain ⟨z, hz⟩ := arch f⁻¹ g⁻¹ finv_ne_one
@@ -173,9 +171,9 @@ theorem pos_arch_arch (pos_arch : ∀g h : α, 1 < g → 1 < h → ∃n : ℕ, g
     simp [←one_eq_h, one_lt_g]
   · use 1
     simp
-    exact gt_trans one_lt_g h_lt_one
-  · exact (g_not_one one_eq_g.symm).elim
-  · exact (g_not_one one_eq_g.symm).elim
+    order
+  · order
+  · order
   · use 1
     simp [←one_eq_g, h_lt_one]
   · have : 1 < g⁻¹ := by exact Right.one_lt_inv_iff.mpr g_lt_one
@@ -186,9 +184,9 @@ theorem pos_arch_arch (pos_arch : ∀g h : α, 1 < g → 1 < h → ∃n : ℕ, g
   · use -1
     simp [←one_eq_h, g_lt_one]
   · use -1
+    simp
     have : 1 < g⁻¹ := by exact Right.one_lt_inv_iff.mpr g_lt_one
-    have : h < g⁻¹ := by exact gt_trans this h_lt_one
-    simpa
+    order
 
 theorem neg_arch_arch (neg_arch : ∀g h : α, g < 1 → h < 1 → ∃n : ℕ, g^n < h) :
     archimedean_group α := by
@@ -208,9 +206,9 @@ theorem neg_arch_arch (neg_arch : ∀g h : α, g < 1 → h < 1 → ∃n : ℕ, g
     simp [←one_eq_h, one_lt_g]
   · use 1
     simp
-    exact gt_trans one_lt_g h_lt_one
-  · exact (g_not_one one_eq_g.symm).elim
-  · exact (g_not_one one_eq_g.symm).elim
+    order
+  · order
+  · order
   · use 1
     simp [←one_eq_g, h_lt_one]
   · have : h⁻¹ < 1 := by exact Left.inv_lt_one_iff.mpr one_lt_h
@@ -223,7 +221,7 @@ theorem neg_arch_arch (neg_arch : ∀g h : α, g < 1 → h < 1 → ∃n : ℕ, g
     simp [←one_eq_h, g_lt_one]
   · use -1
     have : 1 < g⁻¹ := by exact Right.one_lt_inv_iff.mpr g_lt_one
-    have : h < g⁻¹ := by exact gt_trans this h_lt_one
-    simpa
+    simp
+    order
 
 end LinearOrderedGroup

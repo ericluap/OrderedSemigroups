@@ -56,11 +56,11 @@ theorem anomalous_not_one {a b : α} (anomalous : anomalous_pair a b) : ¬is_one
   · intro one_a
     simp at a_lt_b
     simp [ppow_succ, one_a a] at b_lt_ap1
-    exact (lt_self_iff_false (b)).mp (gt_trans a_lt_b b_lt_ap1)
+    order
   · intro one_a
     simp at a_gt_b
     simp [ppow_succ, one_a a] at b_gt_ap1
-    exact (lt_self_iff_false (b)).mp (gt_trans b_gt_ap1 a_gt_b)
+    order
 
 end OrderedSemigroup
 section LinearOrderedCancelSemigroup
@@ -72,17 +72,17 @@ theorem anomalous_not_one' {a b : α} (anomalous : anomalous_pair a b) : ¬is_on
   <;> rcases pos_neg_or_one a with pos_a | neg_a | one_a
   <;> intro one_b
   · have : is_positive b := pos_le_pos pos_a a_lt_b.le
-    exact False.elim (pos_not_one this one_b)
+    exact (pos_not_one this one_b).elim
   · have : is_negative (a * a) := by
       have := neg_pow_neg neg_a 2
       simpa [←ppow_two a]
     have : is_negative b := le_neg_neg this b_lt_ap1.le
-    exact False.elim (neg_not_one this one_b)
+    exact (neg_not_one this one_b).elim
   · have : is_positive b := gt_one_pos one_a a_lt_b
-    exact False.elim (pos_not_one this one_b)
+    exact (pos_not_one this one_b).elim
   · exact (lt_self_iff_false b).mp (gt_trans b_gt_ap1 (gt_trans (pos_a a) a_gt_b))
   · exact one_not_neg one_b (le_neg_neg neg_a (a_gt_b.le))
-  · exact (lt_self_iff_false b).mp (gt_trans b_gt_ap1 (lt_of_lt_of_eq a_gt_b (id (Eq.symm (one_a a)))))
+  · exact (lt_self_iff_false b).mp (gt_trans b_gt_ap1 (lt_of_lt_of_eq a_gt_b (one_a a).symm))
 
 /-- If `a` is Archimedean with respect to `b`, then `a` and `b` have the same sign. -/
 theorem archimedean_same_sign {a b : α} (arch : is_archimedean_wrt a b) : same_sign a b := by
@@ -110,19 +110,27 @@ theorem anomalous_pair_same_sign {a b : α} (anomalous : anomalous_pair a b) : s
   <;> simp [rw_pow_one_plus_one] at *
   <;> rcases pos_neg_or_one a with pos_a | neg_a | one_a
   case inl.intro.inr.inl =>
-    exact False.elim ((lt_self_iff_false b).mp (gt_trans a_lt_b (gt_trans (neg_a a) b_lt_ap1)))
+    -- TODO: change to `order [neg_a a]`
+    have := neg_a a
+    order
   case inl.intro.inr.inr =>
-    exact False.elim ((lt_self_iff_false b).mp (gt_trans a_lt_b (lt_of_lt_of_eq b_lt_ap1 (one_a a))))
+    -- TODO: change to `order [one_a a]`
+    have := one_a a
+    order
   case inr.intro.inl =>
-    exact False.elim ((lt_self_iff_false b).mp (gt_trans b_gt_ap1 (gt_trans (pos_a a) a_gt_b)))
+    -- TODO: change to `order [pos_a a]`
+    have := pos_a a
+    order
   case inr.intro.inr.inr =>
-    exact False.elim ((lt_self_iff_false b).mp (gt_trans b_gt_ap1 (lt_of_lt_of_eq a_gt_b (id (Eq.symm (one_a a))))))
+    -- TODO: change to `order [one_a a]`
+    have := one_a a
+    order
   all_goals rcases pos_neg_or_one b with pos_b | neg_b | one_b
   <;> try tauto
-  · exact False.elim (pos_not_neg (pos_le_pos pos_a a_lt_b.le) neg_b)
-  · exact False.elim (anomalous_not_one' anomalous one_b)
-  · exact False.elim (neg_not_pos (le_neg_neg neg_a a_gt_b.le) pos_b)
-  · exact False.elim (neg_not_one (le_neg_neg neg_a a_gt_b.le) one_b)
+  · exact (pos_not_neg (pos_le_pos pos_a a_lt_b.le) neg_b).elim
+  · exact (anomalous_not_one' anomalous one_b).elim
+  · exact (neg_not_pos (le_neg_neg neg_a a_gt_b.le) pos_b).elim
+  · exact (neg_not_one (le_neg_neg neg_a a_gt_b.le) one_b).elim
 
 /-- If `b` is positive and there exists an `n : ℕ+` such that `a^n ≥ b`, then `a` is Archimedean with respect to `b`. -/
 theorem pos_ge_once_archimedean {a b : α} (pos : is_positive b) (h : ∃n : ℕ+, a^n ≥ b) : is_archimedean_wrt a b := by
@@ -224,8 +232,8 @@ theorem non_archimedean_anomalous_pair (non_arch : ¬is_archimedean (α := α)) 
     <;> use b, (a*b)
     · exact pos_not_arch_anomalous_pair pos_a pos_b hab h
     · exact pos_not_arch_anomalous_pair' pos_a pos_b hab h
-  · exact False.elim (pos_neg_same_sign_false pos_a neg_b same_sign_ab)
-  · exact False.elim (pos_neg_same_sign_false pos_b neg_a (same_sign_symm same_sign_ab))
+  · exact (pos_neg_same_sign_false pos_a neg_b same_sign_ab).elim
+  · exact (pos_neg_same_sign_false pos_b neg_a (same_sign_symm same_sign_ab)).elim
   · rcases le_total (a*b) (b*a) with h | h
     <;> use b, (a*b)
     · exact neg_not_archimedean_anomalous_pair neg_a neg_b hab h
@@ -294,7 +302,7 @@ theorem not_comm_once_comm {a b : α} (h : a * b < b * a) (comm : (b * a) * b = 
     _             = (a * b) * (b * a) := by simp [mul_assoc]
     _             > (a * b) * (a * b) := by exact mul_lt_mul_left' h (a * b)
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
-  exact False.elim ((lt_self_iff_false (a * b * a * b)).mp this)
+  order
 
 /-- If `b * a < a * b` and `(b * a)` commutes with `b`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm' {a b : α} (h : b * a < a * b) (comm : (b * a) * b = b * (b * a)) :
@@ -305,7 +313,7 @@ theorem not_comm_once_comm' {a b : α} (h : b * a < a * b) (comm : (b * a) * b =
     _             = (a * b) * (b * a) := by simp [mul_assoc]
     _             < (a * b) * (a * b) := by exact mul_lt_mul_left' h (a * b)
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
-  exact False.elim ((lt_self_iff_false (a * b * a * b)).mp this)
+  order
 
 /-- If `a * b < b * a` and `(b * a)` commutes with `a`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm'' {a b : α} (h : a * b < b * a) (comm : (b * a) * a = a * (b * a)) :
@@ -316,7 +324,7 @@ theorem not_comm_once_comm'' {a b : α} (h : a * b < b * a) (comm : (b * a) * a 
     _             = (b * a) * (a * b) := by simp [mul_assoc]
     _             > (a * b) * (a * b) := by exact mul_lt_mul_right' h (a * b)
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
-  exact False.elim ((lt_self_iff_false (a * b * a * b)).mp this)
+  order
 
 /-- If `b * a < a * b` and `(b * a)` commutes with `a`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm''' {a b : α} (h : b * a < a * b) (comm : (b * a) * a = a * (b * a)) :
@@ -327,7 +335,7 @@ theorem not_comm_once_comm''' {a b : α} (h : b * a < a * b) (comm : (b * a) * a
     _             = (b * a) * (a * b) := by simp [mul_assoc]
     _             < (a * b) * (a * b) := by exact mul_lt_mul_right' h (a * b)
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
-  exact False.elim ((lt_self_iff_false (a * b * a * b)).mp this)
+  order
 
 /-- If a linear ordered cancel semigroup does not have an anomalous pair, then it is commutative. -/
 theorem not_anomalous_pair_commutative (not_anomalous : ¬has_anomalous_pair (α := α)) (a b : α) : a * b = b * a := by
@@ -470,8 +478,10 @@ theorem large_differences_pos_lt_not_anomalous {a b : α} (differences : has_lar
     · exact (lt_self_iff_false (a^(m*N+1))).mp (lt_of_le_of_lt this bmn_lt_amn1)
     · have : a ^ (m * N) > a ^ (m * N + 1) := by exact lt_of_le_of_lt this amn_gt_bmn
       simp [ppow_succ] at this
-      exact (lt_self_iff_false (a^(m*N))).mp (gt_trans this (pos_right pos_a (a ^ (m * N))))
-  · exact False.elim (pos_not_neg pos_a neg)
+      have := (pos_right pos_a (a ^ (m * N)))
+      -- TODO: change to `order [pos_right pos_a (a ^ (m * N))]`
+      order
+  · exact (pos_not_neg pos_a neg).elim
 
 theorem large_differences_neg_lt_anomalous {a b : α} (differences : has_large_differences (α := α))
     (neg_a : is_negative a) (b_lt_a : b < a) : ¬anomalous_pair a b := by
@@ -500,8 +510,10 @@ theorem large_differences_neg_lt_anomalous {a b : α} (differences : has_large_d
     rcases hab (m*N) with ⟨left, _⟩ | ⟨_, right⟩
     · have : a^(m*N) < a^(m*N+1) := by exact gt_of_ge_of_gt this left
       simp [ppow_succ] at this
-      exact False.elim ((lt_self_iff_false (a ^ (m * N))).mp (gt_trans (neg_right neg_a (a ^ (m * N))) this))
-    · exact (lt_self_iff_false (a ^ (m * N + 1))).mp (gt_of_ge_of_gt this right)
+      have := (neg_right neg_a (a ^ (m * N)))
+      -- TODO: change to `order [neg_right neg_a (a ^ (m * N))]`
+      order
+    · order
 
 theorem large_difference_not_anomalous (differences : has_large_differences (α := α)) :
     ¬has_anomalous_pair (α := α) := by
@@ -517,8 +529,10 @@ theorem large_difference_not_anomalous (differences : has_large_differences (α 
   all_goals try
     have : ¬is_one a := by exact anomalous_not_one hab
     contradiction
-  · exact False.elim (large_differences_pos_lt_not_anomalous differences pos_a a_lt_b hab)
-  · exact (lt_self_iff_false (b)).mp (gt_trans (pos_anomalous_lt hab pos_a) b_lt_a)
+  · exact (large_differences_pos_lt_not_anomalous differences pos_a a_lt_b hab).elim
+  · have := (pos_anomalous_lt hab pos_a)
+    -- TODO: change to `order [pos_anomalous_lt hab pos_a]`
+    order
   all_goals
     have ss_ab : same_sign a b := by exact anomalous_pair_same_sign hab
     try (exact False.elim (pos_neg_same_sign_false pos_a neg_b ss_ab))
@@ -529,9 +543,11 @@ theorem large_difference_not_anomalous (differences : has_large_differences (α 
     try (exact False.elim (neg_one_same_sign_false neg_b one_a (same_sign_symm ss_ab)))
   · rcases hab 1 with ⟨a_lt_b, b_lt_ap1⟩ | ⟨a_gt_b, b_gt_ap1⟩
     <;> simp [rw_pow_one_plus_one] at *
-    · exact False.elim ((lt_self_iff_false b).mp (gt_trans a_lt_b (gt_trans (neg_a a) b_lt_ap1)))
-    · exact False.elim ((lt_self_iff_false b).mp (gt_trans a_lt_b a_gt_b))
-  · exact False.elim (large_differences_neg_lt_anomalous differences neg_a b_lt_a hab)
+    · have := neg_a a
+      -- TODO: change to `order [neg_a a]`
+      order
+    · order
+  · exact (large_differences_neg_lt_anomalous differences neg_a b_lt_a hab).elim
 
 theorem not_anomalous_iff_large_difference : ¬has_anomalous_pair (α := α) ↔ has_large_differences (α := α) := by
   constructor
@@ -587,7 +603,7 @@ theorem same_sign_differences_and_arch_to_large_difference
       simp
       have : y * z < x * z := mul_lt_mul_right' y_lt_x z
       rw [hz] at this
-      exact (gt_trans this y_lt_x).le
+      order
 
 theorem pos_large_elements (not_anomalous : ¬has_anomalous_pair (α := α)) (pos_elem : ∃a : α, is_positive a) :
     ∀x : α, ∃y : α, is_positive y ∧ is_positive (x*y) := by

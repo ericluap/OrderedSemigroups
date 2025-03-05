@@ -109,7 +109,7 @@ theorem q_max_lt (g : α) (p : ℕ) {t : ℤ} (ht : f^t ≤ g^p) : t ≤ q f g p
   have lt_t : f ^ (q f g p + 1) ≤ f^t := pos_exp_le_le f_pos.out h
   have : f ^ t < f ^ (q f g p + 1) := lt_of_le_of_lt ht gp_lt_fqp1
   have : f ^ t < f ^ t := gt_of_ge_of_gt lt_t this
-  exact (lt_self_iff_false (f ^ t)).mp this
+  order
 
 theorem qplus1_min_gt (g : α) (p : ℕ) {t : ℤ} (ht : g^p < f^t) : q f g p + 1 ≤ t := by
   have ⟨fqp_lt_gt, _⟩ := q_spec f g p
@@ -119,7 +119,7 @@ theorem qplus1_min_gt (g : α) (p : ℕ) {t : ℤ} (ht : g^p < f^t) : q f g p + 
   have : f^t ≤ f^(q f g p) := pos_exp_le_le f_pos.out this
   have : g^p < f^(q f g p) := gt_of_ge_of_gt this ht
   have : g^p < g^p := gt_of_ge_of_gt fqp_lt_gt this
-  exact (lt_self_iff_false (g ^ p)).mp this
+  order
 
 theorem q_exp_add (g : α) (a b : ℕ) :
     f^((q f g a) + (q f g b)) ≤ g^(a + b) ∧
@@ -291,7 +291,7 @@ theorem order_preserving_φ {a b : α} (a_le_b : a ≤ b) : (φ f a) ≤ (φ f b
     apply q_max_lt
     obtain ⟨le, _⟩ := q_spec f a p
     have : a^p ≤ b^p := pow_le_pow_left' a_le_b p
-    exact Preorder.le_trans _ _ _ le this
+    order
   have (p : ℕ) (p_pos : 0 < p) : (q f a p)/(p : ℝ) ≤ (q f b p)/(p : ℝ) := by
     have rp_pos : 0 < (p : ℝ) := Nat.cast_pos'.mpr p_pos
     exact (div_le_div_iff_of_pos_right rp_pos).mpr (this p)
@@ -344,8 +344,7 @@ theorem injective_φ : Function.Injective (φ f) := by
     _ ≥ (φ f) f := order_preserving_φ f hn.le
     _ = (1 : ℝ) := f_maps_one_φ f
   have zero_lt_one : (0 : ℝ) < 1 := Real.zero_lt_one
-  have : 0 < 0 := lt_imp_lt_of_le_imp_le (fun a ↦ zero_le_one) zero_lt_one
-  exact Nat.not_succ_le_zero 0 this
+  order
 
 theorem strict_order_preserving_φ {a b : α}: a ≤ b ↔ (φ f a) ≤ (φ f b) := by
   constructor
@@ -356,5 +355,4 @@ theorem strict_order_preserving_φ {a b : α}: a ≤ b ↔ (φ f a) ≤ (φ f b)
     have := order_preserving_φ f h.le
     have : (φ f) a = (φ f) b := PartialOrder.le_antisymm _ _ φa_le_φb this
     have := injective_φ f this
-    rw [this] at h
-    exact (lt_self_iff_false b).mp h
+    order

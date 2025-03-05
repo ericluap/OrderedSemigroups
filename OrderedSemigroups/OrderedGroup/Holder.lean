@@ -55,12 +55,12 @@ theorem holders_theorem [LeftLinearOrderedGroup α] (arch : archimedean_group α
     · obtain ⟨a, ha⟩ := not_one
       simp at ha
       obtain a_lt_one | a_eq_one | one_lt_a := lt_trichotomy a 1
-      · have : 1 < a⁻¹ := by exact one_lt_inv_of_inv a_lt_one
-        have : 1 < 1 := by exact lt_imp_lt_of_le_imp_le (fun a_1 ↦ h a⁻¹) this
-        exact False.elim ((lt_self_iff_false 1).mp this)
+      · have h1 : 1 < a⁻¹ := one_lt_inv_of_inv a_lt_one
+        have h2 := h a⁻¹
+        order
       · contradiction
-      · have : 1 < 1 := by exact lt_imp_lt_of_le_imp_le (fun a_1 ↦ h a) one_lt_a
-        exact False.elim ((lt_self_iff_false 1).mp this)
+      · have := h a
+        order
     -- So `α` is trivial
     · simp at not_one
       use ⊥
