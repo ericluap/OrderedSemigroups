@@ -186,7 +186,7 @@ instance : OrderedCommMonoid (with_one α) where
     · exact not_neg_right (not_neg_iff.mpr x_le_y) z
     · trivial
 
-instance to_monoid : LinearOrderedCancelCommMonoid (with_one α) where
+noncomputable instance to_monoid : LinearOrderedCancelCommMonoid (with_one α) where
   le_total := by
     intro x y
     rcases x with x | one
@@ -195,15 +195,7 @@ instance to_monoid : LinearOrderedCancelCommMonoid (with_one α) where
     · exact LinearOrder.le_total (x * x) x
     · exact LinearOrder.le_total y (y * y)
     · simp
-  decidableLE := by
-    simp [DecidableRel]
-    intro x y
-    rcases x with x | one
-    <;> rcases y with y | one
-    · exact instDecidableLe_mathlib x y
-    · exact instDecidableLe_mathlib (x * x) x
-    · exact instDecidableLe_mathlib y (y * y)
-    · exact instDecidableTrue
+  decidableLE := Classical.decRel LE.le
   le_of_mul_le_mul_left := by
     intro x y z xy_le_xz
     rcases x with x | one

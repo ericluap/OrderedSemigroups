@@ -38,7 +38,7 @@ theorem nppowRec_succ [Mul α] (n : ℕ+) (x : α) : nppowRec (n + 1) x = nppowR
     simp [nppowRec_one]
   | succ n ih =>
     unfold nppowRec
-    have : (n + 1) = ⟨↑n + 1, nppowRec.proof_1 ↑n⟩ := by rfl
+    have : (n + 1) = ⟨↑n + 1, Nat.zero_lt_succ ↑n⟩ := by rfl
     simp
     erw [←this]
     split
@@ -48,7 +48,7 @@ theorem nppowRec_succ [Mul α] (n : ℕ+) (x : α) : nppowRec (n + 1) x = nppowR
     · rename_i x y w z h g
       simp at *
       have : n = z + 1 := by exact Nat.succPNat_inj.mp g
-      have : n = ⟨z + 1, nppowRec.proof_1 z⟩ := by exact PNat.eq this
+      have : n = ⟨z + 1, Nat.zero_lt_succ z⟩ := by exact PNat.eq this
       simp [←this, ih]
 
 /-- A semigroup with an action of ℕ+ on it, by default it is exponentiation -/
