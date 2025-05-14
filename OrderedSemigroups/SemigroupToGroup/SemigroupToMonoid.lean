@@ -17,6 +17,10 @@ variable {α : Type u}
 section Semigroup
 variable [Semigroup α]
 
+/--
+  The subsemigroup of `WithOne α` containing all elements not equal to `1`
+  (i.e. only the original elements of `α`).
+-/
 def without_one (α : Type u) [Semigroup α] : Subsemigroup (WithOne α) where
   carrier := {x : WithOne α | x ≠ 1}
   mul_mem' := by
@@ -26,6 +30,9 @@ def without_one (α : Type u) [Semigroup α] : Subsemigroup (WithOne α) where
     use (WithOne.unone x_ne_one) * (WithOne.unone y_ne_one)
     simp
 
+/--
+  The semigroup `α` is isomorphic to the semigroup `without_one α`
+-/
 noncomputable def iso_without_one : α ≃* without_one α where
   toFun x := ⟨x, by simp [without_one]⟩
   invFun x := WithOne.unone x.prop
