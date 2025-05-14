@@ -20,7 +20,7 @@ variable [LinearOrderedCancelSemigroup α]
 -/
 theorem holder_not_anom (not_anom : ¬has_anomalous_pair (α := α)) :
     ∃G : Subsemigroup (Multiplicative ℝ), Nonempty (α ≃*o G) := by
-  obtain ⟨G, _, arch, subH, ⟨iso⟩⟩ := to_arch_group not_anom
+  obtain ⟨G, _, _, _, arch, subH, ⟨iso⟩⟩ := to_arch_group not_anom
   obtain ⟨subR, ⟨subR_iso⟩⟩ := holders_theorem arch
   obtain ⟨sub, x⟩ :=
     compose_subsemigroup' (G := (Multiplicative ℝ)) (M := G)

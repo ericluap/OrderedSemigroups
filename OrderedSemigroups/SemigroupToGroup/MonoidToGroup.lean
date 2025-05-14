@@ -18,7 +18,7 @@ universe u
 variable {α : Type u}
 
 section LinearOrderedCancelCommMonoid
-variable [LinearOrderedCancelCommMonoid α]
+variable [CommMonoid α] [LinearOrder α] [IsOrderedCancelMonoid α]
 
 abbrev with_division (α : Type*) [CommMonoid α] := Localization (⊤ : Submonoid α)
 
@@ -58,8 +58,8 @@ noncomputable def iso_over_one : α ≃*o (over_one α) where
     simp [MonoidHom.mrangeRestrict, ←Localization.mk_one_eq_monoidOf_mk,
       Localization.mk_le_mk]
 
-instance : LinearOrderedCommGroup (with_division α) where
-  __ := inferInstanceAs (LinearOrderedCancelCommMonoid (with_division α))
+instance : CommGroup (with_division α) where
+  __ := inferInstanceAs (CommMonoid (with_division α))
   inv x := Localization.liftOn x
           (fun m s => Localization.mk s ⟨m, by simp⟩)
           (by
@@ -75,13 +75,18 @@ instance : LinearOrderedCommGroup (with_division α) where
       simp [Localization.liftOn_mk, Localization.mk_mul,
         ←Localization.mk_one, Localization.mk_eq_mk_iff', mul_comm]
 
-instance : LinearOrderedCancelSemigroup α where
-  __ := inferInstanceAs (LinearOrderedCancelCommMonoid α)
+/-
+instance : LinearOrder (with_division α) := inferInstance
+
+instance : IsOrderedMonoid (with_division α) := inferInstance-/
+
+instance monoid_to_semigroup : LinearOrderedCancelSemigroup α where
+  __ := inferInstanceAs (IsOrderedCancelMonoid α)
   mul_le_mul_right := by simp
   le_of_mul_le_mul_right := by simp
 
 instance : LinearOrderedGroup (Localization (⊤ : Submonoid α)) where
-  __ := inferInstanceAs (LinearOrderedCommGroup (Localization (⊤ : Submonoid α)))
+  __ := inferInstanceAs (IsOrderedMonoid (Localization (⊤ : Submonoid α)))
   mul_le_mul_right := by simp
 
 theorem exists_pos_neg_all_one :
@@ -198,8 +203,9 @@ theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
     intro g _ g_not_one
     have : ¬is_one g := by simp [is_one, g_not_one]
     have all_one : ∀t : α, t = 1 := by
-      simp [is_one] at all_one
-      exact all_one
+      intro t
+      simp only [is_one] at all_one
+      exact mul_eq_left.mp (all_one t t)
     have := all_one_div_one all_one
     exact (g_not_one (this g)).elim
   · apply pos_arch_arch
@@ -210,28 +216,28 @@ theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
       not_anom_pos_pair not_anom pos_t g (pos_not_one pos_g)
     obtain ⟨h1, h2, pos_h1, pos_h2, eq_h⟩ :=
       not_anom_pos_pair not_anom pos_t h (pos_not_one pos_h)
-    simp [←eq_g, ←eq_h]
-    simp [is_archimedean] at arch
+    simp only [← eq_g, ← eq_h, gt_iff_lt]
+    simp only [is_archimedean] at arch
     obtain one_g2 | one_h1 | imp := arch g2 h1
     · exact (pos_not_one pos_g2 one_g2).elim
     · exact (pos_not_one pos_h1 one_h1).elim
     have : same_sign g2 h1 := by
-      simp [same_sign]
+      simp only [same_sign]
       tauto
     specialize imp this
-    simp [is_archimedean_wrt] at imp
+    simp only [is_archimedean_wrt, ge_iff_le] at imp
     subst_vars
     obtain ⟨N, hN⟩ := imp
-    obtain ⟨pos, big⟩ | ⟨neg, small⟩ := hN N (by simp)
+    obtain ⟨pos, big⟩ | ⟨neg, small⟩ := hN N (by simp only [le_refl])
     · have : g2 < g1 := with_div_pos_ineq pos_g
       obtain ⟨N1, hN1⟩ := not_anom_big_sep not_anom N this
       use N1
-      simp [with_div_pow]
-      simp [with_division.mk, Localization.mk_lt_mk]
+      simp only [with_div_pow]
+      simp only [with_division.mk, Localization.mk_lt_mk]
       calc g2^ (N1 : ℕ) * h1
       _ = h1 * g2 ^ (N1 : ℕ) := by simp [mul_comm]
       _ < g2^(N : ℕ) * g2^(N1 : ℕ) := by
-        simp
+        simp only [mul_lt_mul_iff_right]
         convert big
         exact monoid_ppow_rec_eq N g2
       _ = g2^(N1 + N : ℕ) := by simp [pow_add, mul_comm]
@@ -250,16 +256,16 @@ theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
       not_anom_neg_pair not_anom neg_t g (neg_not_one neg_g)
     obtain ⟨h1, h2, neg_h1, neg_h2, eq_h⟩ :=
       not_anom_neg_pair not_anom neg_t h (neg_not_one neg_h)
-    simp [←eq_g, ←eq_h]
-    simp [is_archimedean] at arch
+    simp only [← eq_g, ← eq_h]
+    simp only [is_archimedean] at arch
     obtain one_g2 | one_h1 | imp := arch g2 h1
     · exact (neg_not_one neg_g2 one_g2).elim
     · exact (neg_not_one neg_h1 one_h1).elim
     have : same_sign g2 h1 := by
-      simp [same_sign]
+      simp only [same_sign]
       tauto
     specialize imp this
-    simp [is_archimedean_wrt] at imp
+    simp only [is_archimedean_wrt, ge_iff_le] at imp
     subst_vars
     obtain ⟨N, hN⟩ := imp
     obtain ⟨pos, big⟩ | ⟨neg, small⟩ := hN N (by simp)
@@ -267,12 +273,12 @@ theorem not_anom_to_arch (not_anom : ¬has_anomalous_pair α) :
     · have : g1 < g2 := with_div_neg_ineq neg_g
       obtain ⟨N1, hN1⟩ := not_anom_big_sep' not_anom N this
       use N1
-      simp [with_div_pow]
-      simp [with_division.mk, Localization.mk_lt_mk]
+      simp only [with_div_pow]
+      simp only [with_division.mk, Localization.mk_lt_mk]
       calc g2 ^ (N1 : ℕ) * h1
         _ = h1 * g2 ^ (N1 : ℕ) := by simp [mul_comm]
         _ > g2^(N : ℕ) * g2^(N1 : ℕ) := by
-          simp
+          simp only [gt_iff_lt, mul_lt_mul_iff_right]
           convert small
           exact monoid_ppow_rec_eq N g2
         _ = g2^(N1 + N : ℕ) := by simp [pow_add, mul_comm]

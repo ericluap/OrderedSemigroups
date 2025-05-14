@@ -27,25 +27,30 @@ def not_anom_to_comm (not_anomalous : ¬has_anomalous_pair (α := α)) :
   have anomalous pairs and such that `α` is isomorphic to some subsemigroup of `M`.
 -/
 theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
-    ∃M : Type u, ∃_ : LinearOrderedCancelCommMonoid M, ¬has_anomalous_pair (α := M) ∧
+    ∃M : Type u, ∃(_ : CommMonoid M) (_ : LinearOrder M)
+    (_ : IsOrderedCancelMonoid M), ¬has_anomalous_pair (α := M) ∧
       ∃H : Subsemigroup M, Nonempty (α ≃*o H) := by
   set not_anom := not_anom_to_comm not_anomalous
     with not_anom_def
   by_cases not_one : ∀a : α, ¬(∀x : α, a*x = x)
-  · set not_anom_monoid := @to_monoid α not_anom (Fact.mk not_one)
-      with not_anom_monoid_def
-    use (with_one α), not_anom_monoid
+  · use (WithOne α), inferInstance
+    use @withOne_linearOrder _ not_anom ⟨not_one⟩
+    use @withOne_orderedCancelMonoid _ not_anom ⟨not_one⟩
     constructor
-    · exact not_anom_semigroup_not_anom_monoid (α := α) (not_one := Fact.mk not_one) not_anomalous
-    · use without_one, iso_without_one (α := α)
-      simp [iso_without_one]
+    · exact not_anom_semigroup_not_anom_monoid
+        (not_one := Fact.mk not_one) not_anomalous
+    · use without_one α, iso_without_one (α := α)
+      intro a b
+      rfl
   · simp at not_one
-    obtain ⟨one, hone⟩ := not_one
-    set not_anom_monoid := has_one_to_monoid one hone
-      with not_anom_monoid_def
-    use α, not_anom_monoid
+    use α, @has_one_commMonoid _ _ ⟨not_one⟩, inferInstance, inferInstance
     constructor
-    · exact has_one_not_anom_not_anom one hone not_anomalous
+    · simp only [not_exists, not_forall, gt_iff_lt,
+        not_or, not_and, not_lt] at not_anomalous ⊢
+      unfold_projs at not_anomalous ⊢
+      simp only [nppow_eq_nppowRec, Nat.zero_eq,
+        Nat.lt_eq, Nat.add_eq] at not_anomalous
+      exact fun x x_1 ↦ not_anomalous x x_1
     · set whole : Subsemigroup α := {
         carrier := Set.univ
         mul_mem' := by simp
@@ -60,7 +65,6 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
         map_mul' := by simp
         map_le_map_iff' := by simp
       }
-
 
 /--
   If `α` is isomorphic to a subsemigroup of `M` and
@@ -150,12 +154,13 @@ theorem compose_subsemigroup' {G : Type*} {M : Type*} [Group G] [Group M]
   and such that `α` is isomorphic to some subsemigroup of `G`.
 -/
 theorem to_arch_group (not_anomalous : ¬has_anomalous_pair (α := α)) :
-    ∃G : Type u, ∃_ : LinearOrderedCommGroup G, archimedean_group G ∧
-      ∃H : Subsemigroup G, Nonempty (α ≃*o H) := by
-  obtain ⟨M, monoid_M, not_anom_M, H, ⟨subsemi_H⟩⟩ := to_not_anom_monoid not_anomalous
-  use (with_division M), inferInstance
+    ∃G : Type u, ∃(_ : CommGroup G) (_ : LinearOrder G) (_ : IsOrderedMonoid G),
+      archimedean_group G ∧ ∃H : Subsemigroup G, Nonempty (α ≃*o H) := by
+  obtain ⟨M, _, _, _, not_anomalous, ⟨subsemi_H, ⟨iso⟩⟩⟩ :=
+    to_not_anom_monoid not_anomalous
+  use (with_division M), inferInstance, inferInstance, inferInstance
   constructor
-  · exact not_anom_to_arch not_anom_M
-  · exact compose_subsemigroup iso_over_one subsemi_H
+  · exact not_anom_to_arch not_anomalous
+  · exact compose_subsemigroup iso_over_one iso
 
 end LinearOrderedCancelSemigroup

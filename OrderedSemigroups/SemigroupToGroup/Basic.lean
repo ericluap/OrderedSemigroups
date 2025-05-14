@@ -15,6 +15,7 @@ and of Archimedean group.
 universe u
 variable {α : Type u}
 
+/-
 instance [OrderedCommGroup α] : OrderedGroup α where
   mul_le_mul_left _ _ a b := mul_le_mul_left' a b
   mul_le_mul_right _ _ a b := (mul_le_mul_iff_right b).mpr a
@@ -24,10 +25,13 @@ instance [LinearOrderedCommGroup α] : LeftOrderedGroup α where
 
 instance toLeftLinearOrderedGroup [LinearOrderedCommGroup α] : LeftLinearOrderedGroup α where
   __ := inferInstanceAs (LinearOrderedCommGroup α)
-  mul_le_mul_left _ _ a b := mul_le_mul_left' a b
+  mul_le_mul_left _ _ a b := mul_le_mul_left' a b-/
 
 section LinearOrderedCommGroup
-variable [LinearOrderedCommGroup α]
+variable [CommGroup α] [LinearOrder α] [IsOrderedMonoid α]
+
+instance : LeftOrderedGroup α where
+    __ := inferInstanceAs (IsOrderedMonoid α)
 
 theorem is_one_iff_one (a : α) : is_one a ↔ a = 1 := by
   simp [is_one]
