@@ -36,7 +36,7 @@ end Group
 
 section LeftOrdered
 
-variable [LeftOrderedGroup α]
+variable [Group α] [PartialOrder α] [IsLeftOrderedMonoid α]
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
     1 < x^z := by
@@ -105,13 +105,15 @@ theorem pos_lt_exp_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (f_lt : f^a < f^b) : 
 instance : LeftOrderedSemigroup α where
   mul_le_mul_left _ _ a b :=  mul_le_mul_left' a b
 
-instance PositiveCone (α : Type u) [LeftOrderedGroup α] : Subsemigroup α where
+instance PositiveCone (α : Type u) [Group α] [PartialOrder α]
+    [IsLeftOrderedMonoid α] : Subsemigroup α where
   carrier := {x : α | 1 < x}
   mul_mem' := by
     simp
     exact fun {a b} a_1 a_2 ↦ one_lt_mul' a_1 a_2
 
-instance NegativeCone (α : Type u) [LeftOrderedGroup α] : Subsemigroup α where
+instance NegativeCone (α : Type u) [Group α] [PartialOrder α]
+    [IsLeftOrderedMonoid α] : Subsemigroup α where
   carrier := {x : α | x < 1}
   mul_mem' := by
     simp
@@ -157,7 +159,11 @@ def pos_normal_ordered (pos_normal : normal_semigroup (PositiveCone α)) :
 end LeftOrdered
 section LinearOrderedGroup
 
-variable [LinearOrderedGroup α]
+variable [Group α] [LinearOrder α] [IsOrderedMonoid' α]
+
+instance [Group α] [LinearOrder α] [IsOrderedMonoid' α] :
+    OrderedSemigroup α where
+  __ := inferInstanceAs (IsOrderedMonoid' α)
 
 theorem comm_factor_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : a^n * b^n ≤ (a*b)^n := by
   obtain n_eq_0 | n_gt_0 := Nat.eq_zero_or_pos n

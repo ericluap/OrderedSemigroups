@@ -14,13 +14,14 @@ variable {α : Type u}
   Every left linear ordered group that is Archimedean
   is monoid order isomorphic to a subgroup of `ℝ`.
 -/
-theorem holders_theorem [LeftLinearOrderedGroup α] (arch : archimedean_group α) :
+theorem holders_theorem [Group α] [LinearOrder α] [IsLeftOrderedMonoid α]
+    (arch : archimedean_group α) :
     ∃G : Subgroup (Multiplicative ℝ), Nonempty (α ≃*o G) := by
   by_cases h : ∃f : α, 1 < f
   -- We have an element `f` to approximate with
   · obtain ⟨f, f_pos⟩ := h
     -- Define `φ` to be the map from `α` to `ℝ` by approximating each element with `f`
-    set φ := @φ _ _ f (Fact.mk arch) (Fact.mk f_pos) with φ_def
+    set φ := @φ _ _ _ _ f (Fact.mk arch) (Fact.mk f_pos) with φ_def
     use (MonoidHom.range φ)
     rw [←exists_true_iff_nonempty]
     -- `φ'` is the restriction of `φ` to its range
@@ -35,7 +36,8 @@ theorem holders_theorem [LeftLinearOrderedGroup α] (arch : archimedean_group α
     have φ'_inj : Function.Injective φ' := by
       simp [φ', Function.Injective]
       intro a b hab
-      have : Function.Injective φ := @injective_φ _ _ f (Fact.mk arch) (Fact.mk f_pos)
+      have : Function.Injective φ :=
+        @injective_φ _ _ _ _ f (Fact.mk arch) (Fact.mk f_pos)
       exact this hab
     -- Thus, `φ'` witnesses the monoid order isomorphism to a subgroup of `ℝ`
     use {
@@ -46,7 +48,8 @@ theorem holders_theorem [LeftLinearOrderedGroup α] (arch : archimedean_group α
       map_mul' := by simp [φ']
       map_le_map_iff' := by
         simp [φ']
-        exact fun {a b} ↦ (@strict_order_preserving_φ _ _ f (Fact.mk arch) (Fact.mk f_pos) a b).symm
+        exact fun {a b} ↦
+          (@strict_order_preserving_φ _ _ _ _ f (Fact.mk arch) (Fact.mk f_pos) a b).symm
     }
   -- If there is no positive element to approximate with, the group `α` is trivial.
   · simp at h

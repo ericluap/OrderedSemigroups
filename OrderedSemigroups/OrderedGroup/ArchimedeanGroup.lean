@@ -18,12 +18,13 @@ variable {α : Type u}
 
 section LeftOrdered
 
-variable [LeftOrderedGroup α]
+variable [Group α] [PartialOrder α] [IsLeftOrderedMonoid α]
 
-def archimedean_group (α : Type u) [LeftOrderedGroup α] :=
-    ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
+def archimedean_group (α : Type u) [Group α] [PartialOrder α]
+  [IsLeftOrderedMonoid α] := ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
 
-theorem gt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : ∃z : ℤ, g < f^z := by
+theorem gt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) :
+    ∃z : ℤ, g < f^z := by
   obtain ⟨z, hz⟩ := arch f g f_ne_one
   simp at hz
   use z
@@ -32,15 +33,16 @@ theorem gt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : �
   If x and y are both positive, then by Archimedneaness
   we have a least z such that x^z > y.
 -/
-theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x) (pos_y : 1 < y) :
-    ∃z : ℤ, x^z > y ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
+theorem pos_min_arch {x y : α} (arch : archimedean_group α) (pos_x : 1 < x)
+    (pos_y : 1 < y) : ∃z : ℤ, x^z > y ∧ (∀t : ℤ, x^t > y → z ≤ t) := by
   -- Define predicate for numbers satisfying x^n > y
   let P : ℕ → Prop := fun n => x^(n : ℤ) > y
 
   -- Define the set of natural numbers satisfying P
   let S := {n : ℕ | P n}
 
-  -- Since x > 1 and y > 1, and the group is Archimedean, there exists some positive n such that x^n > y
+  -- Since x > 1 and y > 1, and the group is Archimedean,
+  -- there exists some positive n such that x^n > y
   have exists_P : ∃ n, P n := by
     obtain ⟨n, hn⟩ := arch x y (ne_of_gt pos_x)
     have n_pos : n > 0 := pos_arch pos_x pos_y n hn
@@ -89,7 +91,7 @@ theorem neg_case_left_arch_false {g h : α} (arch : archimedean_group α) (pos_g
 end LeftOrdered
 section LeftLinearOrderedGroup
 
-variable [LeftLinearOrderedGroup α]
+variable [Group α] [LinearOrder α] [IsLeftOrderedMonoid α]
 
 theorem neg_case_conj_pos {g h : α} (arch : archimedean_group α) (pos_g : 1 < g) (neg_h : h < 1)
     : 1 < h * g * h⁻¹ := by
@@ -132,14 +134,15 @@ theorem left_arch_ordered (arch : archimedean_group α) :
     simp at this
     order
 
-def left_arch_ordered_group (arch : archimedean_group α) : LinearOrderedGroup α where
+def left_arch_ordered_group (arch : archimedean_group α) :
+    IsRightOrderedMonoid α where
   mul_le_mul_right := by exact fun a b a_1 c ↦ left_arch_ordered arch a b a_1 c
 
 end LeftLinearOrderedGroup
 
 section LinearOrderedGroup
 
-variable [LinearOrderedGroup α]
+variable [Group α] [LinearOrder α] [IsOrderedMonoid' α]
 
 theorem lt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : ∃z : ℤ, f^z < g := by
   obtain f_le_g | g_lt_f := le_or_lt f g

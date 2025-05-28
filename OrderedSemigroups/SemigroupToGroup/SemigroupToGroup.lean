@@ -71,7 +71,7 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
   `M` is isomorphic to a submonoid of `G`, then
   `α` is isomorphic to a subsemigroup of `G`.
 -/
-theorem compose_subsemigroup {G M : Type u} [OrderedGroup G] [Monoid M]
+theorem compose_subsemigroup {G M : Type u} [Monoid G] [Monoid M]
     [Preorder G] [Preorder M]
     {G' : Submonoid G} {M' : Subsemigroup M} (f : M ≃*o G') (g : α ≃*o M') :
     ∃H : Subsemigroup G, Nonempty (α ≃*o H) := by

@@ -75,18 +75,13 @@ instance : CommGroup (with_division α) where
       simp [Localization.liftOn_mk, Localization.mk_mul,
         ←Localization.mk_one, Localization.mk_eq_mk_iff', mul_comm]
 
-/-
-instance : LinearOrder (with_division α) := inferInstance
-
-instance : IsOrderedMonoid (with_division α) := inferInstance-/
-
 instance monoid_to_semigroup : LinearOrderedCancelSemigroup α where
   __ := inferInstanceAs (IsOrderedCancelMonoid α)
   mul_le_mul_right := by simp
   le_of_mul_le_mul_right := by simp
 
-instance : LinearOrderedGroup (Localization (⊤ : Submonoid α)) where
-  __ := inferInstanceAs (IsOrderedMonoid (Localization (⊤ : Submonoid α)))
+instance : IsOrderedMonoid' (with_division α) where
+  mul_le_mul_left := by simp
   mul_le_mul_right := by simp
 
 theorem exists_pos_neg_all_one :

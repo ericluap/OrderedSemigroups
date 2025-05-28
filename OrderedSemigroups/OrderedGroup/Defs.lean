@@ -12,47 +12,51 @@ universe u
 
 variable {α : Type u}
 
-class LeftOrderedGroup (α : Type u) extends Group α, PartialOrder α where
+class IsLeftOrderedMonoid (α : Type*) [Monoid α] [PartialOrder α] where
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, c * a ≤ c * b
 
-instance leftOrderedCovariant [LeftOrderedGroup α] :
-    CovariantClass α α (· * ·) (· ≤ ·) where
-  elim a b c bc := LeftOrderedGroup.mul_le_mul_left b c bc a
+instance [Monoid α] [PartialOrder α] [IsLeftOrderedMonoid α] :
+    MulLeftMono α where
+  elim a b c bc := IsLeftOrderedMonoid.mul_le_mul_left b c bc a
 
-instance leftOrderedContravariant [LeftOrderedGroup α] :
-    ContravariantClass α α (· * ·) (· ≤ ·) where
-  elim a b c bc := by simpa using mul_le_mul_left' bc a⁻¹
-
-class RightOrderedGroup (α : Type u) extends Group α, PartialOrder α where
+class IsRightOrderedMonoid (α : Type*) [Monoid α] [PartialOrder α] where
   mul_le_mul_right : ∀ a b : α, a ≤ b → ∀ c : α, a * c ≤ b * c
 
-instance rightOrderedCovariant [RightOrderedGroup α] :
-    CovariantClass α α (Function.swap (· * ·)) (· ≤ ·) where
-  elim a b c bc := RightOrderedGroup.mul_le_mul_right b c bc a
+instance [Monoid α] [PartialOrder α] [IsRightOrderedMonoid α] :
+    MulRightMono α where
+  elim a b c bc := IsRightOrderedMonoid.mul_le_mul_right b c bc a
 
-instance rightOrderedContravariant [RightOrderedGroup α] :
-    ContravariantClass α α (Function.swap (· * ·)) (· ≤ ·) where
-  elim a b c bc := by simpa using mul_le_mul_right' bc a⁻¹
+class IsOrderedMonoid' (α : Type*) [Monoid α] [PartialOrder α] extends
+    IsLeftOrderedMonoid α, IsRightOrderedMonoid α
 
-class OrderedGroup (α : Type u) extends LeftOrderedGroup α, RightOrderedGroup α
+class IsLeftOrderedCancelMonoid (α : Type*) [Monoid α] [PartialOrder α] extends
+    IsLeftOrderedMonoid α where
+  le_of_mul_le_mul_left : ∀ a b c : α, a * b ≤ a * c → b ≤ c
 
-instance [OrderedGroup α] : OrderedSemigroup α where
-  mul_le_mul_left := OrderedGroup.toLeftOrderedGroup.mul_le_mul_left
-  mul_le_mul_right := OrderedGroup.toRightOrderedGroup.mul_le_mul_right
+instance [Monoid α] [PartialOrder α] [IsLeftOrderedCancelMonoid α] :
+    MulLeftReflectLE α := ⟨IsLeftOrderedCancelMonoid.le_of_mul_le_mul_left⟩
 
-class LeftLinearOrderedGroup (α : Type u)
-  extends LeftOrderedGroup α, LinearOrder α
+instance [Monoid α] [PartialOrder α] [IsLeftOrderedCancelMonoid α] :
+    MulLeftReflectLT α where
+  elim := contravariant_lt_of_contravariant_le α α _ ContravariantClass.elim
 
-instance {α : Type u} [CommGroup α] [LinearOrder α] [IsOrderedMonoid α] :
-    LeftLinearOrderedGroup α where
-  mul_le_mul_left := by simp
+instance [Monoid α] [PartialOrder α] [IsLeftOrderedCancelMonoid α] :
+    IsLeftCancelMul α where
+  mul_left_cancel _ _ _ h :=
+    (le_of_mul_le_mul_left' h.le).antisymm <| le_of_mul_le_mul_left' h.ge
 
-class RightLinearOrderedGroup (α : Type u)
-  extends RightOrderedGroup α, LinearOrder α
+class IsRightOrderedCancelMonoid (α : Type*) [Monoid α] [PartialOrder α] extends
+    IsRightOrderedMonoid α where
+  le_of_mul_le_mul_right : ∀ a b c : α, b * a ≤ c * a → b ≤ c
 
-class LinearOrderedGroup (α : Type u)
-  extends LeftLinearOrderedGroup α, RightLinearOrderedGroup α
+instance [Monoid α] [PartialOrder α] [IsRightOrderedCancelMonoid α] :
+    MulRightReflectLE α := ⟨IsRightOrderedCancelMonoid.le_of_mul_le_mul_right⟩
 
-instance [LinearOrderedGroup α] : OrderedGroup α where
-  mul_le_mul_right :=
-    LinearOrderedGroup.toRightLinearOrderedGroup.mul_le_mul_right
+instance [Monoid α] [PartialOrder α] [IsRightOrderedCancelMonoid α] :
+    MulRightReflectLT α where
+  elim := contravariant_lt_of_contravariant_le α α _ ContravariantClass.elim
+
+instance [Monoid α] [PartialOrder α] [IsRightOrderedCancelMonoid α] :
+    IsRightCancelMul α where
+  mul_right_cancel _ _ _ h :=
+    (le_of_mul_le_mul_right' h.le).antisymm <| le_of_mul_le_mul_right' h.ge
