@@ -20,13 +20,15 @@ injective and order preserving.
 We begin with basic definitions of ordered groups.
 
 \begin{definition}\label{def:LeftOrderedGroup}
-    \lean{LeftOrderedGroup}\leanok
-    A \textbf{left ordered group} $G$ is a group and a partial order such that for all $x, y, z \in G$,
+    \lean{IsLeftOrderedSemigroup}\leanok
+    A \textbf{left ordered group} $G$ is a group and a partial order such that
+    it is also a left ordered semigroup. In other words, 
+    for all $x, y, z \in G$,
     if $x \le y$, then $z * x \le z * y$.
 \end{definition}
 
 \begin{definition}\label{def:LeftLinearOrderedGroup}
-    \lean{LeftLinearOrderedGroup}\uses{def:LeftOrderedGroup}\leanok
+    \lean{IsLeftOrderedSemigroup}\uses{def:LeftOrderedGroup}\leanok
     A \textbf{left linear ordered group} $G$ is a left ordered group that is also a linear order.
 \end{definition}
 
@@ -43,7 +45,7 @@ that is Archimedean. Furthermore, we assume we have an element $f\in G$
 such that $1 < f$.
 \begin{theorem}\label{approximate}
     \lean{approximate}\leanok
-    \uses{def:LefLinearOrderedGroup, def:archimedean_group}
+    \uses{def:LeftLinearOrderedGroup, def:archimedean_group}
     For any $g \in G$ and $p \in \mathbb{N}$,
     there exists an integer $q \in \mathbb{Z}$
     such that
@@ -270,38 +272,38 @@ and so the smaller semigroup is isomorphic to a subsemigroup of $\mathbb{R}$.
 \section{Definitions}
 
 \begin{definition}\label{def:LeftOrderedSemigroup}
-    \lean{LeftOrderedSemigroup}\leanok
+    \lean{IsLeftOrderedSemigroup}\leanok
     A \textbf{left ordered semigroup} $S$ is a semigroup and a partial order
     such that for all $x, y, z\in S$,
     if $x \le y$, then $z * x \le z * y$.
 \end{definition}
 
 \begin{definition}\label{def:RightOrderedSemigroup}
-    \lean{RightOrderedSemigroup}\leanok
+    \lean{IsRightOrderedSemigroup}\leanok
     A \textbf{right ordered semigroup} $S$ is a semigroup and a partial order
     such that for all $x, y, z\in S$,
     if $x \le y$, then $x * z \le y * z$.
 \end{definition}
 
 \begin{definition}\label{def:OrderedSemigroup}
-    \lean{OrderedSemigroup}\leanok
+    \lean{IsOrderedSemigroup}\leanok
     \uses{def:LeftOrderedSemigroup, def:RightOrderedSemigroup}
 An \textbf{ordered semigroup} $S$ is a
 left and right ordered semigroup.
 \end{definition}
 
-\begin{definition}\label{def:OrderedCancelSemigroup}\lean{OrderedCancelSemigroup}\leanok
+\begin{definition}\label{def:OrderedCancelSemigroup}\lean{IsOrderedCancelSemigroup}\leanok
 \uses{def:OrderedSemigroup}
 An \textbf{ordered cancel semigroup} $S$ is an ordered semigroup such that for all $a,b,c\in S$,
 if $a * b \le a * c$ then $b \le c$ and if $b * a \le c * a$ then $b \le c$.
 \end{definition}
 
-\begin{definition}\label{def:LinearOrderedSemigroup}\lean{LinearOrderedSemigroup}\leanok
+\begin{definition}\label{def:LinearOrderedSemigroup}\lean{IsOrderedSemigroup}\leanok
 \uses{def:OrderedSemigroup}
 A \textbf{linear ordered semigroup} is an ordered semigroup where its partial order is a linear order.
 \end{definition}
 
-\begin{definition}\label{def:LinearOrderedCancelSemigroup}\lean{LinearOrderedCancelSemigroup}\leanok
+\begin{definition}\label{def:LinearOrderedCancelSemigroup}\lean{IsOrderedCancelSemigroup}\leanok
 \uses{def:OrderedCancelSemigroup}
 A \textbf{linear ordered cancel semigroup} is an ordered cancel semigroup where its partial order is a linear order.
 \end{definition}

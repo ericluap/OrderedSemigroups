@@ -1,12 +1,10 @@
 import Mathlib.Algebra.Order.Group.Basic
 import Mathlib.Algebra.Order.Monoid.Unbundled.Basic
-import OrderedSemigroups.PNat
 
 /-!
 # Ordered Semigroups
 
 This file defines ordered semigroups and provides some basic instances.
-It also defines the action of `ℕ+` on a semigroup.
 
 -/
 

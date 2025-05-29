@@ -1,5 +1,6 @@
 import OrderedSemigroups.Basic
 import Mathlib.Tactic.Order
+import OrderedSemigroups.PNat
 
 /-!
 # Sign of element in Ordered Semigroup

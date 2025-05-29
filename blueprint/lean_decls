@@ -1,5 +1,5 @@
-LeftOrderedGroup
-LeftLinearOrderedGroup
+IsLeftOrderedSemigroup
+IsLeftOrderedSemigroup
 archimedean_group
 approximate
 q
@@ -14,12 +14,12 @@ f_maps_one_φ
 injective_φ
 strict_order_preserving_φ
 holders_theorem
-LeftOrderedSemigroup
-RightOrderedSemigroup
-OrderedSemigroup
-OrderedCancelSemigroup
-LinearOrderedSemigroup
-LinearOrderedCancelSemigroup
+IsLeftOrderedSemigroup
+IsRightOrderedSemigroup
+IsOrderedSemigroup
+IsOrderedCancelSemigroup
+IsOrderedSemigroup
+IsOrderedCancelSemigroup
 anomalous_pair
 is_positive
 is_negative

@@ -9,7 +9,6 @@ sequence of approximations do converge.
 
 -/
 
-
 open Filter
 
 lemma arch_nat {e C : ℝ} (C_pos : C > 0) (e_pos : e > 0) : ∃n : ℕ+, 1 / n < e/(2*C) := by

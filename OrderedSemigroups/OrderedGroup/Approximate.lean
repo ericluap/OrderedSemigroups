@@ -1,6 +1,8 @@
+import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Analysis.Normed.Field.Instances
+import Mathlib.Topology.Metrizable.CompletelyMetrizable
 import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
 import OrderedSemigroups.OrderedGroup.Convergence
-import OrderedSemigroups.Basic
 
 /-!
 # Approximate
@@ -12,51 +14,14 @@ Most of the content of Holder's theorem is proved here.
 
 -/
 
-
 /--
   Every nonempty set of integers that is bounded above has a maximum element.
 -/
-theorem bounded_above_max {S : Set ℤ} (nonempty : Nonempty S) (upper_bounded : BddAbove S) : ∃max ∈ S, max ∈ upperBounds S := by
-  simp [BddAbove, upperBounds] at *
-  -- `s` is an element in `S`
-  obtain ⟨s, hs⟩ := nonempty
-  -- `m` is an upper bound of `S`
-  obtain ⟨m, hm⟩ := upper_bounded
-  simp at hm
-
-  -- `subset` is the set `[s,m]`
-  set subset := Set.Icc s m
-  -- `subset` is clearly finite
-  have : subset.Finite := by exact Set.finite_Icc s m
-  -- `S_subset` is all elements of `S` that are larger than `s`
-  set S_subset := {x : ℤ | x ∈ S ∧ s ≤ x}
-  have each_subset : S_subset ⊆ subset := by
-    simp [S_subset, subset, Set.Icc]
-    intro x x_in_S s_le_x
-    constructor
-    · trivial
-    · exact hm x_in_S
-  -- `S_subset` is finite and nonempty
-  have S_subset_finite : S_subset.Finite := by exact Set.Finite.subset this each_subset
-  have S_subset_nonempty : S_subset.Nonempty := by
-    use s
-    trivial
-
-  -- a finite and nonempty set has a maximum element and that's what we want
-  obtain ⟨a, a_in_S_subset, a_max⟩ := Set.Finite.exists_maximal_wrt (fun x : ℤ => x) S_subset S_subset_finite S_subset_nonempty
-  use a
-  constructor
-  · exact Set.mem_of_mem_inter_left a_in_S_subset
-  · intro t t_in_S
-    obtain t_lt_s | s_le_t := Int.lt_or_le t s
-    obtain ⟨_, s_le_a⟩ := a_in_S_subset
-    · transitivity s
-      exact t_lt_s.le
-      trivial
-    · have : t ∈ S_subset := by exact Set.mem_sep t_in_S s_le_t
-      by_contra a_lt_t
-      simp at a_lt_t
-      exact a_lt_t.ne (a_max t this a_lt_t.le)
+theorem bounded_above_max {S : Set ℤ} (nonempty : Nonempty S)
+    (upper_bounded : BddAbove S) : ∃max ∈ S, max ∈ upperBounds S := by
+  apply Int.exists_greatest_of_bdd
+  · exact upper_bounded
+  · exact nonempty_subtype.mp nonempty
 
 universe u
 
