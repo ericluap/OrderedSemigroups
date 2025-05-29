@@ -1,5 +1,4 @@
 import OrderedSemigroups.Defs
-import OrderedSemigroups.OrderedGroup.Defs
 import Mathlib.Data.Set.Basic
 import Mathlib.Algebra.Group.Subsemigroup.Basic
 import OrderedSemigroups.Archimedean
@@ -43,24 +42,6 @@ theorem monoid_pnat_pow_eq_pnat_pow {α : Type*} [Monoid α]
     change x ^ n = _ at ih
     simp [npowRecAuto, npowRec, ppow_add, ih]
 
-/-theorem monoid_pnat_pow_eq_pnat_pow' {α : Type*} [Monoid α] [given : Pow α ℕ+]
-    [PNatPowAssoc α] (x : α) (n : ℕ+) :
-    @Pow.pow _ _ given x n = @Pow.pow _ _ monoid_pnat_pow x n := by
-  induction n with
-  | one =>
-    unfold_projs
-    change x ^ (1 : ℕ+) = _
-    simp [pow_one]
-  | succ n ih =>
-    unfold_projs
-    change x ^ (n + 1) = _
-    unfold_projs at ih
-    change x ^ n = _ at ih
-    simp only [npow_eq_pow] at ih
-    simp only [ppow_succ, ih, Nat.zero_eq, Nat.lt_eq, Nat.add_eq, PNat.mk_coe,
-      npow_eq_pow, pow_succ]
-    rfl-/
-
 theorem split_first_and_last_factor_of_product_group {a b : α} {n : ℕ} :
   (a*b)^(n+1) = a*(b*a)^n*b := by
   obtain n_eq_0 | n_gt_0 := Nat.eq_zero_or_pos n
@@ -73,7 +54,7 @@ end Group
 
 section LeftOrdered
 
-variable [Group α] [PartialOrder α] [IsLeftOrderedMonoid α]
+variable [Group α] [PartialOrder α] [IsLeftOrderedSemigroup α]
 
 theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
     1 < x^z := by
@@ -143,14 +124,14 @@ instance : IsLeftOrderedSemigroup α where
   mul_le_mul_left _ _ a b :=  mul_le_mul_left' a b
 
 instance PositiveCone (α : Type u) [Group α] [PartialOrder α]
-    [IsLeftOrderedMonoid α] : Subsemigroup α where
+    [IsLeftOrderedSemigroup α] : Subsemigroup α where
   carrier := {x : α | 1 < x}
   mul_mem' := by
     simp
     exact fun {a b} a_1 a_2 ↦ one_lt_mul' a_1 a_2
 
 instance NegativeCone (α : Type u) [Group α] [PartialOrder α]
-    [IsLeftOrderedMonoid α] : Subsemigroup α where
+    [IsLeftOrderedSemigroup α] : Subsemigroup α where
   carrier := {x : α | x < 1}
   mul_mem' := by
     simp
@@ -196,11 +177,7 @@ def pos_normal_ordered (pos_normal : normal_semigroup (PositiveCone α)) :
 end LeftOrdered
 section LinearOrderedGroup
 
-variable [Group α] [LinearOrder α] [IsOrderedMonoid' α]
-
-instance [Group α] [LinearOrder α] [IsOrderedMonoid' α] :
-    IsOrderedSemigroup α where
-  __ := inferInstanceAs (IsOrderedMonoid' α)
+variable [Group α] [LinearOrder α] [IsOrderedSemigroup α]
 
 theorem comm_factor_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : a^n * b^n ≤ (a*b)^n := by
   obtain n_eq_0 | n_gt_0 := Nat.eq_zero_or_pos n

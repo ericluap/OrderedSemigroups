@@ -14,7 +14,7 @@ variable {α : Type u}
   Every left linear ordered group that is Archimedean
   is monoid order isomorphic to a subgroup of `ℝ`.
 -/
-theorem holders_theorem [Group α] [LinearOrder α] [IsLeftOrderedMonoid α]
+theorem holders_theorem [Group α] [LinearOrder α] [IsLeftOrderedSemigroup α]
     (arch : archimedean_group α) :
     ∃G : Subgroup (Multiplicative ℝ), Nonempty (α ≃*o G) := by
   by_cases h : ∃f : α, 1 < f

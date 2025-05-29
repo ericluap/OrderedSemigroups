@@ -1,6 +1,5 @@
 import OrderedSemigroups.OrderedGroup.Basic
 import OrderedSemigroups.Defs
-import OrderedSemigroups.OrderedGroup.Defs
 import Mathlib.Data.Set.Basic
 import Mathlib.Algebra.Group.Subsemigroup.Basic
 import Mathlib.Tactic
@@ -18,10 +17,10 @@ variable {α : Type u}
 
 section LeftOrdered
 
-variable [Group α] [PartialOrder α] [IsLeftOrderedMonoid α]
+variable [Group α] [PartialOrder α] [IsLeftOrderedSemigroup α]
 
 def archimedean_group (α : Type u) [Group α] [PartialOrder α]
-  [IsLeftOrderedMonoid α] := ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
+  [IsLeftOrderedSemigroup α] := ∀(g h : α), g ≠ 1 → ∃z : ℤ, g^z > h
 
 theorem gt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) :
     ∃z : ℤ, g < f^z := by
@@ -91,7 +90,7 @@ theorem neg_case_left_arch_false {g h : α} (arch : archimedean_group α) (pos_g
 end LeftOrdered
 section LeftLinearOrderedGroup
 
-variable [Group α] [LinearOrder α] [IsLeftOrderedMonoid α]
+variable [Group α] [LinearOrder α] [IsLeftOrderedSemigroup α]
 
 theorem neg_case_conj_pos {g h : α} (arch : archimedean_group α) (pos_g : 1 < g) (neg_h : h < 1)
     : 1 < h * g * h⁻¹ := by
@@ -135,14 +134,14 @@ theorem left_arch_ordered (arch : archimedean_group α) :
     order
 
 def left_arch_ordered_group (arch : archimedean_group α) :
-    IsRightOrderedMonoid α where
+    IsRightOrderedSemigroup α where
   mul_le_mul_right := by exact fun a b a_1 c ↦ left_arch_ordered arch a b a_1 c
 
 end LeftLinearOrderedGroup
 
 section LinearOrderedGroup
 
-variable [Group α] [LinearOrder α] [IsOrderedMonoid' α]
+variable [Group α] [LinearOrder α] [IsOrderedSemigroup α]
 
 theorem lt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : ∃z : ℤ, f^z < g := by
   obtain f_le_g | g_lt_f := le_or_lt f g

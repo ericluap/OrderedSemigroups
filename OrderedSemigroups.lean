@@ -6,7 +6,6 @@ import OrderedSemigroups.OrderedGroup.Approximate
 import OrderedSemigroups.OrderedGroup.ArchimedeanGroup
 import OrderedSemigroups.OrderedGroup.Basic
 import OrderedSemigroups.OrderedGroup.Convergence
-import OrderedSemigroups.OrderedGroup.Defs
 import OrderedSemigroups.OrderedGroup.Holder
 import OrderedSemigroups.PNat
 import OrderedSemigroups.SemigroupToGroup.Basic

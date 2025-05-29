@@ -18,7 +18,7 @@ variable {α : Type u}
 section LinearOrderedCommGroup
 variable [CommGroup α] [LinearOrder α] [IsOrderedMonoid α]
 
-instance : IsLeftOrderedMonoid α where
+instance : IsLeftOrderedSemigroup α where
     __ := inferInstanceAs (IsOrderedMonoid α)
 
 theorem is_one_iff_one (a : α) : is_one a ↔ a = 1 := by

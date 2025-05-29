@@ -60,15 +60,15 @@ theorem bounded_above_max {S : Set ℤ} (nonempty : Nonempty S) (upper_bounded :
 
 universe u
 
-variable {α : Type u} [Group α] [LinearOrder α] [IsLeftOrderedMonoid α]
+variable {α : Type u} [Group α] [LinearOrder α] [IsLeftOrderedSemigroup α]
   (f : α) [arch : Fact (archimedean_group α)] [f_pos : Fact (1 < f)]
 
-instance : IsRightOrderedMonoid α where
+instance : IsRightOrderedSemigroup α where
   mul_le_mul_right := by exact fun a b a_1 c ↦ left_arch_ordered arch.elim a b a_1 c
 
-instance : IsOrderedMonoid' α where
-  mul_le_mul_left := IsLeftOrderedMonoid.mul_le_mul_left
-  mul_le_mul_right := IsRightOrderedMonoid.mul_le_mul_right
+instance : IsOrderedSemigroup α where
+  mul_le_mul_left := IsLeftOrderedSemigroup.mul_le_mul_left
+  mul_le_mul_right := IsRightOrderedSemigroup.mul_le_mul_right
 
 theorem approximate (g : α) (p : ℕ):
   ∃(q : ℤ), f^q ≤ g^p ∧ g^p < f^(q+1) := by

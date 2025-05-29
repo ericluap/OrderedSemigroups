@@ -81,7 +81,7 @@ instance monoid_to_semigroup : IsOrderedCancelSemigroup α where
   mul_le_mul_right := by simp
   le_of_mul_le_mul_right := by simp
 
-instance : IsOrderedMonoid' (with_division α) where
+instance : IsOrderedSemigroup (with_division α) where
   mul_le_mul_left := by simp
   mul_le_mul_right := by simp
 
