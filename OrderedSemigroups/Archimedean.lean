@@ -14,7 +14,8 @@ universe u
 variable {α : Type u}
 
 section OrderedSemigroup
-variable [LeftOrderedSemigroup α]
+variable [Semigroup α] [PartialOrder α] [IsLeftOrderedSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
 /-- `a` is Archimedean with respect to `b` if there exists an `N : ℕ+` such that
 for all `n ≥ N`, either `b` is positive and `b < a^n` or `b` is negative and `a^n < b`. -/
@@ -27,7 +28,8 @@ abbrev anomalous_pair (a b : α) := ∀n : ℕ+, (a^n < b^n ∧ b^n < a^(n+1)) �
 
 /-- An ordered semigroup has an anomalous pair if there exist elements `a` and `b` such that
 `a` and `b` form an anomalous pair. -/
-abbrev has_anomalous_pair (α : Type u) [LeftOrderedSemigroup α] :=
+abbrev has_anomalous_pair (α : Type u) [Semigroup α] [PartialOrder α]
+    [IsLeftOrderedSemigroup α] [Pow α ℕ+] [PNatPowAssoc α] :=
   ∃a b : α, anomalous_pair a b
 
 /-- An ordered semigroup is Archimedean if for all elements `a` and `b` of it, either
@@ -37,8 +39,11 @@ def is_archimedean := ∀a b : α, is_one a ∨ is_one b ∨ (same_sign a b → 
 abbrev has_large_differences := ∀a b : α, (is_positive a → a < b → ∃(c : α) (n : ℕ+), is_archimedean_wrt c a ∧ a^n*c ≤ b^n) ∧
                (is_negative a → b < a → ∃(c : α) (n : ℕ+), is_archimedean_wrt c a ∧ a^n*c ≥ b^n)
 
+omit [Semigroup α] [IsLeftOrderedSemigroup α] [PNatPowAssoc α] in
 theorem not_anomalous_pair_self (a : α) : ¬anomalous_pair a a := by
   simp
+
+omit [IsLeftOrderedSemigroup α]
 
 theorem pos_anomalous_lt {a b : α} (anomalous : anomalous_pair a b) (pos : is_positive a) : a < b := by
   rcases anomalous 1 with ⟨a_lt_b, _⟩ | ⟨_, b_gt_ap1⟩
@@ -48,7 +53,7 @@ theorem pos_anomalous_lt {a b : α} (anomalous : anomalous_pair a b) (pos : is_p
     calc
       a < a * a              := by exact pos a
       _ = a ^ (1 : ℕ+) * a ^ (1 : ℕ+) := by rw [ppow_one]
-      _ = a ^ (1 + (1 : ℕ+)) := by exact Eq.symm (ppow_add a 1 1)
+      _ = a ^ (1 + (1 : ℕ+)) := by exact Eq.symm (ppow_add 1 1 a)
       _ < b                  := by exact b_gt_ap1
 
 theorem anomalous_not_one {a b : α} (anomalous : anomalous_pair a b) : ¬is_one a := by
@@ -64,7 +69,8 @@ theorem anomalous_not_one {a b : α} (anomalous : anomalous_pair a b) : ¬is_one
 
 end OrderedSemigroup
 section LinearOrderedCancelSemigroup
-variable [LinearOrderedCancelSemigroup α]
+variable [Semigroup α] [LinearOrder α] [IsOrderedCancelSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
 theorem anomalous_not_one' {a b : α} (anomalous : anomalous_pair a b) : ¬is_one b := by
   rcases anomalous 1 with ⟨a_lt_b, b_lt_ap1⟩ | ⟨a_gt_b, b_gt_ap1⟩
@@ -98,9 +104,11 @@ theorem archimedean_same_sign {a b : α} (arch : is_archimedean_wrt a b) : same_
     · exact pow_le_neg_neg neg_b N h.le
     · trivial
 
+omit [LinearOrder α] [IsOrderedCancelSemigroup α] in
 lemma rw_pow_one_plus_one (a : α) : a^(1 + (1 : ℕ+)) = a * a := by
   exact ppow_two a
 
+omit [IsOrderedCancelSemigroup α] in
 lemma product_of_neg_neg {a : α} (neg : is_negative a) : is_negative (a * a) := by
   rw [←ppow_two]
   exact neg_pow_neg neg 2
@@ -293,6 +301,7 @@ theorem neg_not_anomalous_comm {a b : α} (neg_a : is_negative a) (neg_b : is_ne
       exact neg_not_comm_anomalous_pair neg_b neg_a h
     contradiction
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 /-- If `a * b < b * a` and `(b * a)` commutes with `b`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm {a b : α} (h : a * b < b * a) (comm : (b * a) * b = b * (b * a)) :
   a * b = b * a := by
@@ -304,6 +313,7 @@ theorem not_comm_once_comm {a b : α} (h : a * b < b * a) (comm : (b * a) * b = 
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
   order
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 /-- If `b * a < a * b` and `(b * a)` commutes with `b`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm' {a b : α} (h : b * a < a * b) (comm : (b * a) * b = b * (b * a)) :
   a * b = b * a := by
@@ -315,6 +325,7 @@ theorem not_comm_once_comm' {a b : α} (h : b * a < a * b) (comm : (b * a) * b =
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
   order
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 /-- If `a * b < b * a` and `(b * a)` commutes with `a`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm'' {a b : α} (h : a * b < b * a) (comm : (b * a) * a = a * (b * a)) :
   a * b = b * a := by
@@ -326,6 +337,7 @@ theorem not_comm_once_comm'' {a b : α} (h : a * b < b * a) (comm : (b * a) * a 
     _             = a * b * a * b := by exact Eq.symm (mul_assoc (a * b) a b)
   order
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 /-- If `b * a < a * b` and `(b * a)` commutes with `a`, then we have a contradiction and so `a` and `b` commute. -/
 theorem not_comm_once_comm''' {a b : α} (h : b * a < a * b) (comm : (b * a) * a = a * (b * a)) :
   a * b = b * a := by
@@ -392,7 +404,7 @@ theorem not_anomalous_comm_and_arch (not_anomalous : ¬has_anomalous_pair (α :=
   · exact not_anomalous_arch not_anomalous
 
 def not_anomalous_comm_semigroup (not_anomalous : ¬has_anomalous_pair (α := α)) :
-    LinearOrderedCancelCommSemigroup α where
+    CommSemigroup α where
   mul_comm a b := not_anomalous_pair_commutative not_anomalous a b
 
 theorem lt_not_anomalous_difference {a b : α} (h : a < b) (not_anomalous : ¬has_anomalous_pair (α := α)) :

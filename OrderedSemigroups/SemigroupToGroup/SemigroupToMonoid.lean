@@ -43,7 +43,7 @@ noncomputable def iso_without_one : α ≃* without_one α where
 end Semigroup
 
 section LinearOrderedCancelCommSemigroup
-variable [LinearOrderedCancelCommSemigroup α]
+variable [CommSemigroup α] [LinearOrder α] [IsOrderedCancelSemigroup α]
   [not_one : Fact (∀x : α, ¬is_one x)]
 
 instance : PartialOrder (WithOne α) where
@@ -96,7 +96,7 @@ instance : MulLeftMono (WithOne α) where
     <;> try simpa
     · exact not_neg_right (not_neg_iff.mpr y_le_z) x
     · exact not_pos_right (not_pos_right_not_pos y_le_z) x
-    · exact LeftOrderedSemigroup.mul_le_mul_left y z y_le_z x
+    · exact IsLeftOrderedSemigroup.mul_le_mul_left y z y_le_z x
 
 instance : IsOrderedMonoid (WithOne α) where
   mul_le_mul_left _ _ a b := mul_le_mul_left' a b
@@ -121,10 +121,13 @@ instance withOne_orderedCancelMonoid : IsOrderedCancelMonoid (WithOne α) where
     <;> first | exact xy_le_xz | try order
     · exact not_neg_iff.1 (not_neg_right_not_neg xy_le_xz)
     · exact not_pos_iff.1 (not_pos_right_not_pos xy_le_xz)
-    · exact OrderedCancelSemigroup.le_of_mul_le_mul_left x y z xy_le_xz
+    · exact IsLeftOrderedCancelSemigroup.le_of_mul_le_mul_left x y z xy_le_xz
 
-instance : LeftOrderedSemigroup (WithOne α) where
+instance : IsLeftOrderedSemigroup (WithOne α) where
   mul_le_mul_left _ _ a b := mul_le_mul_left' a b
+
+variable [Pow α ℕ+] [PNatPowAssoc α]
+  [Pow (WithOne α) ℕ+] [PNatPowAssoc (WithOne α)]
 
 theorem one_pow_eq_one (n : ℕ+) : (1 : WithOne α) ^ n = 1 := by
   induction n with
@@ -171,11 +174,11 @@ theorem not_anom_semigroup_not_anom_monoid
 end LinearOrderedCancelCommSemigroup
 
 section LinearOrderedCancelCommSemigroup
-variable [LinearOrderedCancelCommSemigroup α]
+variable [CommSemigroup α] [LinearOrder α] [IsOrderedCancelSemigroup α]
     [has_one : Fact (∃one : α, ∀x : α, one * x = x)]
 
 noncomputable instance has_one_commMonoid : CommMonoid α where
-  __ := inferInstanceAs (LinearOrderedCancelCommSemigroup α)
+  __ := inferInstanceAs (IsOrderedCancelSemigroup α)
   one := has_one.out.choose
   one_mul := has_one.out.choose_spec
   mul_one a := one_right has_one.out.choose_spec a

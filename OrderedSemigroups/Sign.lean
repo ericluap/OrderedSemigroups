@@ -9,7 +9,7 @@ to be positive, negative, or one. It also proves some basic facts about signs.
 -/
 
 section LeftOrderedSemigroup
-variable [LeftOrderedSemigroup α]
+variable [Semigroup α] [PartialOrder α]
 
 def is_positive (a : α) := ∀x : α, a*x > x
 def is_negative (a : α) := ∀x : α, a*x < x
@@ -57,6 +57,8 @@ theorem pos_sq_pos {a : α} (is_pos : is_positive a) : is_positive (a*a) := by
   have := gt_trans (is_pos (a * x)) (is_pos x)
   simpa [mul_assoc]
 
+variable [Pow α ℕ+] [PNatPowAssoc α]
+
 theorem pos_pow_pos {a : α} (pos : is_positive a) (n : ℕ+) : is_positive (a^n) := by
   intro x
   induction n with
@@ -75,6 +77,7 @@ theorem neg_pow_neg {a : α} (neg : is_negative a) (n : ℕ+) : is_negative (a^n
     have : a * a^n * x < a^n * x := by simp [neg (a^n*x), mul_assoc]
     order
 
+omit [PartialOrder α] in
 theorem one_pow_one {a : α} (one : is_one a) (n : ℕ+) : is_one (a^n) := by
   intro x
   induction n with
@@ -86,10 +89,12 @@ def same_sign (a b : α) :=
   (is_negative a ∧ is_negative b) ∨
   (is_one a ∧ is_one b)
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem same_sign_symm {a b : α} (h : same_sign a b) : same_sign b a := by
   unfold same_sign at *
   tauto
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem pos_neg_same_sign_false {a b : α} (pos : is_positive a) (neg : is_negative b) (ss : same_sign a b) : False := by
   unfold same_sign at ss
   rcases ss with ⟨_, pos_b⟩ | ⟨neg_a, _⟩ | ⟨one_a, _⟩
@@ -97,6 +102,7 @@ theorem pos_neg_same_sign_false {a b : α} (pos : is_positive a) (neg : is_negat
   · exact pos_not_neg pos neg_a
   · exact one_not_pos one_a pos
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem pos_one_same_sign_false {a b : α} (pos : is_positive a) (one : is_one b) (ss : same_sign a b) : False := by
   unfold same_sign at ss
   rcases ss with ⟨_, pos_b⟩ | ⟨neg_a, _⟩ | ⟨one_a, _⟩
@@ -104,6 +110,7 @@ theorem pos_one_same_sign_false {a b : α} (pos : is_positive a) (one : is_one b
   · exact pos_not_neg pos neg_a
   · exact one_not_pos one_a pos
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem neg_one_same_sign_false {a b : α} (neg : is_negative a) (one : is_one b) (ss : same_sign a b) : False := by
   unfold same_sign at ss
   rcases ss with ⟨_, pos_b⟩ | ⟨_, neg_b⟩ | ⟨one_a, _⟩
@@ -152,24 +159,29 @@ theorem neg_ppow_le_ppow {a : α} (n m : ℕ+) (neg : is_negative a)
 end LeftOrderedSemigroup
 
 section OrderedSemigroup
-variable [OrderedSemigroup α]
+variable [Semigroup α] [PartialOrder α] [IsOrderedSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem pos_le_pos {a b : α} (pos : is_positive a) (h : a ≤ b) : is_positive b :=
   fun x ↦ lt_mul_of_lt_mul_right (pos x) h
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem pos_lt_pos {a b : α} (pos : is_positive a) (h : a < b) : is_positive b :=
   pos_le_pos pos h.le
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem le_neg_neg {a b : α} (neg : is_negative a) (h : b ≤ a) : is_negative b :=
   fun x ↦ mul_lt_of_mul_lt_right (neg x) h
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem lt_neg_neg {a b : α} (neg : is_negative a) (h : b < a) : is_negative b :=
   le_neg_neg neg h.le
 
 end OrderedSemigroup
 
 section LinearOrderedCancelSemigroup
-variable [LinearOrderedCancelSemigroup α]
+variable [Semigroup α] [LinearOrder α] [IsOrderedCancelSemigroup α]
 
 theorem gt_one_pos {a b : α} (one : is_one a) (h : a < b) : is_positive b :=
   fun x ↦ lt_of_eq_of_lt (id (Eq.symm (one x))) (mul_lt_mul_right' h x)
@@ -232,6 +244,8 @@ theorem pos_neg_or_one : ∀a : α, is_positive a ∨ is_negative a ∨ is_one a
   · left; exact pos_right_pos_forall ha
   · right; right; exact one_right_one_forall ha.symm
 
+variable [Pow α ℕ+] [PNatPowAssoc α]
+
 theorem pow_pos_pos {a : α} (n : ℕ+) (positive : is_positive (a^n)) : is_positive a := by
   rcases pos_neg_or_one a with pos | neg | one
   · trivial
@@ -249,6 +263,8 @@ theorem pos_le_pow_pos {a b : α} (pos : is_positive a) (n : ℕ+) (h : a ≤ b^
 
 theorem pow_le_neg_neg {a b : α} (neg : is_negative a) (n : ℕ+) (h : b^n ≤ a) : is_negative b :=
   pow_neg_neg n (le_neg_neg neg h)
+
+omit [Pow α ℕ+] [PNatPowAssoc α]
 
 theorem one_unique {a b : α} (one_a : is_one a) (one_b : is_one b) : a = b := by
   rw [←one_right one_b a, one_a b]

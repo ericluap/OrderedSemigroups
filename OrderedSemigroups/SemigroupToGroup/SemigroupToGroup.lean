@@ -15,10 +15,11 @@ there exists a larger Archimedean group containing `α`.
 universe u
 variable {α : Type u}
 section LinearOrderedCancelSemigroup
-variable [LinearOrderedCancelSemigroup α]
+variable [Semigroup α] [LinearOrder α] [IsOrderedCancelSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
 def not_anom_to_comm (not_anomalous : ¬has_anomalous_pair (α := α)) :
-    LinearOrderedCancelCommSemigroup α where
+    CommSemigroup α where
   mul_comm a b := not_anomalous_pair_commutative not_anomalous a b
 
 /--
@@ -34,8 +35,8 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
     with not_anom_def
   by_cases not_one : ∀a : α, ¬(∀x : α, a*x = x)
   · use (WithOne α), inferInstance
-    use @withOne_linearOrder _ not_anom ⟨not_one⟩
-    use @withOne_orderedCancelMonoid _ not_anom ⟨not_one⟩
+    use @withOne_linearOrder _ not_anom _ _ ⟨not_one⟩
+    use @withOne_orderedCancelMonoid _ not_anom _ _ ⟨not_one⟩
     constructor
     · exact not_anom_semigroup_not_anom_monoid
         (not_one := Fact.mk not_one) not_anomalous
@@ -43,14 +44,15 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
       intro a b
       rfl
   · simp at not_one
-    use α, @has_one_commMonoid _ _ ⟨not_one⟩, inferInstance, inferInstance
+    set commMonoid := @has_one_commMonoid _ _ _ _ ⟨not_one⟩
+    use α, commMonoid, inferInstance, inferInstance
     constructor
     · simp only [not_exists, not_forall, gt_iff_lt,
         not_or, not_and, not_lt] at not_anomalous ⊢
       unfold_projs at not_anomalous ⊢
-      simp only [nppow_eq_nppowRec, Nat.zero_eq,
-        Nat.lt_eq, Nat.add_eq] at not_anomalous
-      exact fun x x_1 ↦ not_anomalous x x_1
+      simp only [monoid_pnat_pow_eq_pnat_pow, Nat.zero_eq, Nat.lt_eq,
+        Nat.add_eq, PNat.mk_coe] at not_anomalous
+      exact not_anomalous
     · set whole : Subsemigroup α := {
         carrier := Set.univ
         mul_mem' := by simp
@@ -66,6 +68,7 @@ theorem to_not_anom_monoid (not_anomalous : ¬has_anomalous_pair (α := α)) :
         map_le_map_iff' := by simp
       }
 
+omit [IsOrderedCancelSemigroup α] [Pow α ℕ+] [PNatPowAssoc α] in
 /--
   If `α` is isomorphic to a subsemigroup of `M` and
   `M` is isomorphic to a submonoid of `G`, then
@@ -107,6 +110,7 @@ theorem compose_subsemigroup {G M : Type u} [Monoid G] [Monoid M]
     map_le_map_iff' := by simp [α_to_group]
   }
 
+omit [IsOrderedCancelSemigroup α] [Pow α ℕ+] [PNatPowAssoc α] in
 /--
   If `α` is isomorphic to a subsemigroup of `M` and
   `M` is isomorphic to a subgroup of `G`, then

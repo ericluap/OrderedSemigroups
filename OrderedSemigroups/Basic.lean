@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Group.PNatPowAssoc
 import OrderedSemigroups.Defs
 
 /-!
@@ -12,25 +13,43 @@ universe u
 
 variable {α : Type u}
 
-section Semigroup'
-variable [Semigroup' α]
+section Semigroup
+variable [Semigroup α] [Pow α ℕ+] [PNatPowAssoc α]
 
-theorem nppow_eq_nppowRec : Semigroup'.nppow = nppowRec (α := α):= by
-  ext x y
-  induction x with
-  | one => simp [Semigroup'.nppow_one, nppowRec_one]
-  | succ n ih => simp [Semigroup'.nppow_succ,nppowRec_succ, ih]
+theorem ppow_succ (n : ℕ+) (x : α) : x ^ (n + 1) = x ^ n * x := by
+  simp [ppow_add]
 
+theorem ppow_comm (n : ℕ+) (x : α) : x^n * x = x * x^n := by
+  induction n with
+  | one => simp
+  | succ n ih =>
+    simp [ppow_succ, ih, mul_assoc]
+
+theorem ppow_succ' (n : ℕ+) (x : α) : x ^ (n + 1) = x * x^n := by
+  rw [ppow_succ, ppow_comm]
+
+theorem ppow_two (x : α) : x ^ (2 : ℕ+) = x * x := by
+  have : (2 : ℕ+) = 1 + 1 := by decide
+  simp [this, ppow_succ]
+
+omit [Semigroup α] [Pow α ℕ+] [PNatPowAssoc α] in
+theorem nppow_eq_nppowRec [Monoid α] [Pow α ℕ+] [PNatPowAssoc α]
+    (x : α) (n : ℕ+) : Pow.pow x n = npowRec n.val x := by
+  induction n with
+  | one =>
+    change x ^ (1 : ℕ+) = _
+    simp [npowRec]
+  | succ n ih =>
+    change x ^ (n + 1) = _
+    change x ^ n = _ at ih
+    simp [pow_add, ppow_add, ih, npowRec]
+
+/-
 theorem nppow_eq_pow (n : ℕ+) (x : α) : Semigroup'.nppow n x = x ^ n := rfl
 
 @[simp]
 theorem ppow_one (x : α) : x ^ (1 : ℕ+) = x := Semigroup'.nppow_one x
 
-theorem ppow_succ (n : ℕ+) (x : α) : x ^ (n + 1) = x ^ n * x := Semigroup'.nppow_succ n x
-
-theorem ppow_two (x : α) : x ^ (2 : ℕ+) = x * x := by
-  have : (2 : ℕ+) = 1 + 1 := by decide
-  simp [this, ppow_succ]
 
 theorem ppow_comm (n : ℕ+) (x : α) : x^n * x = x * x^n := by
   induction n with
@@ -46,6 +65,7 @@ theorem ppow_add (a : α) (m n : ℕ+) : a ^ (m + n) = a ^ m * a ^ n := by
   | one => simp [ppow_succ]
   | succ n ih => rw [ppow_succ, ←mul_assoc, ←ih, ←ppow_succ]; exact rfl
 
+
 theorem ppow_mul (a : α) (m : ℕ+) : ∀ n, a ^ (m * n) = (a ^ m) ^ n := by
   intro n
   induction n with
@@ -56,6 +76,7 @@ theorem ppow_mul (a : α) (m : ℕ+) : ∀ n, a ^ (m * n) = (a ^ m) ^ n := by
       _                 = a ^ (m * n) * a ^ m := ppow_add a (m * n) m
       _                 = (a ^ m) ^ n * a ^ m := congrFun (congrArg HMul.hMul ih) (a ^ m)
       _                 = (a ^ m) ^ (n + 1)   := Eq.symm (ppow_succ n (a ^ m))
+-/
 
 theorem split_first_and_last_factor_of_product {a b : α} {n : ℕ+} :
   (a*b)^(n+1) = a*(b*a)^n*b := by
@@ -78,10 +99,11 @@ theorem mul_pow_comm_semigroup (is_comm : ∀x y : α, x * y = y * x)
     _ = a ^ n * (b ^ n * a) * b := by simp [mul_assoc]
     _ = a ^ n * (a * b ^ n) * b := by simp [is_comm]
     _ = a ^ n * a * (b ^ n * b) := by simp [mul_assoc]
-end Semigroup'
+end Semigroup
 
 section OrderedSemigroup
-variable [OrderedSemigroup α]
+variable [Semigroup α] [PartialOrder α] [IsOrderedSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
 theorem le_pow {a b : α} (h : a ≤ b) (n : ℕ+) : a^n ≤ b^n := by
   induction n with
@@ -91,9 +113,11 @@ theorem le_pow {a b : α} (h : a ≤ b) (n : ℕ+) : a^n ≤ b^n := by
     simp [ppow_succ]
     exact mul_le_mul' ih h
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem middle_swap {a b c d : α} (h : a ≤ b) : c * a * d ≤ c * b * d := by
-  have : a * d ≤ b * d := OrderedSemigroup.mul_le_mul_right a b h d
-  have : c * (a * d) ≤ c * (b * d) := LeftOrderedSemigroup.mul_le_mul_left (a*d) (b*d) this c
+  have : a * d ≤ b * d := IsRightOrderedSemigroup.mul_le_mul_right a b h d
+  have : c * (a * d) ≤ c * (b * d) :=
+    IsLeftOrderedSemigroup.mul_le_mul_left (a*d) (b*d) this c
   simp only [mul_assoc]
   trivial
 
@@ -123,7 +147,8 @@ theorem comm_dist_le {a b : α} (h : a*b ≤ b*a) (n : ℕ+) : (b*a)^n ≤ b^n *
 end OrderedSemigroup
 
 section OrderedCancelSemigroup
-variable [OrderedCancelSemigroup α]
+variable [Semigroup α] [PartialOrder α] [IsOrderedCancelSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
 theorem lt_pow {a b : α} (h : a < b) (n : ℕ+) : a^n < b^n := by
   induction n with

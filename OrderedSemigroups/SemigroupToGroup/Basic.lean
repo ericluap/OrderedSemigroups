@@ -87,7 +87,6 @@ theorem arch_semigroup_to_arch_group :
       obtain ⟨_, h_lt_gN⟩ | ⟨h_lt_one, _⟩ := hN N (by simp)
       · convert h_lt_gN
         norm_cast
-        exact pnat_pow_eq_nat_pow g N
       · order
   · use 1
     simpa [←one_eq_h]
@@ -113,7 +112,6 @@ theorem arch_semigroup_to_arch_group :
       obtain ⟨_, h_lt_gN⟩ | ⟨h_lt_one, _⟩ := hN N (by simp)
       · convert h_lt_gN
         norm_cast
-        exact pnat_pow_eq_nat_pow g⁻¹ N
       · order
   · use -1
     simpa [←one_eq_h]

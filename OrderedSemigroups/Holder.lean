@@ -12,7 +12,8 @@ universe u
 variable {α : Type u}
 
 section LinearOrderedCancelSemigroup
-variable [LinearOrderedCancelSemigroup α]
+variable [Semigroup α] [LinearOrder α] [IsOrderedCancelSemigroup α]
+  [Pow α ℕ+] [PNatPowAssoc α]
 
 /--
   If `α` is a linear ordered cancel semigroup that does not have anomalous pairs,

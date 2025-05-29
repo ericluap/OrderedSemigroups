@@ -18,11 +18,48 @@ variable {α : Type u}
 section Group
 variable [Group α]
 
-theorem pnat_pow_eq_nat_pow (x : α) (n : ℕ+) : x^(n.val) = x^n := by
+instance monoid_pnat_pow {α : Type*} [Monoid α] : Pow α ℕ+ where
+  pow a n := a ^ (n : ℕ)
+
+instance {α : Type*} [Monoid α] : PNatPowAssoc α where
+  ppow_add := by
+    intro k n x
+    unfold_projs
+    simp [pow_add]
+    rfl
+  ppow_one := by
+    unfold_projs
+    simp
+
+theorem monoid_pnat_pow_eq_pnat_pow {α : Type*} [Monoid α]
+    [given : Pow α ℕ+] [PNatPowAssoc α] (x : α) (n : ℕ+) :
+    Pow.pow x n = npowRecAuto n x := by
   induction n with
-  | one => simp
+  | one =>
+    change x ^ (1 : ℕ+) = _
+    simp [npowRecAuto, npowRec]
   | succ n ih =>
-    simp [ppow_succ, pow_succ, ih]
+    change x ^ (n + 1) = _
+    change x ^ n = _ at ih
+    simp [npowRecAuto, npowRec, ppow_add, ih]
+
+/-theorem monoid_pnat_pow_eq_pnat_pow' {α : Type*} [Monoid α] [given : Pow α ℕ+]
+    [PNatPowAssoc α] (x : α) (n : ℕ+) :
+    @Pow.pow _ _ given x n = @Pow.pow _ _ monoid_pnat_pow x n := by
+  induction n with
+  | one =>
+    unfold_projs
+    change x ^ (1 : ℕ+) = _
+    simp [pow_one]
+  | succ n ih =>
+    unfold_projs
+    change x ^ (n + 1) = _
+    unfold_projs at ih
+    change x ^ n = _ at ih
+    simp only [npow_eq_pow] at ih
+    simp only [ppow_succ, ih, Nat.zero_eq, Nat.lt_eq, Nat.add_eq, PNat.mk_coe,
+      npow_eq_pow, pow_succ]
+    rfl-/
 
 theorem split_first_and_last_factor_of_product_group {a b : α} {n : ℕ} :
   (a*b)^(n+1) = a*(b*a)^n*b := by
@@ -30,7 +67,7 @@ theorem split_first_and_last_factor_of_product_group {a b : α} {n : ℕ} :
   · simp [n_eq_0]
   · set n' : ℕ+ := ⟨n, n_gt_0⟩
     have : (a*b)^(n'+1) = a*(b*a)^n'*b := split_first_and_last_factor_of_product
-    simpa [←pnat_pow_eq_nat_pow]
+    simpa [←ppow_eq_pow]
 
 end Group
 
@@ -102,7 +139,7 @@ theorem pos_lt_exp_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (f_lt : f^a < f^b) : 
       order
   exact lt_neg_add_iff_lt.mp this
 
-instance : LeftOrderedSemigroup α where
+instance : IsLeftOrderedSemigroup α where
   mul_le_mul_left _ _ a b :=  mul_le_mul_left' a b
 
 instance PositiveCone (α : Type u) [Group α] [PartialOrder α]
@@ -162,7 +199,7 @@ section LinearOrderedGroup
 variable [Group α] [LinearOrder α] [IsOrderedMonoid' α]
 
 instance [Group α] [LinearOrder α] [IsOrderedMonoid' α] :
-    OrderedSemigroup α where
+    IsOrderedSemigroup α where
   __ := inferInstanceAs (IsOrderedMonoid' α)
 
 theorem comm_factor_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : a^n * b^n ≤ (a*b)^n := by
@@ -170,7 +207,7 @@ theorem comm_factor_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : a^n * b^n 
   · simp [n_eq_0]
   · set n' : ℕ+ := ⟨n, n_gt_0⟩
     have := comm_factor_le h n'
-    simpa [←pnat_pow_eq_nat_pow]
+    simpa [ppow_eq_pow]
 
 theorem comm_swap_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : (a*b)^n ≤ (b*a)^n := pow_le_pow_left' h n
 
@@ -179,7 +216,7 @@ theorem comm_dist_le_group {a b : α} (h : a*b ≤ b*a) (n : ℕ) : (b*a)^n ≤ 
   · simp [n_eq_0]
   · set n' : ℕ+ := ⟨n, n_gt_0⟩
     have := comm_dist_le h n'
-    simpa [←pnat_pow_eq_nat_pow]
+    simpa [←ppow_eq_pow]
 
 theorem pos_exp_lt_lt {f : α} (f_pos : 1 < f) {a b : ℤ} (a_lt_b : a < b) : f^a < f^b := by
   have : 0 < b - a := Int.sub_pos_of_lt a_lt_b
