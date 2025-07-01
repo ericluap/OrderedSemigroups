@@ -94,10 +94,10 @@ lemma sequence_convergence_unique
       use (x*y)
       constructor
       · rw [mul_comm x y]
-        exact h_I y x (by simp [x.property])
-      · exact h_I x y (by simp [x.property])
+        exact h_I y x (by simp)
+      · exact h_I x y (by simp)
     · simp [Set.Nonempty, h_I_nonempty]
-    · simp [h_I_Icc, isCompact_Icc]
+    · simp [h_I_Icc]
       exact fun i => isCompact_Icc
     · simp [h_I_Icc]
       exact fun i => isClosed_Icc

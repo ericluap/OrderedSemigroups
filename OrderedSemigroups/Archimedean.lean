@@ -158,7 +158,7 @@ theorem neg_ge_once_archimedean {a b : α} (neg : is_negative b) (h : ∃n : ℕ
   right
   constructor
   · trivial
-  · exact gt_of_ge_of_gt hn (neg_ppow_lt_ppow n x (pow_le_neg_neg neg n hn) hx)
+  · exact lt_of_le_of_lt' hn (neg_ppow_lt_ppow n x (pow_le_neg_neg neg n hn) hx)
 
 /-- If `b` is positive and `a` is not Archimedean with respect to `b`, then for all `n : ℕ+`, `a^n < b`. -/
 theorem pos_not_archimedean_wrt_forall_lt {a b : α} (pos : is_positive b) (h : ¬is_archimedean_wrt a b) :
@@ -178,7 +178,7 @@ theorem pos_not_arch_anomalous_pair {a b : α} (pos_a : is_positive a) (pos_b : 
   intro n
   left
   constructor
-  · exact gt_of_ge_of_gt (comm_factor_le comm n) ((pos_pow_pos pos_a n) (b ^ n))
+  · exact lt_of_le_of_lt' (comm_factor_le comm n) ((pos_pow_pos pos_a n) (b ^ n))
   · calc
       (a * b) ^ n ≤ (b * a) ^ n := le_pow comm n
       _           ≤ b ^ n * a ^ n := comm_dist_le comm n
@@ -438,7 +438,7 @@ theorem arch_wrt_self {a : α} (not_one : ¬is_one a) : is_archimedean_wrt a a :
   · left
     constructor
     · trivial
-    ·  exact gt_of_ge_of_gt (pos_ppow_le_ppow 2 n pos_a hn) (pos_one_lt_squared pos_a)
+    ·  exact lt_of_le_of_lt' (pos_ppow_le_ppow 2 n pos_a hn) (pos_one_lt_squared pos_a)
   · right
     constructor
     · trivial
@@ -520,7 +520,7 @@ theorem large_differences_neg_lt_anomalous {a b : α} (differences : has_large_d
         _               ≥ (b ^ m) ^ N := le_pow h N
         _               = b ^ (m * N) := Eq.symm (ppow_mul b m N)
     rcases hab (m*N) with ⟨left, _⟩ | ⟨_, right⟩
-    · have : a^(m*N) < a^(m*N+1) := by exact gt_of_ge_of_gt this left
+    · have : a^(m*N) < a^(m*N+1) := by exact lt_of_le_of_lt' this left
       simp [ppow_succ] at this
       have := (neg_right neg_a (a ^ (m * N)))
       -- TODO: change to `order [neg_right neg_a (a ^ (m * N))]`

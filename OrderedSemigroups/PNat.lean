@@ -9,8 +9,7 @@ that are used in relation to exponentiation of elements in a semigroup.
 -/
 
 lemma add_sub_eq (x y : ℕ+) : x + y - y = x := by
-  apply PNat.eq
-  simp [PNat.sub_coe, PNat.lt_add_left y x]
+  simp
 
 lemma gt_one_sub_eq {x : ℕ+} (h : 1 < x) : (x : ℕ) - 1 = ((x - 1) : ℕ+) := by
   simp [PNat.sub_coe, h]

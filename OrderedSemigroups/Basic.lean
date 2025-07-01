@@ -42,41 +42,7 @@ theorem nppow_eq_nppowRec [Monoid α] [Pow α ℕ+] [PNatPowAssoc α]
   | succ n ih =>
     change x ^ (n + 1) = _
     change x ^ n = _ at ih
-    simp [pow_add, ppow_add, ih, npowRec]
-
-/-
-theorem nppow_eq_pow (n : ℕ+) (x : α) : Semigroup'.nppow n x = x ^ n := rfl
-
-@[simp]
-theorem ppow_one (x : α) : x ^ (1 : ℕ+) = x := Semigroup'.nppow_one x
-
-
-theorem ppow_comm (n : ℕ+) (x : α) : x^n * x = x * x^n := by
-  induction n with
-  | one => simp
-  | succ n ih =>
-    simp [ppow_succ, ih, mul_assoc]
-
-theorem ppow_succ' (n : ℕ+) (x : α) : x ^ (n + 1) = x * x^n := by
-  rw [ppow_succ, ppow_comm]
-
-theorem ppow_add (a : α) (m n : ℕ+) : a ^ (m + n) = a ^ m * a ^ n := by
-  induction n with
-  | one => simp [ppow_succ]
-  | succ n ih => rw [ppow_succ, ←mul_assoc, ←ih, ←ppow_succ]; exact rfl
-
-
-theorem ppow_mul (a : α) (m : ℕ+) : ∀ n, a ^ (m * n) = (a ^ m) ^ n := by
-  intro n
-  induction n with
-  | one => simp
-  | succ n ih =>
-    calc
-      a ^ (m * (n + 1)) = a ^ (m * n + m)     := rfl
-      _                 = a ^ (m * n) * a ^ m := ppow_add a (m * n) m
-      _                 = (a ^ m) ^ n * a ^ m := congrFun (congrArg HMul.hMul ih) (a ^ m)
-      _                 = (a ^ m) ^ (n + 1)   := Eq.symm (ppow_succ n (a ^ m))
--/
+    simp [ppow_add, ih, npowRec]
 
 theorem split_first_and_last_factor_of_product {a b : α} {n : ℕ+} :
   (a*b)^(n+1) = a*(b*a)^n*b := by

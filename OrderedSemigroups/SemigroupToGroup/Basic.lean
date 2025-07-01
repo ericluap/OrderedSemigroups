@@ -21,6 +21,7 @@ variable [CommGroup α] [LinearOrder α] [IsOrderedMonoid α]
 instance : IsLeftOrderedSemigroup α where
     __ := inferInstanceAs (IsOrderedMonoid α)
 
+omit [LinearOrder α] [IsOrderedMonoid α] in
 theorem is_one_iff_one (a : α) : is_one a ↔ a = 1 := by
   simp [is_one]
 

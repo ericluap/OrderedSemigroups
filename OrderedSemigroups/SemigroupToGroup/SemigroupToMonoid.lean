@@ -73,7 +73,6 @@ instance : PartialOrder (WithOne α) where
     · rw [←not_pos_iff]
       exact le_not_pos_not_pos (not_pos_iff.mpr y_le_z) x_le_y
     · order
-  lt_iff_le_not_le := by simp
   le_antisymm := by
     intro x y x_le_y y_le_x
     induction' x with x
@@ -129,27 +128,31 @@ instance : IsLeftOrderedSemigroup (WithOne α) where
 variable [Pow α ℕ+] [PNatPowAssoc α]
   [Pow (WithOne α) ℕ+] [PNatPowAssoc (WithOne α)]
 
+omit [LinearOrder α] [IsOrderedCancelSemigroup α] not_one [Pow α ℕ+] [PNatPowAssoc α] in
 theorem one_pow_eq_one (n : ℕ+) : (1 : WithOne α) ^ n = 1 := by
   induction n with
   | one => simp
   | succ n ih => simp [ppow_succ, ih]
 
+omit [LinearOrder α] [IsOrderedCancelSemigroup α] not_one in
 theorem coe_pow_eq_pow_coe (a : α) (n : ℕ+) :
     (a : WithOne α)^n = (a ^ n : α) := by
   induction n with
   | one => simp
   | succ n ih => simp [ppow_succ, ih]
 
+omit [Pow α ℕ+] [PNatPowAssoc α] [Pow (WithOne α) ℕ+] [PNatPowAssoc (WithOne α)] in
 theorem coe_lt_iff_lt (a b : α) : (a : WithOne α) < b ↔ a < b := by
   constructor
   · intro a_lt_b
-    exact lt_iff_le_not_le.mpr a_lt_b
+    exact lt_iff_le_not_ge.mpr a_lt_b
   · intro a_lt_b
     unfold_projs
     simp only [ge_iff_le, WithOne.recOneCoe_coe, not_le]
     constructor
     <;> order
 
+omit [Pow α ℕ+] [PNatPowAssoc α] [Pow (WithOne α) ℕ+] [PNatPowAssoc (WithOne α)] in
 theorem coe_le_iff_le (a b : α) : (a : WithOne α) ≤ b ↔ a ≤ b := by rfl
 
 theorem not_anom_semigroup_not_anom_monoid

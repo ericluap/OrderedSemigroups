@@ -31,6 +31,7 @@ abbrev over_one (α : Type*) [CommMonoid α] :=
 abbrev over_one_map (α : Type*) [CommMonoid α] : α →* over_one α
   := (Localization.monoidOf (⊤ : Submonoid α)).mrangeRestrict
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem over_one_map_inj : Function.Injective (over_one_map α) := by
   simp [Function.Injective]
   intro a b hab
@@ -85,6 +86,7 @@ instance : IsOrderedSemigroup (with_division α) where
   mul_le_mul_left := by simp
   mul_le_mul_right := by simp
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem exists_pos_neg_all_one :
     (∀t : α, is_one t) ∨ (∃t : α, is_positive t) ∨ (∃t : α, is_negative t) := by
   by_cases h : ∃t : α, is_positive t
@@ -150,6 +152,7 @@ theorem not_anom_neg_pair (not_anom : ¬has_anomalous_pair α)
   _ = z.2 * (z1' * (z.1 * z2')) := by simp [mul_assoc]
   _ = z.2 * z1' * z2' * z.1 := by simp [mul_comm z2', mul_assoc]
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem all_one_div_one (all_one : ∀x : α, x = 1) :
     ∀z : with_division α, z = 1 := by
   intro z
@@ -157,33 +160,37 @@ theorem all_one_div_one (all_one : ∀x : α, x = 1) :
   induction' z with z
   simp [←Localization.mk_one, Localization.mk_eq_mk_iff', all_one]
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem with_div_pos_ineq {x y : α}
     (pos : is_positive (with_division.mk x y)) :
     y < x := by
   rw [is_positive] at pos
-  simp [with_division.mk, Localization.liftOn₂_mk] at pos
+  simp [with_division.mk] at pos
   rw [←Localization.mk_one] at pos
   simp [Localization.mk_lt_mk] at pos
   trivial
 
+omit [Pow α ℕ+] [PNatPowAssoc α] in
 theorem with_div_neg_ineq {x y : α}
     (neg : is_negative (with_division.mk x y)) :
     x < y := by
   rw [is_negative] at neg
-  simp [with_division.mk, Localization.liftOn₂_mk] at neg
+  simp [with_division.mk] at neg
   rw [←Localization.mk_one] at neg
   simp [Localization.mk_lt_mk] at neg
   trivial
 
+omit [LinearOrder α] [IsOrderedCancelMonoid α] [Pow α ℕ+] [PNatPowAssoc α] in
 theorem with_div_pow (n : ℕ) (g1 g2 : α) :
     (with_division.mk g1 g2)^n = with_division.mk (g1^n) (g2^n) := by
   simp [with_division.mk]
   induction n with
   | zero =>
-    simp [←Localization.mk_one, Localization.mk_eq_mk_iff']
+    simp [←Localization.mk_one]
   | succ n ih =>
     simp [pow_succ, ih, Localization.mk_mul]
 
+omit [LinearOrder α] [IsOrderedCancelMonoid α] in
 theorem monoid_ppow_rec_eq (n : ℕ+) (x : α) : x^(n : ℕ) = x^n := by
   induction n with
   | one => simp

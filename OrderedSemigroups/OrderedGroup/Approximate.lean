@@ -77,7 +77,7 @@ theorem q_max_lt (g : α) (p : ℕ) {t : ℤ} (ht : f^t ≤ g^p) : t ≤ q f g p
   have : q f g p + 1 ≤ t := h
   have lt_t : f ^ (q f g p + 1) ≤ f^t := pos_exp_le_le f_pos.out h
   have : f ^ t < f ^ (q f g p + 1) := lt_of_le_of_lt ht gp_lt_fqp1
-  have : f ^ t < f ^ t := gt_of_ge_of_gt lt_t this
+  have : f ^ t < f ^ t := lt_of_le_of_lt' lt_t this
   order
 
 theorem qplus1_min_gt (g : α) (p : ℕ) {t : ℤ} (ht : g^p < f^t) : q f g p + 1 ≤ t := by
@@ -86,8 +86,8 @@ theorem qplus1_min_gt (g : α) (p : ℕ) {t : ℤ} (ht : g^p < f^t) : q f g p + 
   simp at h
   have : t ≤ q f g p := (Int.add_le_add_iff_right 1).mp h
   have : f^t ≤ f^(q f g p) := pos_exp_le_le f_pos.out this
-  have : g^p < f^(q f g p) := gt_of_ge_of_gt this ht
-  have : g^p < g^p := gt_of_ge_of_gt fqp_lt_gt this
+  have : g^p < f^(q f g p) := lt_of_le_of_lt' this ht
+  have : g^p < g^p := lt_of_le_of_lt' fqp_lt_gt this
   order
 
 theorem q_exp_add (g : α) (a b : ℕ) :

@@ -144,7 +144,7 @@ section LinearOrderedGroup
 variable [Group α] [LinearOrder α] [IsOrderedSemigroup α]
 
 theorem lt_exp (arch : archimedean_group α) (f g : α) (f_ne_one : f ≠ 1) : ∃z : ℤ, f^z < g := by
-  obtain f_le_g | g_lt_f := le_or_lt f g
+  obtain f_le_g | g_lt_f := le_or_gt f g
   · obtain f_lt_one | one_lt_f := lt_or_gt_of_ne f_ne_one
     · have : f*f < f := (mul_lt_iff_lt_one_right' f).mpr f_lt_one
       use 2
