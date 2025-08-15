@@ -26,7 +26,7 @@ abbrev with_division (α : Type*) [CommMonoid α] := Localization (⊤ : Submono
 def with_division.mk (m s : α) : with_division α := Localization.mk m ⟨s, by simp⟩
 
 abbrev over_one (α : Type*) [CommMonoid α] :=
-  MonoidHom.mrange ((Localization.monoidOf (⊤ : Submonoid α)).toMap)
+  MonoidHom.mrange ((Localization.monoidOf (⊤ : Submonoid α)).toMonoidHom)
 
 abbrev over_one_map (α : Type*) [CommMonoid α] : α →* over_one α
   := (Localization.monoidOf (⊤ : Submonoid α)).mrangeRestrict
@@ -53,7 +53,7 @@ noncomputable def iso_over_one : α ≃*o (over_one α) where
   right_inv := by
     simp [Function.RightInverse, Function.LeftInverse]
     intro x y hyx
-    set t : over_one α := ⟨x, by use y⟩
+    set t : over_one α := ⟨x, ⟨y, hyx⟩⟩
     simp [MonoidHom.mrangeRestrict, t.prop.choose_spec, t]
   map_mul' := by simp
   map_le_map_iff' := by

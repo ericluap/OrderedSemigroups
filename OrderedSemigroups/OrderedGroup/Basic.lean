@@ -64,9 +64,9 @@ theorem pos_exp_pos_pos {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z > 0) :
 
 theorem nonneg_exp_pos_nonneg {x : α} (pos_x : 1 < x) {z : ℤ} (pos_z : z ≥ 0) :
     1 ≤ x^z := by
-  obtain z_eq_0 | z_gt_0 := pos_z.eq_or_gt
-  · simp [z_eq_0]
-  · exact (pos_exp_pos_pos pos_x z_gt_0).le
+  obtain z_eq_0 | z_lt_0 := pos_z.eq_or_lt
+  · simp [z_eq_0.symm]
+  · exact (pos_exp_pos_pos pos_x z_lt_0).le
 
 theorem pos_exp_neg_neg {x : α} (neg_x : x < 1) {z : ℤ} (pos_z : z > 0) :
     x^z < 1 := by
