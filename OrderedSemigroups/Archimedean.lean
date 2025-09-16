@@ -117,19 +117,19 @@ theorem anomalous_pair_same_sign {a b : α} (anomalous : anomalous_pair a b) : s
   rcases anomalous 1 with ⟨a_lt_b, b_lt_ap1⟩ | ⟨a_gt_b, b_gt_ap1⟩
   <;> simp [rw_pow_one_plus_one] at *
   <;> rcases pos_neg_or_one a with pos_a | neg_a | one_a
-  case inl.intro.inr.inl =>
+  case inl.inr.inl =>
     -- TODO: change to `order [neg_a a]`
     have := neg_a a
     order
-  case inl.intro.inr.inr =>
+  case inl.inr.inr =>
     -- TODO: change to `order [one_a a]`
     have := one_a a
     order
-  case inr.intro.inl =>
+  case inr.inl =>
     -- TODO: change to `order [pos_a a]`
     have := pos_a a
     order
-  case inr.intro.inr.inr =>
+  case inr.inr.inr =>
     -- TODO: change to `order [one_a a]`
     have := one_a a
     order
